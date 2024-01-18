@@ -4,16 +4,57 @@ project:
 website:
   title: "ISSS608-VAA"
   navbar:
-    left:
+    left: 
+      - text: "Hands-on Exercises"
+        menu: 
+          - text: "Hands-on Exercise 1"        
+            href: "Hands-on_EX/Hands-on_EX01/Hands-on_Ex01.html"
+          - text: "Hands-on Exercise 2"        
+            href: "Hands-on_EX/Hands-on_EX02/Hands-on_Ex02.html"
+          - text: "Hands-on Exercise 3"        
+            href: "Hands-on_EX/Hands-on_EX03/Hands-on_Ex03.html"
+          - text: "Hands-on Exercise 4"        
+            href: "Hands-on_EX/Hands-on_EX04/Hands-on_Ex04.html"
+          - text: "Hands-on Exercise 5"        
+            href: "Hands-on_EX/Hands-on_EX05/Hands-on_Ex05.html"
+            
+      - text: "In-class Exercises"
+        menu: 
+          - text: "In-class Exercise 1"        
+            href: "In-class_EX/In-class_EX01/In-class_Ex01.html"
+          - text: "In-class Exercise 2"        
+            href: "In-class_EX/In-class_EX02/In-class_Ex02.html"
+          - text: "In-class Exercise 3"        
+            href: "In-class_EX/In-class_EX03/In-class_Ex03.html"
+          - text: "In-class Exercise 4"     
+            href: "In-class_EX/In-class_EX04/In-class_Ex04.html"
+          - text: "In-class Exercise 5"        
+            href: "In-class_EX/In-class_EX05/In-class_Ex05.html"
+          
+      - text: "Take-home Exercises"
+        menu: 
+          - text: "Take-home Exercise 1"        
+            href: "Take-home_EX/Take-home_EX01/Take-home_Ex01.html"
+          - text: "Take-home Exercise 2"        
+            href: "Take-home_EX/Take-home_EX02/Take-home_Ex02.html"
+          - text: "Take-home Exercise 3"        
+            href: "Take-home_EX/Take-home_EX03/Take-home_Ex03.html"
+          - text: "Take-home Exercise 4"        
+            href: "Take-home_EX/Take-home_EX04/Take-home_Ex04.html"
+          - text: "Take-home Exercise 5"        
+            href: "Take-home_EX/Take-home_EX05/Take-home_Ex05.html"
+    right:
       - href: index.qmd
-        text: Home
+        icon: house-fill
       - about.qmd
+       
 
 format:
   html:
-    theme: cosmo
+    theme: journal
     css: styles.css
     toc: true
 
 editor: visual
+
 
