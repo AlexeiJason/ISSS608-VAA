@@ -1,6 +1,13 @@
 ---
 title: "Hands-on Exercise 1: A Layered Grammar of Graphics - ggplot2 methods"
 author: "Alexei Jason"
+date: "January 12, 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+editor: visual
 ---
 
 # **1 Overview**
