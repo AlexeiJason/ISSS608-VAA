@@ -243,6 +243,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#variable-preparations" id="toc-variable-preparations" class="nav-link" data-scroll-target="#variable-preparations">2.3 Variable Preparations</a></li>
   <li><a href="#overview-of-the-data-set" id="toc-overview-of-the-data-set" class="nav-link" data-scroll-target="#overview-of-the-data-set">2.4 Overview of the Data-set</a></li>
   <li><a href="#handling-missing-values" id="toc-handling-missing-values" class="nav-link" data-scroll-target="#handling-missing-values">2.5 Handling Missing Values</a></li>
+  </ul></li>
   <li><a href="#exploratory-data-analysis-eda" id="toc-exploratory-data-analysis-eda" class="nav-link" data-scroll-target="#exploratory-data-analysis-eda">3 Exploratory Data Analysis (EDA)</a>
   <ul class="collapse">
   <li><a href="#student-performances" id="toc-student-performances" class="nav-link" data-scroll-target="#student-performances">3.1 Student Performances</a></li>
@@ -251,7 +252,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#social-economic" id="toc-social-economic" class="nav-link" data-scroll-target="#social-economic">3.4 Social Economic</a></li>
   </ul></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">4 Conclusion</a></li>
-  </ul></li>
   </ul>
 </nav>
     </div>
@@ -450,8 +450,9 @@ $ socio_economic &lt;dbl&gt; 0.1836, 0.8261, -1.0357, -0.9606, 0.0856, 0.1268, -
 </div>
 <p>The output shows that 6,559 observations are retained.</p>
 </section>
-<section id="exploratory-data-analysis-eda" class="level2">
-<h2 class="anchored" data-anchor-id="exploratory-data-analysis-eda">3 Exploratory Data Analysis (EDA)</h2>
+</section>
+<section id="exploratory-data-analysis-eda" class="level1">
+<h1>3 Exploratory Data Analysis (EDA)</h1>
 <p>In this section 4 analysis will be performed to get insights and uncover truth of factors for Singapore student performances.</p>
 <section id="student-performances" class="level3">
 <h3 class="anchored" data-anchor-id="student-performances">3.1 Student Performances</h3>
@@ -749,7 +750,7 @@ $ socio_economic &lt;dbl&gt; 0.1836, 0.8261, -1.0357, -0.9606, 0.0856, 0.1268, -
 </section>
 <section id="social-economic" class="level3">
 <h3 class="anchored" data-anchor-id="social-economic">3.4 Social Economic</h3>
-<p>The last factor that are going to be explored is social economic. The social economic range from -3.55 to 3.28. there are 47 row that has no social economic score.</p>
+<p>The last factor that are going to be explored is social economic. The social economic range from -3.55 to 3.28.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(stu_filtered<span class="sc">$</span>socio_economic)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -814,8 +815,8 @@ $ socio_economic &lt;dbl&gt; 0.1836, 0.8261, -1.0357, -0.9606, 0.0856, 0.1268, -
 <p>From the three plots, it is apparent that the scatter is broadly distributed across all levels. However, when examining the correlation between social-economic status and academic performances, it is consistently around 0.44. This indicates a weak to medium positive correlation between social-economic standing and students’ performances. In other words, it can be inferred that students with higher social-economic standing tend to achieve higher scores.</p>
 </section>
 </section>
-<section id="conclusion" class="level2">
-<h2 class="anchored" data-anchor-id="conclusion">4 Conclusion</h2>
+<section id="conclusion" class="level1">
+<h1>4 Conclusion</h1>
 <ul>
 <li><p>In conclusion:</p>
 <ol type="1">
@@ -827,7 +828,6 @@ $ socio_economic &lt;dbl&gt; 0.1836, 0.8261, -1.0357, -0.9606, 0.0856, 0.1268, -
 </ul>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
