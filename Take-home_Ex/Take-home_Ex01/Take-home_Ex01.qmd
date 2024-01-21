@@ -231,9 +231,9 @@ ggplot(data = stu_filtered,
 From the distribution graph above can be seen that the questionnaire have similar number of male and female student.
 
 ::: panel-tabset
-#### 3.2.1 Math
+#### Math
 
-Observing the graph below, it's evident that there are **minimal distinctions** between male and female science scores. Males exhibit a **slightly higher** average and median score, though the differences are quite small
+Observing the graph below, it's evident that there are **minimal distinctions** between male and female math scores. Males exhibit a **slightly higher** average and median score, though the differences are quite small
 
 ```{r}
 #| code-fold: true
@@ -277,7 +277,7 @@ ggplot(data = stu_filtered,
   theme_minimal()
 ```
 
-#### 3.2.2 Science
+#### Science
 
 From the graph below, can be seen that there are **VERY SMALL** differences between male and female science scores, with male have a **SLIGHTLY HIGHER** average and median score
 
@@ -323,7 +323,7 @@ ggplot(data = stu_filtered,
   theme_minimal()
 ```
 
-#### 3.2.3 Reading
+#### Reading
 
 From the graph below, can be seen that there are **VERY SMALL** differences between male and female reading scores, with male have a **SLIGHTLY LOWER** average and median score
 
