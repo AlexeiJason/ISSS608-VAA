@@ -155,7 +155,7 @@ stu_filtered
 
 The output shows that 6,559 observations are retained.
 
-## 3 Exploratory Data Analysis (EDA)
+# 3 Exploratory Data Analysis (EDA)
 
 In this section 4 analysis will be performed to get insights and uncover truth of factors for Singapore student performances.
 
@@ -448,7 +448,7 @@ On the other hand, the q3 of the box plot lay around 70 point scores. This mean 
 
 ### 3.4 Social Economic
 
-The last factor that are going to be explored is social economic. The social economic range from -3.55 to 3.28. there are 47 row that has no social economic score.
+The last factor that are going to be explored is social economic. The social economic range from -3.55 to 3.28.
 
 ```{r}
 
@@ -507,7 +507,7 @@ p1/p2/p3
 
 From the three plots, it is apparent that the scatter is broadly distributed across all levels. However, when examining the correlation between social-economic status and academic performances, it is consistently around 0.44. This indicates a weak to medium positive correlation between social-economic standing and students' performances. In other words, it can be inferred that students with higher social-economic standing tend to achieve higher scores.
 
-## 4 Conclusion
+# 4 Conclusion
 
 -   In conclusion:
 
