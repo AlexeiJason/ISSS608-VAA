@@ -233,9 +233,7 @@ From the distribution graph above can be seen that the questionnaire have simila
 ::: panel-tabset
 #### 3.2.1 Math
 
-::: panel-tabset
-Observing the graph below, it's evident that there are **minimal distinctions** between male and female science scores. Males exhibit a **slightly higher** average and median score, though the differences are quite small.
-:::
+Observing the graph below, it's evident that there are **minimal distinctions** between male and female science scores. Males exhibit a **slightly higher** average and median score, though the differences are quite small
 
 ```{r}
 #| code-fold: true
