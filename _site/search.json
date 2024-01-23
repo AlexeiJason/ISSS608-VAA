@@ -404,5 +404,12 @@
     "title": "Hands-on Exercise 2: Beyond ggplot2 Fundamentals",
     "section": "5.6 Creating a composite figure by using patchwork and ggtheme",
     "text": "5.6 Creating a composite figure by using patchwork and ggtheme\nFigure below is created by combining patchwork and theme_economist() of ggthemes package discussed earlier.\n\npatchwork &lt;- (p1 / p2) | p3\npatchwork & theme_economist()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html",
+    "title": "Hands-on_Ex03",
+    "section": "",
+    "text": "1 Learning Outcome"
   }
 ]

@@ -1,0 +1,13 @@
+---
+title: "Hands-on_Ex03"
+author: "Alexei Jason"
+date: "January 23, 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+---
+
+# 1 Learning Outcome
