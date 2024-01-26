@@ -2,7 +2,7 @@
 title: "Take-home Exercise 1: Investigating Student Performance with Data Visualisations"
 author: "Alexei Jason"
 date: "January 19, 2024"
-date-modified: "last-modified"
+date-modified: "January 21, 2024"
 execute: 
   eval: true
   echo: true
@@ -66,7 +66,7 @@ stu_qqq_SG <- read_rds('data/stu_qqq_SG.rds')
 
 In preparing for our analysis, we'll filter out the columns we need and focus on six variables:
 
-1.  **`school_id`** (Renamed from CNTSCHID)
+1.  **`school_type`** (Renamed from STRATUM)
 
 2.  **`gender`** (Renamed from ST004D01T)
 
@@ -93,15 +93,15 @@ stu_filtered <- stu_qqq_SG %>%
          reading = rowMeans(select(stu_qqq_SG,
          PV1READ,PV2READ,PV3READ,PV4READ,PV5READ,PV6READ,PV7READ,PV8READ,PV9READ,PV10READ))
          ) %>%
-  select(CNTSCHID,ST004D01T,math,science,reading,ESCS) %>%
-  rename(c(school_ID = "CNTSCHID", 
+  select(STRATUM,ST004D01T,math,science,reading,ESCS) %>%
+  rename(c(school_type = "STRATUM", 
            gender = "ST004D01T",
            socio_economic = "ESCS")) %>%
   mutate(gender = recode(gender, 
                          "1" = "Female", 
                          "2" = "Male"))
 
-stu_filtered$school_ID <- as.factor(stu_filtered$school_ID)
+stu_filtered$school_type <- as.factor(stu_filtered$school_type)
 stu_filtered$gender <- as.factor(stu_filtered$gender)
 ```
 
@@ -168,47 +168,86 @@ stu_grade <- stu_filtered %>%
 
 ```{r}
 
-p1 <- ggplot(data = stu_grade,
-       aes(y = math)) +
-  geom_violin(aes(x=0)) +
-  geom_boxplot()+
-  stat_boxplot(geom = "errorbar", width = 0.05) +
-  stat_summary(aes(x = 0),
-               geom = "point",       
-               fun.y = "mean",         
-               colour = "red", 
-               size = 1) +
-  scale_y_continuous(NULL, limits = c(0,1000)) +
-  scale_x_continuous("MATH GRADES", breaks = NULL) +
-  theme_minimal()
-p2 <- ggplot(data = stu_grade,
-       aes(y = science)) +
-  geom_violin(aes(x=0)) +
-  geom_boxplot()+
-  stat_boxplot(geom = "errorbar", width = 0.05) +
-  stat_summary(aes(x = 0),
-               geom = "point",       
-               fun.y = "mean",         
-               colour = "red", 
-               size = 1) +
-  scale_y_continuous(NULL, limits = c(0,1000)) +
-  scale_x_continuous("SCIENCE GRADES", breaks = NULL) +
-  theme_minimal()
-p3 <- ggplot(data = stu_grade,
-       aes(y = reading)) +
-  geom_violin(aes(x=0)) +
-  geom_boxplot() +
-  stat_boxplot(geom = "errorbar", width = 0.05) +
-  stat_summary(aes(x = 0),
-               geom = "point",       
-               fun.y = "mean",         
-               colour = "red", 
-               size = 1) +
-  scale_y_continuous(NULL, limits = c(0,1000)) +
-  scale_x_continuous("READING GRADES", breaks = NULL) +
-  theme_minimal()
+# Distribution of Performance in Mathematics
+P1 <- ggplot(data = stu_grade,
+       aes(x = math)) +
+  geom_density(color = "#459395", size = 0.6, fill= "#459395", alpha = 0.4) +
+  coord_cartesian(xlim = c(0,1000)) +
+  geom_vline(aes(xintercept = mean(math)),
+             color = "red", alpha = 0.8, linewidth = 0.7, linetype = "dashed") +
+  annotate("text", x = 400, y = 0.0035,
+           label = paste("Mean=", 
+                         round(mean(stu_grade$math, na.rm=T), 2)),
+           color = "red", size = 3) +
+  geom_vline(aes(xintercept = median(math)),
+             color= "grey50", linewidth = 0.7, linetype = "solid") +
+  annotate("text", x = 800, y = 0.0035,
+           label = paste("Median=", 
+                         round(median(stu_grade$math, na.rm=T), 2)),
+           color = "grey20", size = 3) +  
+  geom_boxplot(width = 0.0005, fill = "white", alpha = 0.5,
+               position = position_nudge(y = -0.0005)) +
+  theme_minimal()+
+  labs(title="Distribution of Performance in Mathematics") +
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        plot.title=element_text(size= 12),
+        axis.text = element_text(size= 8)) 
 
-p1|p2|p3
+# Distribution of Performance in Reading
+P2 <- ggplot(data = stu_grade,
+       aes(x = reading)) +
+  geom_density(color = "#EB7C69", size = 0.6, fill= "#EB7C69", alpha = 0.4) +
+  coord_cartesian(xlim = c(0,1000)) +
+  geom_vline(aes(xintercept = mean(reading)),
+             color = "red", alpha = 0.8, linewidth = 0.7, linetype = "dashed") +
+  annotate("text", x = 400, y = 0.0035,
+           label = paste("Mean=", 
+                         round(mean(stu_grade$reading, na.rm=T), 2)),
+           color = "red", size = 3) +
+  geom_vline(aes(xintercept = median(reading)),
+             color= "grey50", linewidth = 0.7, linetype = "solid") +
+  annotate("text", x = 800, y = 0.0035,
+           label = paste("Median=", 
+                         round(median(stu_grade$reading, na.rm=T), 2)),
+           color = "grey20", size = 3) +  
+  geom_boxplot(width = 0.0005, fill = "white", alpha = 0.5,
+               position = position_nudge(y = -0.0005)) +
+  theme_minimal()+
+  labs(title="Distribution of Performance in Reading",
+       y = "density") +
+  theme(axis.title.x = element_blank(),
+        plot.title=element_text(size= 12),
+        axis.text = element_text(size= 8)) 
+  
+# Distribution of Performance in Science
+P3 <- ggplot(data = stu_grade,
+       aes(x = science)) +
+  geom_density(color = "#FDA638", size = 0.6, fill= "#FDA638", alpha = 0.4) +
+  coord_cartesian(xlim = c(0,1000)) +
+  geom_vline(aes(xintercept = mean(science)),
+             color = "red", alpha = 0.8, linewidth = 0.7, linetype = "dashed") +
+  annotate("text", x = 400, y = 0.0035,
+           label = paste("Mean=", 
+                         round(mean(stu_grade$science, na.rm=T), 2)),
+           color = "red", size = 3) +
+  geom_vline(aes(xintercept = median(science)),
+             color= "grey50", linewidth = 0.7, linetype = "solid") +
+  annotate("text", x = 800, y = 0.0035,
+           label = paste("Median=", 
+                         round(median(stu_grade$science, na.rm=T), 2)),
+           color = "grey20", size = 3) +  
+  geom_boxplot(width = 0.0005, fill = "white", alpha = 0.5,
+               position = position_nudge(y = -0.0005)) +
+  theme_minimal()+
+  labs(title="Distribution of Performance in Science") +
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        plot.title=element_text(size= 12),
+        axis.text = element_text(size= 8)) 
+
+
+P1 / P2 / P3
 ```
 
 Based on the provided figure, it appears that the performance distribution follows a normal pattern. However, there's a slight variation in performance levels, with math scores being higher than science, and science scores being higher than reading.
@@ -369,26 +408,11 @@ ggplot(data = stu_filtered,
 ```
 :::
 
-Overall, can be concluded that student's performances are **EQUAL** no matter the gender is.
+Overall, can be concluded that student's performances has **SLIGHLTY VARIATION** between both gender.
 
 ### 3.3 School
 
 The student that was participating in this questionnaire was from 164 different school in Singapore
-
-```{r}
-average_math_SG <- mean(stu_filtered$math)
-average_science_SG <- mean(stu_filtered$science)
-average_reading_SG <- mean(stu_filtered$reading)
-
-stu_sch <- stu_filtered %>%
-  group_by(school_ID) %>%
-  mutate(average_math_diff = abs(mean(math)-average_math_SG),
-         average_science_diff = abs(mean(science)-average_science_SG),
-         average_reading_diff = abs(mean(reading)-average_reading_SG)) %>%
-  select(school_ID, average_math_diff, average_science_diff, average_reading_diff) %>%
-  unique() 
-
-```
 
 On the code above we are going to calculate the average of performance of student for each school across Singapore against Singapore overall average.
 
@@ -398,46 +422,60 @@ Followed by calculating the error or the differences between each school average
 #| code-fold: true
 #| code-summary: "Show the code"
 
-p1 <- ggplot(data = stu_sch,
-       aes(y = average_math_diff)) +
-  geom_boxplot(width = 0.1) +
-  stat_boxplot(geom = "errorbar", width = 0.05) +
-  stat_summary(aes(x = 0),
-               geom = "point",       
-               fun.y = "mean",         
-               colour = "red", 
-               size = 1) +
-  scale_y_continuous(NULL, limits = c(0,220)) +
-  scale_x_continuous("math avg grade diff", breaks = NULL) +
-  theme_minimal()
+P7 <- ggplot(data= stu_filtered,
+       aes(x= school_type, y= math)) +
+  geom_violin(color = "#459395", size = 0.6, fill= "#459395", alpha = 0.4) +
+  geom_boxplot(width= 0.4, outlier.colour = "grey30", outlier.size = 2, 
+               outlier.alpha = 0.5, outlier.shape = 19) +
+  stat_summary(geom = "point",       
+               fun.y="mean",         
+               colour ="red",        
+               size=3) +  coord_cartesian(ylim = c(0,1000)) +
+  scale_color_manual(values=c("#999999", "#E69F00")) +
+  theme_minimal() +
+  labs(title="Mathematics") +  
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        plot.title=element_text(size= 12, hjust= 0.5),
+        axis.text = element_text(size= 10)) 
+  
+P8 <- ggplot(data= stu_filtered,
+       aes(x= school_type, y= reading)) +
+  geom_violin(color = "#EB7C69", size = 0.6, fill= "#EB7C69", alpha = 0.4) +
+  geom_boxplot(width= 0.4, outlier.colour = "grey30", outlier.size = 2, 
+               outlier.alpha = 0.5, outlier.shape = 19) +
+  stat_summary(geom = "point",       
+               fun.y="mean",         
+               colour ="red",        
+               size=3) +  coord_cartesian(ylim = c(0,1000)) +  
+  theme_minimal() +
+  labs(title="Reading") + 
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.y = element_blank(),
+        plot.title=element_text(size= 12, hjust= 0.5),
+        axis.text = element_text(size= 10)) 
+  
+P9 <- ggplot(data= stu_filtered,
+       aes(x= school_type, y= science)) +
+  geom_violin(color = "#FDA638", size = 0.6, fill= "#FDA638", alpha = 0.4) +
+  geom_boxplot(width= 0.4, outlier.colour = "grey30", outlier.size = 2, 
+               outlier.alpha = 0.5, outlier.shape = 19) +
+  stat_summary(geom = "point",       
+               fun.y="mean",         
+               colour ="red",        
+               size=3) +  coord_cartesian(ylim = c(0,1000)) +  
+  theme_minimal() +
+  labs(title="Science") + 
+  theme(axis.title.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.title.y = element_blank(),
+        plot.title=element_text(size= 12, hjust= 0.5),
+        axis.text = element_text(size= 10)) 
 
-p2 <- ggplot(data = stu_sch,
-       aes(y = average_science_diff)) +
-  geom_boxplot(width = 0.1) +
-  stat_boxplot(geom = "errorbar", width = 0.05) +
-  stat_summary(aes(x = 0),
-               geom = "point",       
-               fun.y ="mean",         
-               colour ="red", 
-               size=1) +
-  scale_y_continuous(NULL, limits = c(0,220)) +
-  scale_x_continuous("science avg grade diff", breaks = NULL) +
-  theme_minimal()
-
-p3 <- ggplot(data = stu_sch,
-       aes(y = average_reading_diff)) +
-  geom_boxplot(width = 0.1) +
-  stat_boxplot(geom = "errorbar", width = 0.05) +
-  stat_summary(aes(x = 0),
-               geom = "point",       
-               fun.y ="mean",         
-               colour ="red", 
-               size=1) +
-  scale_y_continuous(NULL, limits = c(0,220)) +
-  scale_x_continuous("reading avg grade diff", breaks = NULL) +
-  theme_minimal()
-
-p1|p2|p3
+(P7 + P8 + P9) +
+    plot_annotation(title= "School-Based Performance Comparison ",
+                    theme = theme(plot.title=element_text(size= 15, hjust= 0.5)))
 ```
 
 The plots above show that the differences between all study subject were similar. However, the differences between a school and the Singapore average are ranged from 0 to 220. And, the average differences is around 40. This mean that not every single school in Singapore are having the same performance with each other.
