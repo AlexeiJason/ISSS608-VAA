@@ -167,7 +167,8 @@ stu_grade <- stu_filtered %>%
 ```
 
 ```{r}
-
+#| code-fold: true
+#| code-summary: "Show the code"
 # Distribution of Performance in Mathematics
 P1 <- ggplot(data = stu_grade,
        aes(x = math)) +
@@ -545,9 +546,14 @@ From the three plots, it is apparent that the scatter is broadly distributed acr
 
 # 4 Conclusion
 
--   In conclusion:
+These observations suggest several key points about the educational landscape in Singapore:
 
-    1.  Student performances exhibit similarity across different subjects.
-    2.  Gender does not appear to have a significant impact on student performances.
-    3.  There are variations in performance levels among schools in Singapore, indicating that not all schools are equal.
-    4.  Social-economic standing plays a relatively minor role in influencing students' academic performances.
+1.  **Similarity Across Subjects**: The consistency in student performances across different subjects implies that factors affecting academic achievement may be relatively consistent across disciplines. This could include teaching quality, curriculum standards, and student support mechanisms.
+
+2.  **Gender Neutrality in Performance**: The lack of a significant impact of gender on student performance suggests that academic success in Singapore is not heavily influenced by gender-specific factors. This could reflect a culture of equality and fairness in education.
+
+3.  **Variations Among Schools**: The variations in performance levels among schools highlight disparities in educational resources, teaching methodologies, and perhaps even socio-cultural environments. This suggests that efforts to standardize and equalize educational opportunities across schools may be necessary.
+
+4.  **Minor Role of Socio-economic Standing**: The relatively minor influence of socio-economic standing on academic performance indicates that Singapore's education system may effectively mitigate the effects of socio-economic disparities. This could be attributed to policies aimed at providing equal access to education and support for students from diverse socio-economic backgrounds.
+
+Overall, these observations underscore the complex interplay of various factors shaping educational outcomes in Singapore, highlighting the need for continued efforts to address disparities and ensure equitable access to quality education for all students.
