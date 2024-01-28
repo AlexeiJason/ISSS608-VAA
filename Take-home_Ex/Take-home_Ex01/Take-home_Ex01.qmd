@@ -99,7 +99,10 @@ stu_filtered <- stu_qqq_SG %>%
            socio_economic = "ESCS")) %>%
   mutate(gender = recode(gender, 
                          "1" = "Female", 
-                         "2" = "Male"))
+                         "2" = "Male"),
+         school_type = recode(school_type,
+                              "SGP01" = "Public",
+                              "SGP03" = "Private"))
 
 stu_filtered$school_type <- as.factor(stu_filtered$school_type)
 stu_filtered$gender <- as.factor(stu_filtered$gender)
@@ -169,106 +172,66 @@ stu_grade <- stu_filtered %>%
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
-# Distribution of Performance in Mathematics
-P1 <- ggplot(data = stu_grade,
-       aes(x = math)) +
-  geom_density(color = "#459395", size = 0.6, fill= "#459395", alpha = 0.4) +
+# Density plot for Mathematics performance
+Math_Plot <- ggplot(data = stu_grade, aes(x = math)) +
+  geom_density(color = "grey50", size = 0.6, fill= "grey50", alpha = 0.4) +
   coord_cartesian(xlim = c(0,1000)) +
-  geom_vline(aes(xintercept = mean(math)),
-             color = "red", alpha = 0.8, linewidth = 0.7, linetype = "dashed") +
-  annotate("text", x = 400, y = 0.0035,
-           label = paste("Mean=", 
-                         round(mean(stu_grade$math, na.rm=T), 2)),
-           color = "red", size = 3) +
-  geom_vline(aes(xintercept = median(math)),
-             color= "grey50", linewidth = 0.7, linetype = "solid") +
-  annotate("text", x = 800, y = 0.0035,
-           label = paste("Median=", 
-                         round(median(stu_grade$math, na.rm=T), 2)),
-           color = "grey20", size = 3) +  
-  geom_boxplot(width = 0.0005, fill = "white", alpha = 0.5,
-               position = position_nudge(y = -0.0005)) +
-  theme_minimal()+
-  labs(title="Distribution of Performance in Mathematics") +
-  theme(axis.title.x = element_blank(),
-        axis.title.y = element_blank(),
-        plot.title=element_text(size= 12),
-        axis.text = element_text(size= 8)) 
+  geom_vline(aes(xintercept = mean(math)), color = "red", alpha = 0.8, linewidth = 0.7, linetype = "dashed") +
+  annotate("text", x = 400, y = 0.0035, label = paste("Mean=", round(mean(stu_grade$math, na.rm=T), 2)), color = "red", size = 3) +
+  geom_vline(aes(xintercept = median(math)), color= "grey50", linewidth = 0.7, linetype = "solid") +
+  annotate("text", x = 800, y = 0.0035, label = paste("Median=", round(median(stu_grade$math, na.rm=T), 2)), color = "grey20", size = 3) +  
+  geom_boxplot(width = 0.0005, fill = "white", alpha = 0.5, position = position_nudge(y = -0.0005)) +
+  theme_minimal() +
+  labs(title = "Distribution of Performance in Mathematics") +
+  theme(axis.title.x = element_blank(), axis.title.y = element_blank(), plot.title=element_text(size= 12), axis.text = element_text(size= 8)) 
 
-# Distribution of Performance in Reading
-P2 <- ggplot(data = stu_grade,
-       aes(x = reading)) +
-  geom_density(color = "#EB7C69", size = 0.6, fill= "#EB7C69", alpha = 0.4) +
+# Density plot for Reading performance
+Reading_Plot <- ggplot(data = stu_grade, aes(x = reading)) +
+  geom_density(color = "grey70", size = 0.6, fill= "grey70", alpha = 0.4) +
   coord_cartesian(xlim = c(0,1000)) +
-  geom_vline(aes(xintercept = mean(reading)),
-             color = "red", alpha = 0.8, linewidth = 0.7, linetype = "dashed") +
-  annotate("text", x = 400, y = 0.0035,
-           label = paste("Mean=", 
-                         round(mean(stu_grade$reading, na.rm=T), 2)),
-           color = "red", size = 3) +
-  geom_vline(aes(xintercept = median(reading)),
-             color= "grey50", linewidth = 0.7, linetype = "solid") +
-  annotate("text", x = 800, y = 0.0035,
-           label = paste("Median=", 
-                         round(median(stu_grade$reading, na.rm=T), 2)),
-           color = "grey20", size = 3) +  
-  geom_boxplot(width = 0.0005, fill = "white", alpha = 0.5,
-               position = position_nudge(y = -0.0005)) +
-  theme_minimal()+
-  labs(title="Distribution of Performance in Reading",
-       y = "density") +
-  theme(axis.title.x = element_blank(),
-        plot.title=element_text(size= 12),
-        axis.text = element_text(size= 8)) 
+  geom_vline(aes(xintercept = mean(reading)), color = "red", alpha = 0.8, linewidth = 0.7, linetype = "dashed") +
+  annotate("text", x = 400, y = 0.0035, label = paste("Mean=", round(mean(stu_grade$reading, na.rm=T), 2)), color = "red", size = 3) +
+  geom_vline(aes(xintercept = median(reading)), color= "grey50", linewidth = 0.7, linetype = "solid") +
+  annotate("text", x = 800, y = 0.0035, label = paste("Median=", round(median(stu_grade$reading, na.rm=T), 2)), color = "grey20", size = 3) +  
+  geom_boxplot(width = 0.0005, fill = "white", alpha = 0.5, position = position_nudge(y = -0.0005)) +
+  theme_minimal() +
+  labs(title = "Distribution of Performance in Reading", y = "density") +
+  theme(axis.title.x = element_blank(), plot.title=element_text(size= 12), axis.text = element_text(size= 8)) 
   
-# Distribution of Performance in Science
-P3 <- ggplot(data = stu_grade,
-       aes(x = science)) +
-  geom_density(color = "#FDA638", size = 0.6, fill= "#FDA638", alpha = 0.4) +
+# Density plot for Science performance
+Science_Plot <- ggplot(data = stu_grade, aes(x = science)) +
+  geom_density(color = "grey30", size = 0.6, fill= "grey30", alpha = 0.4) +
   coord_cartesian(xlim = c(0,1000)) +
-  geom_vline(aes(xintercept = mean(science)),
-             color = "red", alpha = 0.8, linewidth = 0.7, linetype = "dashed") +
-  annotate("text", x = 400, y = 0.0035,
-           label = paste("Mean=", 
-                         round(mean(stu_grade$science, na.rm=T), 2)),
-           color = "red", size = 3) +
-  geom_vline(aes(xintercept = median(science)),
-             color= "grey50", linewidth = 0.7, linetype = "solid") +
-  annotate("text", x = 800, y = 0.0035,
-           label = paste("Median=", 
-                         round(median(stu_grade$science, na.rm=T), 2)),
-           color = "grey20", size = 3) +  
-  geom_boxplot(width = 0.0005, fill = "white", alpha = 0.5,
-               position = position_nudge(y = -0.0005)) +
-  theme_minimal()+
-  labs(title="Distribution of Performance in Science") +
-  theme(axis.title.x = element_blank(),
-        axis.title.y = element_blank(),
-        plot.title=element_text(size= 12),
-        axis.text = element_text(size= 8)) 
+  geom_vline(aes(xintercept = mean(science)), color = "red", alpha = 0.8, linewidth = 0.7, linetype = "dashed") +
+  annotate("text", x = 400, y = 0.0035, label = paste("Mean=", round(mean(stu_grade$science, na.rm=T), 2)), color = "red", size = 3) +
+  geom_vline(aes(xintercept = median(science)), color= "grey50", linewidth = 0.7, linetype = "solid") +
+  annotate("text", x = 800, y = 0.0035, label = paste("Median=", round(median(stu_grade$science, na.rm=T), 2)), color = "grey20", size = 3) +  
+  geom_boxplot(width = 0.0005, fill = "white", alpha = 0.5, position = position_nudge(y = -0.0005)) +
+  theme_minimal() +
+  labs(title = "Distribution of Performance in Science") +
+  theme(axis.title.x = element_blank(), axis.title.y = element_blank(), plot.title=element_text(size= 12), axis.text = element_text(size= 8)) 
 
+# Arrange the plots
+Math_Plot / Reading_Plot / Science_Plot
 
-P1 / P2 / P3
 ```
 
-Based on the provided figure, it appears that the performance distribution follows a normal pattern. However, there's a slight variation in performance levels, with math scores being higher than science, and science scores being higher than reading.
+Based on the provided figure, it appears that the performance distribution follows a normal pattern. However, there's a **SLIGHT VARIATION** in performance levels, with math scores being higher than science, and science scores being higher than reading.
 
-Moreover, it's noticeable that the performance variance is quite substantial. This suggests that students in Singapore exhibit significant differences in their academic achievements. Several factors, including school, gender, and socioeconomic status, could contribute to these variations in performance.
+Moreover, it's noticeable that the performance variance is quite substantial. This suggests that students in Singapore exhibit significant differences in their academic achievements. Several factors, including **gender, school, and socioeconomic** status, could contribute to these variations in performance.
 
 ### 3.2 Gender
 
-The first factor that we are going to look into is gender.
+The initial aspect we'll examine is gender. From the distribution graph below, it is evident that the questionnaire shows a comparable number of male and female students.
 
 ```{r}
 ggplot(data = stu_filtered,
        aes(x = gender)) +
   geom_bar(width = 0.5,
            color = "black",
-           fill = "#01796F")+
+           fill = "grey70")+
   theme_minimal()
 ```
-
-From the distribution graph above can be seen that the questionnaire have similar number of male and female student.
 
 ::: panel-tabset
 #### Math
@@ -278,43 +241,36 @@ Observing the graph below, it's evident that there are **minimal distinctions** 
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
-stats <- data.frame(gender = as.factor(c('Female','Male')),
-                    mean = c(mean(stu_filtered$math[stu_filtered$gender == "Female"]),
-                             mean(stu_filtered$math[stu_filtered$gender == "Male"])),
-                    median = c(median(stu_filtered$math[stu_filtered$gender == "Female"]),
-                               median(stu_filtered$math[stu_filtered$gender == "Male"])) )
+# Prepare statistics on math scores by gender
+stats <- data.frame(
+  gender = as.factor(c('Female','Male')),
+  mean = c(
+    mean(stu_filtered$math[stu_filtered$gender == "Female"]),
+    mean(stu_filtered$math[stu_filtered$gender == "Male"])
+  ),
+  median = c(
+    median(stu_filtered$math[stu_filtered$gender == "Female"]),
+    median(stu_filtered$math[stu_filtered$gender == "Male"])
+  )
+)
 
-ggplot(data = stu_filtered,
-       aes(y = math)) +
-  geom_histogram(bins = 10,
-                 color = 'grey50',
-                 fill = 'grey90') +
+# Create a histogram plot of math scores by gender
+ggplot(data = stu_filtered, aes(x = math)) +
+  geom_histogram(bins = 20, color = 'grey50', fill = 'grey90') +
   facet_wrap(~ gender) +
-  geom_hline(data = stats,
-             mapping = aes(yintercept=mean),
-             color = "red") +
-  geom_hline(data = stats,
-             mapping = aes(yintercept=median),
-             color = "blue") +
+  geom_vline(data = stats, mapping = aes(xintercept = mean), color = "red") +
+  geom_vline(data = stats, mapping = aes(xintercept = median), color = "blue") +
   annotate(
     'text',
-    x = Inf,
-    y = Inf,
-    hjust = 1,
-    vjust = 2.1,
-    label = paste("mean"),
-    color = "red"
+    x = Inf, y = Inf, hjust = 7, vjust = 1, label = paste("Mean"), color = "red", size = 3
   ) +
   annotate(
     'text',
-    x = Inf,
-    y = Inf,
-    hjust = 1,
-    vjust = 1,
-    label = paste("median"),
-    color = "blue"
+    x = Inf, y = Inf, hjust = 3, vjust = 1, label = paste("Median"), color = "blue", size= 3
   ) +
-  theme_minimal()
+  theme_minimal() +
+  theme(axis.title.x = element_blank(), plot.title=element_text(size= 12), axis.text = element_text(size= 8)) 
+
 ```
 
 #### Science
@@ -324,43 +280,36 @@ Observing the graph provided, it's evident that there are **minimal disparities*
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
-stats <- data.frame(gender = as.factor(c('Female','Male')),
-                    mean = c(mean(stu_filtered$science[stu_filtered$gender == "Female"]),
-                             mean(stu_filtered$science[stu_filtered$gender == "Male"])),
-                    median = c(median(stu_filtered$science[stu_filtered$gender == "Female"]),
-                               median(stu_filtered$science[stu_filtered$gender == "Male"])) )
+# Prepare statistics on science scores by gender
+stats <- data.frame(
+  gender = as.factor(c('Female','Male')),
+  mean = c(
+    mean(stu_filtered$science[stu_filtered$gender == "Female"]),
+    mean(stu_filtered$science[stu_filtered$gender == "Male"])
+  ),
+  median = c(
+    median(stu_filtered$science[stu_filtered$gender == "Female"]),
+    median(stu_filtered$science[stu_filtered$gender == "Male"])
+  )
+)
 
-ggplot(data = stu_filtered,
-       aes(y = science)) +
-  geom_histogram(bins = 10,
-                 color = 'grey50',
-                 fill = 'grey90') +
+# Create a histogram plot of science scores by gender 
+ggplot(data = stu_filtered, aes(x = science)) +
+  geom_histogram(bins = 20, color = 'grey50', fill = 'grey90') +
   facet_wrap(~ gender) +
-  geom_hline(data = stats,
-             mapping = aes(yintercept=mean),
-             color = "red") +
-  geom_hline(data = stats,
-             mapping = aes(yintercept=median),
-             color = "blue") +
+  geom_vline(data = stats, mapping = aes(xintercept = mean), color = "red") +
+  geom_vline(data = stats, mapping = aes(xintercept = median), color = "blue") +
   annotate(
     'text',
-    x = Inf,
-    y = Inf,
-    hjust = 1,
-    vjust = 2.1,
-    label = paste("mean"),
-    color = "red"
+    x = Inf, y = Inf, hjust = 7, vjust = 1, label = paste("Mean"), color = "red", size = 3
   ) +
   annotate(
     'text',
-    x = Inf,
-    y = Inf,
-    hjust = 1,
-    vjust = 1,
-    label = paste("median"),
-    color = "blue"
+    x = Inf, y = Inf, hjust = 3, vjust = 1, label = paste("Median"), color = "blue", size= 3
   ) +
-  theme_minimal()
+  theme_minimal() +
+  theme(axis.title.x = element_blank(), plot.title=element_text(size= 12), axis.text = element_text(size= 8)) 
+
 ```
 
 #### Reading
@@ -370,42 +319,36 @@ Based on the graph below, it's noticeable that there are very slight distinction
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
-stats <- data.frame(gender = as.factor(c('Female','Male')),
-                    mean = c(mean(stu_filtered$reading[stu_filtered$gender == "Female"]),
-                             mean(stu_filtered$reading[stu_filtered$gender == "Male"])),
-                    median = c(median(stu_filtered$reading[stu_filtered$gender == "Female"]),
-                               median(stu_filtered$reading[stu_filtered$gender == "Male"])) )
-ggplot(data = stu_filtered,
-       aes(y = reading)) +
-  geom_histogram(bins = 10,
-                 color = 'grey50',
-                 fill = 'grey90') +
+# Prepare statistics on reading scores by gender
+stats <- data.frame(
+  gender = as.factor(c('Female','Male')),
+  mean = c(
+    mean(stu_filtered$reading[stu_filtered$gender == "Female"]),
+    mean(stu_filtered$reading[stu_filtered$gender == "Male"])
+  ),
+  median = c(
+    median(stu_filtered$reading[stu_filtered$gender == "Female"]),
+    median(stu_filtered$reading[stu_filtered$gender == "Male"])
+  )
+)
+
+# Create a histogram plot of reading scores by gender 
+ggplot(data = stu_filtered, aes(x = reading)) +
+  geom_histogram(bins = 20, color = 'grey50', fill = 'grey90') +
   facet_wrap(~ gender) +
-  geom_hline(data = stats,
-             mapping = aes(yintercept=mean),
-             color = "red") +
-  geom_hline(data = stats,
-             mapping = aes(yintercept=median),
-             color = "blue") +
+  geom_vline(data = stats, mapping = aes(xintercept = mean), color = "red") +
+  geom_vline(data = stats, mapping = aes(xintercept = median), color = "blue") +
   annotate(
     'text',
-    x = Inf,
-    y = Inf,
-    hjust = 1,
-    vjust = 2.1,
-    label = paste("mean"),
-    color = "red"
+    x = Inf, y = Inf, hjust = 7, vjust = 1, label = paste("Mean"), color = "red", size = 3
   ) +
   annotate(
     'text',
-    x = Inf,
-    y = Inf,
-    hjust = 1,
-    vjust = 1,
-    label = paste("median"),
-    color = "blue"
+    x = Inf, y = Inf, hjust = 3, vjust = 1, label = paste("Median"), color = "blue", size= 3
   ) +
-  theme_minimal()
+  theme_minimal() +
+  theme(axis.title.x = element_blank(), plot.title=element_text(size= 12), axis.text = element_text(size= 8)) 
+
 ```
 :::
 
@@ -415,73 +358,74 @@ Overall, can be concluded that student's performances has **SLIGHLTY VARIATION**
 
 The student that was participating in this questionnaire was from 164 different school in Singapore
 
-On the code above we are going to calculate the average of performance of student for each school across Singapore against Singapore overall average.
+On the code above we are going to calculate the average of performance of student for private and public school across Singapore.
 
-Followed by calculating the error or the differences between each school average and the average in Singapore.
+Followed by calculating the error or the differences between each school type average in Singapore.
 
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
 
-P7 <- ggplot(data= stu_filtered,
-       aes(x= school_type, y= math)) +
-  geom_violin(color = "#459395", size = 0.6, fill= "#459395", alpha = 0.4) +
-  geom_boxplot(width= 0.4, outlier.colour = "grey30", outlier.size = 2, 
+P7 <- ggplot(data = stu_filtered, aes(x = school_type, y = math)) +
+  geom_violin(color = "grey30", size = 0.6, fill = "grey30", alpha = 0.4) +
+  geom_boxplot(width = 0.4, outlier.colour = "grey30", outlier.size = 2, 
                outlier.alpha = 0.5, outlier.shape = 19) +
-  stat_summary(geom = "point",       
-               fun.y="mean",         
-               colour ="red",        
-               size=3) +  coord_cartesian(ylim = c(0,1000)) +
-  scale_color_manual(values=c("#999999", "#E69F00")) +
+  stat_summary(geom = "point", fun.y = "mean", colour = "red", size = 3) +  
+  coord_cartesian(ylim = c(0, 1000)) +
+  scale_color_manual(values = c("#999999", "#E69F00")) +
   theme_minimal() +
-  labs(title="Mathematics") +  
-  theme(axis.title.x = element_blank(),
-        axis.title.y = element_blank(),
-        plot.title=element_text(size= 12, hjust= 0.5),
-        axis.text = element_text(size= 10)) 
+  labs(title = "Mathematics") +  
+  theme(
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    plot.title = element_text(size = 12, hjust = 0.5),
+    axis.text = element_text(size = 10)
+  ) 
+
+P8 <- ggplot(data = stu_filtered, aes(x = school_type, y = reading)) +
+  geom_violin(color = "grey50", size = 0.6, fill = "grey50", alpha = 0.4) +
+  geom_boxplot(width = 0.4, outlier.colour = "grey30", outlier.size = 2, 
+               outlier.alpha = 0.5, outlier.shape = 19) +
+  stat_summary(geom = "point", fun.y = "mean", colour = "red", size = 3) +  
+  coord_cartesian(ylim = c(0, 1000)) +  
+  theme_minimal() +
+  labs(title = "Reading") + 
+  theme(
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    axis.text.y = element_blank(),
+    plot.title = element_text(size = 12, hjust = 0.5),
+    axis.text = element_text(size = 10)
+  ) 
   
-P8 <- ggplot(data= stu_filtered,
-       aes(x= school_type, y= reading)) +
-  geom_violin(color = "#EB7C69", size = 0.6, fill= "#EB7C69", alpha = 0.4) +
-  geom_boxplot(width= 0.4, outlier.colour = "grey30", outlier.size = 2, 
+P9 <- ggplot(data = stu_filtered, aes(x = school_type, y = science)) +
+  geom_violin(color = "grey70", size = 0.6, fill = "grey70", alpha = 0.4) +
+  geom_boxplot(width = 0.4, outlier.colour = "grey30", outlier.size = 2, 
                outlier.alpha = 0.5, outlier.shape = 19) +
-  stat_summary(geom = "point",       
-               fun.y="mean",         
-               colour ="red",        
-               size=3) +  coord_cartesian(ylim = c(0,1000)) +  
+  stat_summary(geom = "point", fun.y = "mean", colour = "red", size = 3) +  
+  coord_cartesian(ylim = c(0, 1000)) +  
   theme_minimal() +
-  labs(title="Reading") + 
-  theme(axis.title.x = element_blank(),
-        axis.title.y = element_blank(),
-        axis.text.y = element_blank(),
-        plot.title=element_text(size= 12, hjust= 0.5),
-        axis.text = element_text(size= 10)) 
-  
-P9 <- ggplot(data= stu_filtered,
-       aes(x= school_type, y= science)) +
-  geom_violin(color = "#FDA638", size = 0.6, fill= "#FDA638", alpha = 0.4) +
-  geom_boxplot(width= 0.4, outlier.colour = "grey30", outlier.size = 2, 
-               outlier.alpha = 0.5, outlier.shape = 19) +
-  stat_summary(geom = "point",       
-               fun.y="mean",         
-               colour ="red",        
-               size=3) +  coord_cartesian(ylim = c(0,1000)) +  
-  theme_minimal() +
-  labs(title="Science") + 
-  theme(axis.title.x = element_blank(),
-        axis.text.y = element_blank(),
-        axis.title.y = element_blank(),
-        plot.title=element_text(size= 12, hjust= 0.5),
-        axis.text = element_text(size= 10)) 
+  labs(title = "Science") + 
+  theme(
+    axis.title.x = element_blank(),
+    axis.text.y = element_blank(),
+    axis.title.y = element_blank(),
+    plot.title = element_text(size = 12, hjust = 0.5),
+    axis.text = element_text(size = 10)
+  ) 
+
 
 (P7 + P8 + P9) +
-    plot_annotation(title= "School-Based Performance Comparison ",
-                    theme = theme(plot.title=element_text(size= 15, hjust= 0.5)))
+    plot_annotation(title = "School-Based Performance Comparison",
+                    theme = theme(plot.title = element_text(size = 15, hjust = 0.5)))
+
 ```
 
-The plots above show that the differences between all study subject were similar. However, the differences between a school and the Singapore average are ranged from 0 to 220. And, the average differences is around 40. This mean that not every single school in Singapore are having the same performance with each other.
+The visualization of student performance in Mathematics, Reading, and Science highlights clear distinctions. Public schools present a wider range of scores, indicating varied performance levels among students. In contrast, private schools show narrower distributions, with scores clustering closely around the median, though they have a wider spread at the median point. Private schools also exhibit a tighter interquartile range, signaling more uniform performance among their students.
 
-On the other hand, the q3 of the box plot lay around 70 point scores. This mean that almost 75% of school in Singapore are located between 0-70 point difference to national average. On the other side, there are some school that are having almost 150 point difference either higher or lower against the national average.
+Moreover, the average and median scores slightly favor private schools, suggesting a minor academic edge. Public schools, however, have more outliers, particularly among lower scores, indicating a subgroup of students performing well below the average.
+
+These findings imply that while private schools generally maintain **CONSISTENT** performance with tendencies toward higher achievement, public schools demonstrate **GREATER DIVERSITY** in student outcomes.
 
 ### 3.4 Social Economic
 
@@ -492,57 +436,44 @@ The last factor that are going to be explored is social economic. The social eco
 summary(stu_filtered$socio_economic)
 ```
 
-The code below plot the distribution of student social economic standing in Singapore.
+The code below show the scatterplot of the distribution of student social economic standing in Singapore.
 
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
 
-ggplot(data = stu_filtered,
-       aes(y = socio_economic)) +
-  geom_violin(aes(x = 0))+
-  geom_boxplot()+
-  stat_summary(geom = 'point',
-               fun = 'mean',
-               aes(x = 0),
-               color = 'red') +
-  scale_y_continuous(NULL) +
-  scale_x_continuous('Social Economic Standing', breaks = NULL) +
-  theme_minimal()
-```
+c1 <- round(cor(stu_filtered$math, stu_filtered$socio_economic), 2)
+c2 <- round(cor(stu_filtered$science, stu_filtered$socio_economic), 2)
+c3 <- round(cor(stu_filtered$reading, stu_filtered$socio_economic), 2)
 
-```{r}
-#| code-fold: true
-#| code-summary: "Show the code"
-cor1 <- round(cor(stu_filtered$math, stu_filtered$socio_economic),2)
-cor2 <- round(cor(stu_filtered$science, stu_filtered$socio_economic),2)
-cor3 <- round(cor(stu_filtered$reading, stu_filtered$socio_economic),2)
 
-p1 <- ggplot(data = stu_filtered,
-             aes(y = math, x = socio_economic)) +
-        geom_point(size = 0.1)+
+scp1 <- ggplot(data = stu_filtered, aes(y = math, x = socio_economic)) +
+        geom_point(size = 0.1) +
         geom_smooth(method = lm) + 
-        annotate("text", x = 2.5, y = 600, label=paste0("r = ", cor1), color = 'blue') +
-        theme_minimal()
+        annotate("text", x = 2.5, y = 600, label = paste0("r = ", c1), color = 'blue') +
+        theme_minimal() +
+  theme(axis.title.x = element_blank(), plot.title=element_text(size= 12), axis.text = element_text(size= 8)) 
 
-p2 <- ggplot(data = stu_filtered,
-             aes(y = science, x = socio_economic)) +
-        geom_point(size = 0.1)+
+scp2 <- ggplot(data = stu_filtered, aes(y = science, x = socio_economic)) +
+        geom_point(size = 0.1) +
         geom_smooth(method = lm) +
-        annotate("text", x = 2.5, y = 600, label=paste0("r = ", cor2), color = 'blue') + 
-        theme_minimal()
+        annotate("text", x = 2.5, y = 600, label = paste0("r = ", c2), color = 'blue') + 
+        theme_minimal() +
+  theme(axis.title.x = element_blank(), plot.title=element_text(size= 12), axis.text = element_text(size= 8)) 
 
-p3 <- ggplot(data = stu_filtered,
-             aes(y = reading, x = socio_economic)) +
-        geom_point(size = 0.1)+
+scp3 <- ggplot(data = stu_filtered, aes(y = reading, x = socio_economic)) +
+        geom_point(size = 0.1) +
         geom_smooth(method = lm) + 
-        annotate("text", x = 2.5, y = 600, label=paste0("r = ", cor3), color = 'blue') +
-        theme_minimal()
+        annotate("text", x = 2.5, y = 600, label = paste0("r = ", c3), color = 'blue') +
+        theme_minimal() +
+  theme(axis.title.x = element_blank(), plot.title=element_text(size= 12), axis.text = element_text(size= 8)) 
 
-p1/p2/p3
+
+scp1 / scp2 / scp3
+
 ```
 
-From the three plots, it is apparent that the scatter is broadly distributed across all levels. However, when examining the correlation between social-economic status and academic performances, it is consistently around 0.44. This indicates a weak to medium positive correlation between social-economic standing and students' performances. In other words, it can be inferred that students with higher social-economic standing tend to achieve higher scores.
+From the three plots, it is apparent that the scatter is broadly distributed across all levels. However, when examining the correlation between social-economic status and academic performances, it is **consistently around 0.44**. This indicates a weak to medium positive correlation between social-economic standing and students' performances. In other words, it can be inferred that students with **higher social-economic standing tend to achieve higher scores**.
 
 # 4 Conclusion
 
@@ -552,8 +483,8 @@ These observations suggest several key points about the educational landscape in
 
 2.  **Gender Neutrality in Performance**: The lack of a significant impact of gender on student performance suggests that academic success in Singapore is not heavily influenced by gender-specific factors. This could reflect a culture of equality and fairness in education.
 
-3.  **Variations Among Schools**: The variations in performance levels among schools highlight disparities in educational resources, teaching methodologies, and perhaps even socio-cultural environments. This suggests that efforts to standardize and equalize educational opportunities across schools may be necessary.
+3.  **Variations Among Public and Private School**: The variations in performance levels between public and private schools highlight disparities in educational resources, teaching methodologies, and perhaps even social cultural environments. This suggests that efforts to standardize and equalize educational opportunities across schools may be necessary.
 
-4.  **Minor Role of Socio-economic Standing**: The relatively minor influence of socio-economic standing on academic performance indicates that Singapore's education system may effectively mitigate the effects of socio-economic disparities. This could be attributed to policies aimed at providing equal access to education and support for students from diverse socio-economic backgrounds.
+4.  **Minor Role of Social Economic Standing**: The relatively minor influence of social economic standing on academic performance indicates that Singapore's education system may effectively mitigate the effects of social economic disparities. This could be attributed to policies aimed at providing equal access to education and support for students from diverse social economic backgrounds.
 
 Overall, these observations underscore the complex interplay of various factors shaping educational outcomes in Singapore, highlighting the need for continued efforts to address disparities and ensure equitable access to quality education for all students.
