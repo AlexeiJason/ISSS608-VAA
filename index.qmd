@@ -1,5 +1,5 @@
 ---
-title: "ISSS608-VAA"
+title: "Visual Analytics and Applications"
 author: "Alexei Jason"
 date: "January 8, 2024"
 date-modified: "last-modified"
