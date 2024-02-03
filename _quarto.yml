@@ -31,8 +31,30 @@ website:
             href: "Hands-on_EX/Hands-on_EX04/Hands-on_Ex04c.html"
           - text: "Hands-on Exercise 4d"        
             href: "Hands-on_EX/Hands-on_EX04/Hands-on_Ex04d.html"
-          - text: "Hands-on Exercise 5"        
-            href: "Hands-on_EX/Hands-on_EX05/Hands-on_Ex05.html"
+          - text: "Hands-on Exercise 5a"        
+            href: "Hands-on_EX/Hands-on_EX05/Hands-on_Ex05a.html"
+          - text: "Hands-on Exercise 5b"        
+            href: "Hands-on_EX/Hands-on_EX05/Hands-on_Ex05b.html"
+          - text: "Hands-on Exercise 5c"        
+            href: "Hands-on_EX/Hands-on_EX05/Hands-on_Ex05c.html"
+          - text: "Hands-on Exercise 5d"        
+            href: "Hands-on_EX/Hands-on_EX05/Hands-on_Ex05d.html"
+          - text: "Hands-on Exercise 5e"        
+            href: "Hands-on_EX/Hands-on_EX05/Hands-on_Ex05e.html"
+          - text: "Hands-on Exercise 6"        
+            href: "Hands-on_EX/Hands-on_EX06/Hands-on_Ex06.html"
+          - text: "Hands-on Exercise 7a"        
+            href: "Hands-on_EX/Hands-on_EX07/Hands-on_Ex07a.html"
+          - text: "Hands-on Exercise 7b"        
+            href: "Hands-on_EX/Hands-on_EX07/Hands-on_Ex07b.html"
+          - text: "Hands-on Exercise 7c"        
+            href: "Hands-on_EX/Hands-on_EX07/Hands-on_Ex07c.html"
+          - text: "Hands-on Exercise 8"        
+            href: "Hands-on_EX/Hands-on_EX08/Hands-on_Ex08.html"
+          - text: "Hands-on Exercise 9"        
+            href: "Hands-on_EX/Hands-on_EX09/Hands-on_Ex09.html"
+          - text: "Hands-on Exercise 10"        
+            href: "Hands-on_EX/Hands-on_EX10/Hands-on_Ex10.html"
             
       - text: "{{< fa house-chimney-window >}} In-class Exercises"
         menu: 
@@ -60,8 +82,7 @@ website:
           - text: "Take-home Exercise 5"        
             href: "Take-home_EX/Take-home_EX05/Take-home_Ex05.html"
       - text: "{{< fa house-chimney-window >}} Projects"
-        menu: 
-          - text: "Project1"
+        
       
     right:
       - icon: linkedin
