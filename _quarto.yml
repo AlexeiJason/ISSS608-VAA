@@ -13,7 +13,7 @@ website:
     collapse-below: lg
     search: true
     left: 
-      - text: "{{< fa house-chimney-window >}} Hands-on Exercises"
+      - text: "Hands-on Exercises"
         menu: 
           - text: "Hands-on Exercise 1"        
             href: "Hands-on_EX/Hands-on_EX01/Hands-on_Ex01.html"
@@ -56,7 +56,7 @@ website:
           - text: "Hands-on Exercise 10"        
             href: "Hands-on_EX/Hands-on_EX10/Hands-on_Ex10.html"
             
-      - text: "{{< fa house-chimney-window >}} In-class Exercises"
+      - text: "In-class Exercises"
         menu: 
           - text: "In-class Exercise 1"        
             href: "In-class_EX/In-class_EX01/In-class_Ex01.html"
@@ -69,7 +69,7 @@ website:
           - text: "In-class Exercise 5"        
             href: "In-class_EX/In-class_EX05/In-class_Ex05.html"
           
-      - text: "{{< fa house-chimney-window >}} Take-home Exercises"
+      - text: "Take-home Exercises"
         menu: 
           - text: "Take-home Exercise 1"        
             href: "Take-home_EX/Take-home_EX01/Take-home_Ex01.html"
@@ -81,7 +81,7 @@ website:
             href: "Take-home_EX/Take-home_EX04/Take-home_Ex04.html"
           - text: "Take-home Exercise 5"        
             href: "Take-home_EX/Take-home_EX05/Take-home_Ex05.html"
-      - text: "{{< fa house-chimney-window >}} Projects"
+      - text: "Projects"
         
       
     right:
