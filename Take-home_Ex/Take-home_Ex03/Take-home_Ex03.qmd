@@ -1,0 +1,11 @@
+---
+title: "Take-home Exercise 3: Be Weatherwise or Otherwise"
+author: "Alexei Jason"
+date: "February 6, 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+---
