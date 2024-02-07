@@ -719,5 +719,19 @@
     "title": "Take-home Exercise 1: Investigating Student Performance with Data Visualisations",
     "section": "2.5 Handling Missing Values",
     "text": "2.5 Handling Missing Values\nNow, we are going through our data and getting rid of rows that are missing some info. The main reason for doing this is because later on, we want to make our variables easier to understand. If there are blank spots in our data columns, it might mess up the way we simplify things if a value accidentally ends up in a spot that was supposed to be blank.\nWe use the is.na() to spot those gaps in our data, and then sum() helps us count how many times these missing values pop up. It’s all part of making our data more user-friendly.\n\nsum(is.na(stu_filtered$school_ID))\n\n[1] 0\n\n\n\nsum(is.na(stu_filtered$gender))\n\n[1] 0\n\n\n\nsum(is.na(stu_filtered$math))\n\n[1] 0\n\n\n\nsum(is.na(stu_filtered$science))\n\n[1] 0\n\n\n\nsum(is.na(stu_filtered$reading))\n\n[1] 0\n\n\n\nsum(is.na(stu_filtered$socio_economic))\n\n[1] 47\n\n\nThe variable with missing values is: socio_economic.\nNow, we are going to drop variable which contains missing values using ‘drop_na()’\n\nstu_filtered &lt;- drop_na(stu_filtered,socio_economic)\n\nstu_filtered\n\n# A tibble: 6,559 × 6\n   school_type gender  math science reading socio_economic\n   &lt;fct&gt;       &lt;fct&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;          &lt;dbl&gt;\n 1 Public      Female  605.    640.    667.         0.184 \n 2 Public      Male    690.    672.    628.         0.826 \n 3 Public      Male    677.    660.    583.        -1.04  \n 4 Public      Male    401.    344.    361.        -0.961 \n 5 Public      Female  436.    479.    476.         0.0856\n 6 Public      Female  518.    476.    431.         0.127 \n 7 Public      Male    708.    647.    704.        -0.0154\n 8 Public      Male    620.    573.    524.         1.16  \n 9 Public      Female  736.    691.    713.         1.47  \n10 Public      Male    555.    548.    505.         0.520 \n# ℹ 6,549 more rows\n\n\nThe output shows that 6,559 observations are retained."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Lexei's Projects",
+    "section": "",
+    "text": "Hey there! Welcome to my Visual Analytics and Applications playground! 🚀 Dive into our projects where data gets a makeover, turning into exciting stories and insights. Hurray! 🎉✨\n\n\n\n\n\n\n\nMy Latest Works:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTake-home Exercise 3: Be Weatherwise or Otherwise\n\n\n\n\n\n\nAlexei Jason\n\n\nFeb 6, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 5e: Treemap Visualisation with R\n\n\n\n\n\n\nAlexei Jason\n\n\nFeb 3, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 5d: Visual Multivariate Analysis with Parallel Coordinates Plot\n\n\n\n\n\n\nAlexei Jason\n\n\nFeb 3, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 5c: Visual Multivariate Analysis with Heatmap\n\n\n\n\n\n\nAlexei Jason\n\n\nFeb 3, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 5b: Visual Correlation Analysis\n\n\n\n\n\n\nAlexei Jason\n\n\nFeb 3, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 5a: Creating Ternary Plot with R\n\n\n\n\n\n\nAlexei Jason\n\n\nFeb 3, 2024\n\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "index.html#my-latest-works",
+    "href": "index.html#my-latest-works",
+    "title": "Lexei's Projects",
+    "section": "My Latest Works:",
+    "text": "My Latest Works:"
   }
 ]

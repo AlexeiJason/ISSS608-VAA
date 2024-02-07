@@ -1,0 +1,86 @@
+/*-- scss:defaults --*/
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+// Colors
+$sky-blue: #52B2BF;
+$dark-blue: #3A3B60;
+$cream: #F8F3E6;
+$gray: #64605f;
+$light-gray: #dfdfeb;
+$blue: #4d5887;
+$teal: #93c7c2;
+$orange: #f5bc5f;
+$pink: #f53b5d;
+$black: #000000;
+
+// Base document colors
+$navbar-bg: $sky-blue; // navbar
+$navbar-fg: $black; // navbar foreground elements
+$navbar-hl: $teal; // highlight color when hovering over navbar links
+$body-bg: $cream; // page background 
+$body-color: $black; // page text 
+$footer-bg: $cream; // footer 
+$link-color: $blue; // hyperlinks 
+
+// fonts
+$font-family: 'IBM Plex Mono', monospace;
+
+//toc 
+$toc-font-size: 11px;
+$toc-active-border: $teal;
+
+// callouts
+$callout-color-note: $blue;
+$callout-color-tip: $teal;
+$callout-color-caution: $orange;
+$callout-color-important: $pink;
+
+
+/*-- scss:rules --*/
+
+.title {
+  margin-top: 2em !important;
+  margin-bottom: 1.5em;
+  font-size: 28px;
+  font-weight: 500;
+}
+
+body {
+  font-size: 14px;
+  font-family: $font-family;
+}
+
+.left {
+  text-align: left;
+  padding-left: 1em;
+}
+.right {
+  text-align: right;
+  padding-right: 1em;
+}
+
+
+/* Heading 1 */
+h1 {
+  font-size: 24px;
+  font-variant: normal; 
+  font-weight: 500; 
+}
+
+/* Heading 2 */
+h2 {
+  font-size: 21px;
+  font-variant: normal; 
+  font-weight: 500; 
+}
+
+/* Heading 3 */
+h3 {
+  font-size: 18px;
+  font-variant: italic; 
+  font-weight: 500; 
+}
+
+.callout.callout-style-default .callout-body {
+  font-size: 0.75rem;
+}

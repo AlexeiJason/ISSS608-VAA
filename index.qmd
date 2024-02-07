@@ -1,12 +1,21 @@
 ---
-title: "Visual Analytics and Applications"
-author: "Alexei Jason"
-date: "January 8, 2024"
-date-modified: "last-modified"
-backgroundcoloR: WHITE;
-execute: 
-  eval: true
-  echo: true
-  warning: false
-editor: visual
+listing:
+  type: grid
+  max-items: 6
+  contents:
+    - "Hands-on_Ex/*/*.qmd"
+    - "Take-home_Ex/*/*.qmd"
+    - "In-class_Ex/*/*.qmd"
+  sort:
+      - "date-modified desc"
+toc: false
+border: true
 ---
+
+###### Hey there!  Welcome to my **Visual Analytics and Applications** playground! 🚀 Dive into our projects where data gets a makeover, turning into exciting stories and insights. Hurray! 🎉✨
+
+![](Images/RoboHurraycrop.gif){fig-align="center"}
+
+#### **My Latest Works:**
+
+#### 

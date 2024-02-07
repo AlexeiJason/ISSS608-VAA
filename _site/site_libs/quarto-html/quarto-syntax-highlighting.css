@@ -1,35 +1,33 @@
 /* quarto syntax highlight colors */
 :root {
-  --quarto-hl-al-color: #bf0303;
-  --quarto-hl-an-color: #ca60ca;
-  --quarto-hl-at-color: #0057ae;
-  --quarto-hl-bn-color: #b08000;
-  --quarto-hl-bu-color: #644a9b;
-  --quarto-hl-ch-color: #924c9d;
-  --quarto-hl-co-color: #898887;
-  --quarto-hl-cv-color: #0095ff;
-  --quarto-hl-cn-color: #aa5500;
-  --quarto-hl-cf-color: #1f1c1b;
-  --quarto-hl-dt-color: #0057ae;
-  --quarto-hl-dv-color: #b08000;
-  --quarto-hl-do-color: #607880;
-  --quarto-hl-er-color: #bf0303;
-  --quarto-hl-ex-color: #0095ff;
-  --quarto-hl-fl-color: #b08000;
-  --quarto-hl-fu-color: #644a9b;
-  --quarto-hl-im-color: #ff5500;
-  --quarto-hl-in-color: #b08000;
-  --quarto-hl-kw-color: #1f1c1b;
-  --quarto-hl-op-color: #1f1c1b;
-  --quarto-hl-ot-color: #006e28;
-  --quarto-hl-pp-color: #006e28;
-  --quarto-hl-re-color: #0057ae;
-  --quarto-hl-sc-color: #3daee9;
-  --quarto-hl-ss-color: #ff5500;
-  --quarto-hl-st-color: #bf0303;
-  --quarto-hl-va-color: #0057ae;
-  --quarto-hl-vs-color: #bf0303;
-  --quarto-hl-wa-color: #bf0303;
+  --quarto-hl-al-color: #ef2929;
+  --quarto-hl-an-color: #8f5902;
+  --quarto-hl-at-color: #204a87;
+  --quarto-hl-bn-color: #0000cf;
+  --quarto-hl-ch-color: #4e9a06;
+  --quarto-hl-co-color: #8f5902;
+  --quarto-hl-cv-color: #8f5902;
+  --quarto-hl-cn-color: #8f5902;
+  --quarto-hl-cf-color: #204a87;
+  --quarto-hl-dt-color: #204a87;
+  --quarto-hl-dv-color: #0000cf;
+  --quarto-hl-do-color: #8f5902;
+  --quarto-hl-er-color: #a40000;
+  --quarto-hl-ex-color: inherit;
+  --quarto-hl-fl-color: #0000cf;
+  --quarto-hl-fu-color: #204a87;
+  --quarto-hl-im-color: inherit;
+  --quarto-hl-in-color: #8f5902;
+  --quarto-hl-kw-color: #204a87;
+  --quarto-hl-op-color: #ce5c00;
+  --quarto-hl-ot-color: #8f5902;
+  --quarto-hl-pp-color: #8f5902;
+  --quarto-hl-sc-color: #ce5c00;
+  --quarto-hl-ss-color: #4e9a06;
+  --quarto-hl-st-color: #4e9a06;
+  --quarto-hl-va-color: #000000;
+  --quarto-hl-vs-color: #4e9a06;
+  --quarto-hl-wa-color: #8f5902;
 }
 
 /* other quarto variables */
@@ -38,182 +36,152 @@
 }
 
 code span.al {
-  color: #bf0303;
-  background-color: #f7e6e6;
-  font-weight: bold;
+  color: #ef2929;
   font-style: inherit;
 }
 
 code span.an {
-  color: #ca60ca;
-  font-style: inherit;
+  color: #8f5902;
+  font-weight: bold;
+  font-style: italic;
 }
 
 code span.at {
-  color: #0057ae;
+  color: #204a87;
   font-style: inherit;
 }
 
 code span.bn {
-  color: #b08000;
-  font-style: inherit;
-}
-
-code span.bu {
-  color: #644a9b;
-  font-weight: bold;
+  color: #0000cf;
   font-style: inherit;
 }
 
 code span.ch {
-  color: #924c9d;
+  color: #4e9a06;
   font-style: inherit;
 }
 
 code span.co {
-  color: #898887;
-  font-style: inherit;
+  color: #8f5902;
+  font-style: italic;
 }
 
 code span.cv {
-  color: #0095ff;
-  font-style: inherit;
+  color: #8f5902;
+  font-weight: bold;
+  font-style: italic;
 }
 
 code span.cn {
-  color: #aa5500;
+  color: #8f5902;
   font-style: inherit;
 }
 
 code span.cf {
-  color: #1f1c1b;
+  color: #204a87;
   font-weight: bold;
   font-style: inherit;
 }
 
 code span.dt {
-  color: #0057ae;
+  color: #204a87;
   font-style: inherit;
 }
 
 code span.dv {
-  color: #b08000;
+  color: #0000cf;
   font-style: inherit;
 }
 
 code span.do {
-  color: #607880;
-  font-style: inherit;
+  color: #8f5902;
+  font-weight: bold;
+  font-style: italic;
 }
 
 code span.er {
-  color: #bf0303;
+  color: #a40000;
+  font-weight: bold;
   font-style: inherit;
-  text-decoration: underline;
 }
 
 code span.ex {
-  color: #0095ff;
-  font-weight: bold;
   font-style: inherit;
 }
 
 code span.fl {
-  color: #b08000;
+  color: #0000cf;
   font-style: inherit;
 }
 
 code span.fu {
-  color: #644a9b;
-  font-style: inherit;
-}
-
-code span.im {
-  color: #ff5500;
-  font-style: inherit;
-}
-
-code span.in {
-  color: #b08000;
-  font-style: inherit;
-}
-
-code span.kw {
-  color: #1f1c1b;
+  color: #204a87;
   font-weight: bold;
   font-style: inherit;
 }
 
-pre > code.sourceCode > span {
-  color: #1f1c1b;
+code span.im {
   font-style: inherit;
 }
 
-code span {
-  color: #1f1c1b;
-  font-style: inherit;
+code span.in {
+  color: #8f5902;
+  font-weight: bold;
+  font-style: italic;
 }
 
-code.sourceCode > span {
-  color: #1f1c1b;
-  font-style: inherit;
-}
-
-div.sourceCode,
-div.sourceCode pre.sourceCode {
-  color: #1f1c1b;
+code span.kw {
+  color: #204a87;
+  font-weight: bold;
   font-style: inherit;
 }
 
 code span.op {
-  color: #1f1c1b;
+  color: #ce5c00;
+  font-weight: bold;
   font-style: inherit;
 }
 
 code span.ot {
-  color: #006e28;
+  color: #8f5902;
   font-style: inherit;
 }
 
 code span.pp {
-  color: #006e28;
-  font-style: inherit;
-}
-
-code span.re {
-  color: #0057ae;
-  background-color: #e0e9f8;
-  font-style: inherit;
+  color: #8f5902;
+  font-style: italic;
 }
 
 code span.sc {
-  color: #3daee9;
+  color: #ce5c00;
+  font-weight: bold;
   font-style: inherit;
 }
 
 code span.ss {
-  color: #ff5500;
+  color: #4e9a06;
   font-style: inherit;
 }
 
 code span.st {
-  color: #bf0303;
+  color: #4e9a06;
   font-style: inherit;
 }
 
 code span.va {
-  color: #0057ae;
+  color: #000000;
   font-style: inherit;
 }
 
 code span.vs {
-  color: #bf0303;
+  color: #4e9a06;
   font-style: inherit;
 }
 
 code span.wa {
-  color: #bf0303;
-  font-style: inherit;
+  color: #8f5902;
+  font-weight: bold;
+  font-style: italic;
 }
 
 .prevent-inlining {

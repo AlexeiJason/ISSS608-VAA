@@ -3,16 +3,22 @@ project:
 
 website:
   title: "Lexei's Projects"
-  image: "Images/name_logo.png"
-  favicon: "Images/logo.png"
+  image: "Images/Robo.gif"
+  favicon: "Images/Robo.gif"
   page-navigation: true
   
   navbar:
-    logo: "Images/name_logo.png"
+    logo: "Images/Robo.gif"
     title: false
     collapse-below: lg
     search: true
     left: 
+      - text: "Home"
+        menu: 
+          - text: "Home"
+            href: index.qmd
+          - text: "Welcome Abroad!"
+            href: about.html
       - text: "Hands-on Exercises"
         menu: 
           - text: "Hands-on Exercise 1"        
@@ -91,20 +97,22 @@ website:
       - icon: github
         href: https://github.com/AlexeiJason
         aria-label: Github
+      - icon: diagram-3-fill
+        href: https://public.tableau.com/app/profile/alexei.jason/vizzes
+        aria-label: Tableau
        
 
 format:
   html:
     toc: true
-    theme:
+    theme: 
       - cosmo
-      - theme.scss
-    highlight-style: kate
+      - custom.css
+    highlight-style: tango
     code-copy: hover
     code-overflow: wrap
     css: styles.css
-  
- 
+    
 
 editor: visual
 
