@@ -726,5 +726,12 @@
     "title": "Take-home Exercise 2: DataVis Makeover",
     "section": "5.3 Final Design",
     "text": "5.3 Final Design\n\n\nShow the code\ntheme_setting &lt;- theme(\n  plot.title = element_text(size = 9),\n  plot.subtitle = element_text(size = 8),\n  plot.caption = element_text(size = 8),\n  axis.text.x = element_text(angle = 45, hjust = 1)) # Adjust for better readability\n\n\n# Adjust the alpha and size in geom_point for transparency and smaller points\np1 &lt;- ggplot(data=stu_filtered, aes(x= socio_economic, y=math, color = \"Math\")) +\n  geom_point(alpha = 0.5, size = 0.5) +\n  geom_smooth(method=lm, linewidth=0.5, color=\"black\") +  \n  coord_cartesian(xlim=c(-3,3), ylim=c(250,850)) +\n  ggtitle(\"Math vs. ESCS\") +  \n  theme_setting +\n  scale_color_manual(values = c(\"Math\" = \"#DE5D83\"))\n\np2 &lt;- ggplot(data=stu_filtered, aes(x= socio_economic, y= reading, color = \"Reading\")) +\n  geom_point(alpha = 0.5, size = 0.5) +\n  geom_smooth(method=lm, linewidth=0.5, color=\"black\") +  \n  coord_cartesian(xlim=c(-3,3), ylim=c(250,850)) +\n  ggtitle(\"Reading vs. ESCS\") +\n  theme_setting +\n  scale_color_manual(values = c(\"Reading\" = \"#3DED97\"))\n\np3 &lt;- ggplot(data=stu_filtered, aes(x= socio_economic, y= science, color = \"Science\")) +\n  geom_point(alpha = 0.5, size = 0.5) +\n  geom_smooth(method=lm, linewidth=0.5, color=\"black\") +  \n  coord_cartesian(xlim=c(-3,3), ylim=c(250,850)) +\n  ggtitle(\"Science vs. ESCS\") +\n  theme_setting +\n  scale_color_manual(values = c(\"Science\" = \"#FFE338\"))\n\n\np1 / p2 / p3"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "Welcome Abroad!",
+    "section": "",
+    "text": "👋 Hi, I’m @AlexeiJason\n👀 I’m interested in comprehending the complexities of Data Analytics\n🌱 I’m currently learning how to create effective R visualizations\n💞️ I’m looking to collaborate on more projects!\n📫 How to reach me alexeijason@gmail.com\n⚡ Fun fact: The 17th-century English statistician John Graunt pioneered statistical analysis of demographic data, laying the groundwork for modern data analysis and epidemiology."
   }
 ]

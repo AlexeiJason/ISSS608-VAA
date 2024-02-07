@@ -1,3 +1,19 @@
 ---
-title: "Welcome to My Site!"
+title: "Welcome Abroad!"
 ---
+
+![](images/output-onlinegiftools.gif){fig-align="center" width="200"}
+
+-   👋 Hi, I’m \@AlexeiJason
+
+-   👀 I’m interested in comprehending the complexities of Data Analytics
+
+-   🌱 I’m currently learning how to create effective R visualizations
+
+-   💞️ I’m looking to collaborate on more projects!
+
+-   📫 How to reach me [alexeijason\@gmail.com](mailto:alexeijason@gmail.com)
+
+-   ⚡ Fun fact: The 17th-century English statistician John Graunt pioneered statistical analysis of demographic data, laying the groundwork for modern data analysis and epidemiology.
+
+![](images/output-onlinegiftools (1).gif){fig-align="center" width="200"}
