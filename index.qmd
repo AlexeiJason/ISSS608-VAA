@@ -9,6 +9,7 @@ listing:
   sort: 
     - "date desc"
 toc: false
+back-to-top-navigation: true
 ---
 
 ###### Hey there! Welcome to my **Visual Analytics and Applications** playground! 🚀 Dive into our projects where data gets a makeover, turning into exciting stories and insights. Hurray! 🎉✨
