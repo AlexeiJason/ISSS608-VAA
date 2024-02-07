@@ -88,6 +88,9 @@ website:
           - text: "Take-home Exercise 5"        
             href: "Take-home_EX/Take-home_EX05/Take-home_Ex05.html"
       - text: "Projects"
+        menu:
+          - text: "Coming Soon!"
+            href: index.qmd
         
       
     right:

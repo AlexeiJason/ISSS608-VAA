@@ -3,20 +3,17 @@
 
 // Colors
 $sky-blue: #52B2BF;
-$dark-blue: #3A3B60;
 $cream: #F8F3E6;
-$gray: #64605f;
-$light-gray: #dfdfeb;
 $blue: #4d5887;
-$teal: #93c7c2;
-$orange: #f5bc5f;
+$orange: #EC9706;
 $pink: #f53b5d;
 $black: #000000;
+$purple: #7852A9;
 
 // Base document colors
 $navbar-bg: $sky-blue; // navbar
 $navbar-fg: $black; // navbar foreground elements
-$navbar-hl: $teal; // highlight color when hovering over navbar links
+$navbar-hl: $orange; // highlight color when hovering over navbar links
 $body-bg: $cream; // page background 
 $body-color: $black; // page text 
 $footer-bg: $cream; // footer 
@@ -27,11 +24,11 @@ $font-family: 'IBM Plex Mono', monospace;
 
 //toc 
 $toc-font-size: 11px;
-$toc-active-border: $teal;
+$toc-active-border: $orange;
 
 // callouts
 $callout-color-note: $blue;
-$callout-color-tip: $teal;
+$callout-color-tip: $purple;
 $callout-color-caution: $orange;
 $callout-color-important: $pink;
 
