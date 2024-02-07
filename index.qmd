@@ -3,16 +3,15 @@ listing:
   type: grid
   max-items: 6
   contents:
-    - "Hands-on_Ex/*/*.qmd"
     - "Take-home_Ex/*/*.qmd"
     - "In-class_Ex/*/*.qmd"
-  sort:
-      - "date-modified desc"
+    - "Hands-on_Ex/*/*.qmd"
+  sort: 
+    - "date desc"
 toc: false
-border: true
 ---
 
-###### Hey there!  Welcome to my **Visual Analytics and Applications** playground! 🚀 Dive into our projects where data gets a makeover, turning into exciting stories and insights. Hurray! 🎉✨
+###### Hey there! Welcome to my **Visual Analytics and Applications** playground! 🚀 Dive into our projects where data gets a makeover, turning into exciting stories and insights. Hurray! 🎉✨
 
 ![](Images/RoboHurraycrop.gif){fig-align="center"}
 
