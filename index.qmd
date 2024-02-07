@@ -1,6 +1,6 @@
 ---
 listing:
-  type: grid
+  type: default
   max-items: 6
   contents:
     - "Take-home_Ex/*/*.qmd"
