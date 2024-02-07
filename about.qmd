@@ -2,7 +2,7 @@
 title: "Welcome Abroad!"
 ---
 
-![](images/output-onlinegiftools.gif){fig-align="center" width="200"}
+![](images/output-onlinegiftools.gif){fig-align="center" width="300"}
 
 -   👋 Hi, I’m \@AlexeiJason
 
@@ -15,5 +15,3 @@ title: "Welcome Abroad!"
 -   📫 How to reach me [alexeijason\@gmail.com](mailto:alexeijason@gmail.com)
 
 -   ⚡ Fun fact: The 17th-century English statistician John Graunt pioneered statistical analysis of demographic data, laying the groundwork for modern data analysis and epidemiology.
-
-![](images/output-onlinegiftools (1).gif){fig-align="center" width="200"}
