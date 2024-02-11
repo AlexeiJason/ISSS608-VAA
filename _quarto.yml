@@ -82,11 +82,10 @@ website:
           - text: "Take-home Exercise 2"        
             href: "Take-home_EX/Take-home_EX02/Take-home_Ex02.html"
           - text: "Take-home Exercise 3"        
-            href: "Take-home_EX/Take-home_EX03/Take-home_Ex03.html"
+            href: index.qmd
           - text: "Take-home Exercise 4"        
             href: "Take-home_EX/Take-home_EX04/Take-home_Ex04.html"
-          - text: "Take-home Exercise 5"        
-            href: "Take-home_EX/Take-home_EX05/Take-home_Ex05.html"
+      
       - text: "Projects"
         menu:
           - text: "Coming Soon!"

@@ -9,3 +9,46 @@ execute:
   warning: false
 editor: visual
 ---
+
+# Overview 
+
+The primary objective of this project is to apply visual analytics techniques to validate climate change projections regarding daily mean temperature fluctuations. Specifically, we aim to explore the projected temperature increases, which range from 1.4 to 4.6 degrees Celsius, as indicated in an office report from [National Climate Change Secretariat Singapore.](https://www.nccs.gov.sg/singapores-climate-action/impact-of-climate-change-in-singapore/#:~:text=The%20long%2Dterm%20effects%20of,the%20end%20of%20the%20century.)
+
+[![Source: Ministry of Sustainability and the Environment](images/info-1-01.jpg){width="600"}](https://www.nccs.gov.sg/singapores-climate-action/impact-of-climate-change-in-singapore/#:~:text=The%20long%2Dterm%20effects%20of,the%20end%20of%20the%20century.)
+
+We seek to employ newly acquired methods of visual interactivity and uncertainty visualization to assess and validate the claims presented in the report.
+
+# Data Preparation
+
+## Importing packages
+
+In this take home exercise we are going to utilise several package
+
+1.  Tidyverse (to wrangle and plot our data)
+2.  Haven (to read our dataset from sas data type)
+3.  Patchwork (to plot multiple plot in the same figure)
+
+```{r} 
+pacman::p_load(tidyverse, haven, patchwork, dplyr)
+```
+
+## Importing dataset
+
+```{r}
+
+
+# Set the locale with the encoding parameter
+my_locale <- locale(encoding = "latin1")
+
+# Read the CSV file using the specified locale
+file1 <- read_csv("data/DAILYDATA_S24_198305.csv", locale = my_locale)
+file2 <- read_csv("data/DAILYDATA_S24_199305.csv", locale = my_locale)
+file3 <- read_csv("data/DAILYDATA_S24_200305.csv", locale = my_locale)
+file4 <- read_csv("data/DAILYDATA_S24_201305.csv", locale = my_locale)
+file5 <- read_csv("data/DAILYDATA_S24_202305.csv", locale = my_locale)
+
+combined_data <- bind_rows(file1, file2, file3, file4, file5)
+
+glimpse(combined_data)
+```
+

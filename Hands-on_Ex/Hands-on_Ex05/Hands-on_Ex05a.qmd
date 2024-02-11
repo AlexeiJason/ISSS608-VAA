@@ -48,7 +48,7 @@ For the purpose of this hands-on exercise, the [Singapore Residents by Planning 
 
 ### Importing Data
 
-To important *respopagsex2000to2018_tidy.csv* into R, ***read_csv()*** function of **readr** package will be used.
+To import *respopagsex2000to2018_tidy.csv* into R, ***read_csv()*** function of **readr** package will be used.
 
 ```{r, echo=TRUE}
 #Reading the data into R environment
