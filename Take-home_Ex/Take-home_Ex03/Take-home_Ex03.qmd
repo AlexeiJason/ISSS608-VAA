@@ -10,7 +10,7 @@ execute:
 editor: visual
 ---
 
-# Overview 
+# Overview
 
 The primary objective of this project is to apply visual analytics techniques to validate climate change projections regarding daily mean temperature fluctuations. Specifically, we aim to explore the projected temperature increases, which range from 1.4 to 4.6 degrees Celsius, as indicated in an office report from [National Climate Change Secretariat Singapore.](https://www.nccs.gov.sg/singapores-climate-action/impact-of-climate-change-in-singapore/#:~:text=The%20long%2Dterm%20effects%20of,the%20end%20of%20the%20century.)
 
@@ -28,7 +28,7 @@ In this take home exercise we are going to utilise several package
 2.  Haven (to read our dataset from sas data type)
 3.  Patchwork (to plot multiple plot in the same figure)
 
-```{r} 
+```{r}
 pacman::p_load(tidyverse, haven, patchwork, dplyr)
 ```
 
@@ -51,4 +51,3 @@ combined_data <- bind_rows(file1, file2, file3, file4, file5)
 
 glimpse(combined_data)
 ```
-
