@@ -368,7 +368,7 @@ From the box plot, observing that the year 2003 has a longer box compared to the
 
 From the trend line analysis, it's evident that from 1983 to 1993, the daily mean temperature trend remained relatively stable, with no significant increase or decrease observed. However, between 1993 and 2003, there was a noticeable upward trend in the daily mean temperature. Subsequently, from 2003 to 2013, the trend line depicted a decrease in the daily mean temperature. However, from 2013 to 2023, there was a clear upward trend, culminating in **the highest mean temperature** observed among the past years.
 
-The positioning of the box plot for 2023 at the highest level, along with 10 days of daily mean temperature exceeding the highest recorded daily mean temperature in 1983, and with the monthly mean temperature ranging from 28.3 °C in 1983 to 29.5 °C in 2023, strongly indicates a significant increase in temperature during 2023 compared to 1983.
+The positioning of the box plot for 2023 at the highest level, along with 10 days of daily mean temperature exceeding the highest recorded daily mean temperature in 1983, and with the monthly mean temperature ranging from 28.3 °C in 1983 to 29.5 °C in 2023, strongly indicates **a significant increase** in temperature during 2023 compared to 1983.
 :::
 
 # Conclusion
