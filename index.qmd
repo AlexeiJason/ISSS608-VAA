@@ -5,6 +5,7 @@ listing:
   contents:
     - "In-class_Ex/*/*.qmd"
     - "Hands-on_Ex/*/*.qmd"
+    - "Take-home_Ex/*/*.qmd"
   sort: 
     - "date desc"
 toc: false
