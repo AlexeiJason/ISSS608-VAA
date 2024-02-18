@@ -206,7 +206,7 @@ Then we can simply group the count by hour and wkday and plot it, since we know 
 
 **Challenge:** Building multiple heatmaps for the top four countries with the highest number of attacks.
 
-![](/Images/heatmap multi.png)
+![](/Images/heatmap%20multi.png)
 
 Plotting Multiple Calendar Heatmaps
 
@@ -270,7 +270,7 @@ ggplot(top4_attacks,
 
 In this section, you will learn how to plot a cycle plot showing the time-series patterns and trend of visitor arrivals from Vietnam programmatically by using ggplot2 functions.
 
-![](/Images/cycle plot.png)
+![](/Images/cycle%20plot.png)
 
 ### Step 1: Data Import
 

@@ -1,5 +1,5 @@
 ---
-title: "Hands-on_Ex03"
+title: "Hands-on Exercise 3a: Programming Interactive Data Visualisation with R"
 author: "Alexei Jason"
 date: "January 23, 2024"
 date-modified: "last-modified"
