@@ -1,0 +1,11 @@
+---
+title: "Hands-on Exercise 7c: Analytical Mapping"
+author: "Alexei Jason"
+date: "February 22, 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+---

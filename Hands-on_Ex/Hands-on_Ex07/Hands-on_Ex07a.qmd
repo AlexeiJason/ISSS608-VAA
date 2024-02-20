@@ -1,0 +1,11 @@
+---
+title: "Hands-on Exercise 7a: Choropleth Mapping with R"
+author: "Alexei Jason"
+date: "February 20, 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+---
