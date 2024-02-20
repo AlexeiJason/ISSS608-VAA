@@ -2,7 +2,7 @@
 title: "Take-home Exercise 3: Be Weatherwise or Otherwise"
 author: "Alexei Jason"
 date: "February 6, 2024"
-date-modified: "last-modified"
+date-modified: "February 18,2024"
 execute: 
   eval: true
   echo: true
