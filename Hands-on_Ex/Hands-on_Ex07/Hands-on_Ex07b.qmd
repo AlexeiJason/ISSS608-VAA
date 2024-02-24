@@ -12,6 +12,8 @@ editor: visual
 
 # Overview
 
+![](images/Screenshot 2024-02-24 133523.png)
+
 Proportional symbol maps (also known as graduate symbol maps) are a class of maps that use the visual variable of size to represent differences in the magnitude of a discrete, abruptly changing phenomenon, e.g. counts of people. Like choropleth maps, you can create classed or unclassed versions of these maps. The classed ones are known as range-graded or graduated symbols, and the unclassed are called proportional symbols, where the area of the symbols are proportional to the values of the attribute being mapped. In this hands-on exercise, you will learn how to create a proportional symbol map showing the number of wins by Singapore Pools' outlets using an R package called **tmap**.
 
 ## Learning outcome
