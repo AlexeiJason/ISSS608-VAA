@@ -66,14 +66,9 @@ website:
         menu: 
           - text: "In-class Exercise 1"        
             href: "In-class_EX/In-class_EX01/In-class_Ex01.html"
-          - text: "In-class Exercise 2"        
-            href: "In-class_EX/In-class_EX02/In-class_Ex02.html"
-          - text: "In-class Exercise 3"        
-            href: "In-class_EX/In-class_EX03/In-class_Ex03.html"
-          - text: "In-class Exercise 4"     
-            href: "In-class_EX/In-class_EX04/In-class_Ex04.html"
-          - text: "In-class Exercise 5"        
-            href: "In-class_EX/In-class_EX05/In-class_Ex05.html"
+          - text: "In-class Exercise 6"        
+            href: "In-class_EX/In-class_EX02/In-class_Ex06.html"
+       
           
       - text: "Take-home Exercises"
         menu: 

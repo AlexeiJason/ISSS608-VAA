@@ -984,7 +984,7 @@
     "href": "index.html",
     "title": "Lexei's Projects",
     "section": "",
-    "text": "Hey there! Welcome to my Visual Analytics and Applications playground! 🚀 Dive into our projects where data gets a makeover, turning into exciting stories and insights. Hurray! 🎉✨\n\n\n\n\n\n\n\nMy Latest Works:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 7c: Analytical Mapping\n\n\n\n\n\n\n\n\n\n\n\nFeb 22, 2024\n\n\nAlexei Jason\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 7b: Visualising Geospatial Point Data\n\n\n\n\n\n\n\n\n\n\n\nFeb 21, 2024\n\n\nAlexei Jason\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 7a: Choropleth Mapping with R\n\n\n\n\n\n\n\n\n\n\n\nFeb 20, 2024\n\n\nAlexei Jason\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 6: Visualising and Analysing Time-oriented Data\n\n\n\n\n\n\n\n\n\n\n\nFeb 15, 2024\n\n\nAlexei Jason\n\n\n\n\n\n\n\n\n\n\n\n\nTake-home Exercise 3: Be Weatherwise or Otherwise\n\n\n\n\n\n\n\n\n\n\n\nFeb 6, 2024\n\n\nAlexei Jason\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 5a: Creating Ternary Plot with R\n\n\n\n\n\n\n\n\n\n\n\nFeb 3, 2024\n\n\nAlexei Jason\n\n\n\n\n\n\nNo matching items"
+    "text": "Hey there! Welcome to my Visual Analytics and Applications playground! 🚀 Dive into our projects where data gets a makeover, turning into exciting stories and insights. Hurray! 🎉✨\n\n\n\n\n\n\n\nMy Latest Works:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nIn-class Exercise 6: Horizon Plot\n\n\n\n\n\n\n\n\n\n\n\nFeb 24, 2024\n\n\nAlexei Jason\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 7c: Analytical Mapping\n\n\n\n\n\n\n\n\n\n\n\nFeb 22, 2024\n\n\nAlexei Jason\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 7b: Visualising Geospatial Point Data\n\n\n\n\n\n\n\n\n\n\n\nFeb 21, 2024\n\n\nAlexei Jason\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 7a: Choropleth Mapping with R\n\n\n\n\n\n\n\n\n\n\n\nFeb 20, 2024\n\n\nAlexei Jason\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 6: Visualising and Analysing Time-oriented Data\n\n\n\n\n\n\n\n\n\n\n\nFeb 15, 2024\n\n\nAlexei Jason\n\n\n\n\n\n\n\n\n\n\n\n\nTake-home Exercise 3: Be Weatherwise or Otherwise\n\n\n\n\n\n\n\n\n\n\n\nFeb 6, 2024\n\n\nAlexei Jason\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html",
@@ -1195,5 +1195,12 @@
     "title": "Hands-on Exercise 7b: Visualising Geospatial Point Data",
     "section": "Data wrangling",
     "text": "Data wrangling\n\ndplyr\nTidy data\ntidyr: Easily Tidy Data with ‘spread()’ and ‘gather()’ Functions"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex06/In-class_Ex06.html",
+    "href": "In-class_Ex/In-class_Ex06/In-class_Ex06.html",
+    "title": "In-class Exercise 6: Horizon Plot",
+    "section": "",
+    "text": "pacman::p_load(ggHoriPlot, ggthemes, tidyverse)\n\n\naverp &lt;- read_csv(\"data/AVERP.csv\") %&gt;%\n  mutate(`Date` = dmy(`Date`))\n\n\naverp %&gt;% \n  filter(Date &gt;= \"2018-01-01\") %&gt;%\n  ggplot() +\n  geom_horizon(aes(x = Date, y=Values), \n               origin = \"midpoint\", \n               horizonscale = 6)+\n  facet_grid(`Consumer Items`~.) +\n    theme_few() +\n  scale_fill_hcl(palette = 'RdBu') +\n  theme(panel.spacing.y=unit(0, \"lines\"), strip.text.y = element_text(\n    size = 5, angle = 0, hjust = 0),\n    legend.position = 'none',\n    axis.text.y = element_blank(),\n    axis.text.x = element_text(size=7),\n    axis.title.y = element_blank(),\n    axis.title.x = element_blank(),\n    axis.ticks.y = element_blank(),\n    panel.border = element_blank()\n    ) +\n    scale_x_date(expand=c(0,0), date_breaks = \"3 month\", date_labels = \"%b%y\") +\n  ggtitle('Average Retail Prices of Selected Consumer Items (Jan 2018 to Dec 2022)')"
   }
 ]
