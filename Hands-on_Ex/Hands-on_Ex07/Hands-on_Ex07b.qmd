@@ -12,7 +12,7 @@ editor: visual
 
 # Overview
 
-![](images/Screenshot 2024-02-24 133523.png)
+![](images/Screenshot%202024-02-24%20133523.png)
 
 Proportional symbol maps (also known as graduate symbol maps) are a class of maps that use the visual variable of size to represent differences in the magnitude of a discrete, abruptly changing phenomenon, e.g. counts of people. Like choropleth maps, you can create classed or unclassed versions of these maps. The classed ones are known as range-graded or graduated symbols, and the unclassed are called proportional symbols, where the area of the symbols are proportional to the values of the attribute being mapped. In this hands-on exercise, you will learn how to create a proportional symbol map showing the number of wins by Singapore Pools' outlets using an R package called **tmap**.
 
@@ -40,7 +40,7 @@ The data set use for this hands-on exercise is called *SGPools_svy21*. The data 
 
 Figure below shows the first 15 records of SGPools_svy21.csv. It consists of seven columns. The XCOORD and YCOORD columns are the x-coordinates and y-coordinates of SingPools outlets and branches. They are in [Singapore SVY21 Projected Coordinates System](https://www.sla.gov.sg/sirent/CoordinateSystems.aspx).
 
-![](images/image1 (1).jpg)
+![](images/image1%20(1).jpg)
 
 ## Data Import and Preparation
 
@@ -77,7 +77,7 @@ Things to learn from the arguments above:
 
 Figure below shows the data table of *sgpools_sf*. Notice that a new column called geometry has been added into the data frame.
 
-![](images/image2 (1).jpg)
+![](images/image2%20(1).jpg)
 
 You can display the basic information of the newly created sgpools_sf by using the code chunk below.
 
