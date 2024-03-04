@@ -1,0 +1,11 @@
+---
+title: "Hands-on Exercise 8: Modelling, Visualising and Analysing Network Data with R"
+author: "Alexei Jason"
+date: "March 5, 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+---
