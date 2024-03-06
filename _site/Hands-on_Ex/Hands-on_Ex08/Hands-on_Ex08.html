@@ -325,6 +325,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#wrangling-attributes" id="toc-wrangling-attributes" class="nav-link" data-scroll-target="#wrangling-attributes">Wrangling attributes</a></li>
   <li><a href="#reviewing-the-revised-edges-file" id="toc-reviewing-the-revised-edges-file" class="nav-link" data-scroll-target="#reviewing-the-revised-edges-file">Reviewing the revised edges file</a></li>
   </ul></li>
+  <li><a href="#creating-network-objects-using-tidygraph" id="toc-creating-network-objects-using-tidygraph" class="nav-link" data-scroll-target="#creating-network-objects-using-tidygraph">Creating network objects using <strong>tidygraph</strong></a>
+  <ul class="collapse">
+  <li><a href="#the-tbl_graph-object" id="toc-the-tbl_graph-object" class="nav-link" data-scroll-target="#the-tbl_graph-object">The <strong>tbl_graph</strong> object</a></li>
+  <li><a href="#the-dplyr-verbs-in-tidygraph" id="toc-the-dplyr-verbs-in-tidygraph" class="nav-link" data-scroll-target="#the-dplyr-verbs-in-tidygraph">The <strong>dplyr</strong> verbs in <strong>tidygraph</strong></a></li>
+  <li><a href="#using-tbl_graph-to-build-tidygraph-data-model." id="toc-using-tbl_graph-to-build-tidygraph-data-model." class="nav-link" data-scroll-target="#using-tbl_graph-to-build-tidygraph-data-model.">Using <code>tbl_graph()</code> to build tidygraph data model.</a></li>
+  <li><a href="#reviewing-the-output-tidygraphs-graph-object" id="toc-reviewing-the-output-tidygraphs-graph-object" class="nav-link" data-scroll-target="#reviewing-the-output-tidygraphs-graph-object">Reviewing the output tidygraph’s graph object</a></li>
+  <li><a href="#reviewing-the-output-tidygraphs-graph-object-1" id="toc-reviewing-the-output-tidygraphs-graph-object-1" class="nav-link" data-scroll-target="#reviewing-the-output-tidygraphs-graph-object-1">Reviewing the output tidygraph’s graph object</a></li>
+  <li><a href="#changing-the-active-object" id="toc-changing-the-active-object" class="nav-link" data-scroll-target="#changing-the-active-object">Changing the active object</a></li>
+  </ul></li>
   <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"></a></li>
   </ul>
 </nav>
@@ -454,7 +463,7 @@ Warning
 <section id="wrangling-time" class="level3">
 <h3 class="anchored" data-anchor-id="wrangling-time">Wrangling time</h3>
 <p>The code chunk below will be used to perform the changes.</p>
-<p><code>kah GAStech_edges &lt;- GAStech_edges %&gt;%   mutate(SendDate = dmy(SentDate)) %&gt;%   mutate(Weekday = wday(SentDate,                         label = TRUE,                         abbr = FALSE))}</code></p>
+<p><code>ayk GAStech_edges &lt;- GAStech_edges %&gt;%   mutate(SendDate = dmy(SentDate)) %&gt;%   mutate(Weekday = wday(SentDate,                         label = TRUE,                         abbr = FALSE))}</code></p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -484,7 +493,7 @@ Things to learn from the code chunk above
 <p>A close examination of <em>GAStech_edges</em> data.frame reveals that it consists of individual e-mail flow records. This is not very useful for visualisation.</p>
 <p>In view of this, we will aggregate the individual by date, senders, receivers, main subject and day of the week.</p>
 <p>The code chunk:</p>
-<p><code>kah GAStech_edges_aggregated &lt;- GAStech_edges %&gt;%   filter(MainSubject == "Work related") %&gt;%   group_by(source, target, Weekday) %&gt;%     summarise(Weight = n()) %&gt;%   filter(source!=target) %&gt;%   filter(Weight &gt; 1) %&gt;%   ungroup()}</code></p>
+<p><code>ayk GAStech_edges_aggregated &lt;- GAStech_edges %&gt;%   filter(MainSubject == "Work related") %&gt;%   group_by(source, target, Weekday) %&gt;%     summarise(Weight = n()) %&gt;%   filter(source!=target) %&gt;%   filter(Weight &gt; 1) %&gt;%   ungroup()}</code></p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -507,6 +516,68 @@ Things to learn from the code chunk above:
 <h3 class="anchored" data-anchor-id="reviewing-the-revised-edges-file">Reviewing the revised edges file</h3>
 <p>Table below shows the data structure of the reformatted <em>GAStech_edges</em> data frame</p>
 <pre class="{r} #| echo: false glimpse(GAStech_edges_aggregated)}"><code></code></pre>
+</section>
+</section>
+<section id="creating-network-objects-using-tidygraph" class="level2">
+<h2 class="anchored" data-anchor-id="creating-network-objects-using-tidygraph">Creating network objects using <strong>tidygraph</strong></h2>
+<p>In this section, you will learn how to create a graph data model by using <strong>tidygraph</strong> package. It provides a tidy API for graph/network manipulation. While network data itself is not tidy, it can be envisioned as two tidy tables, one for node data and one for edge data. tidygraph provides a way to switch between the two tables and provides dplyr verbs for manipulating them. Furthermore it provides access to a lot of graph algorithms with return values that facilitate their use in a tidy workflow.</p>
+<p>Before getting started, you are advised to read these two articles:</p>
+<ul>
+<li><a href="https://www.data-imaginist.com/2017/introducing-tidygraph/">Introducing tidygraph</a></li>
+<li><a href="https://www.data-imaginist.com/2018/tidygraph-1-1-a-tidy-hope/">tidygraph 1.1 - A tidy hope</a></li>
+</ul>
+<section id="the-tbl_graph-object" class="level3">
+<h3 class="anchored" data-anchor-id="the-tbl_graph-object">The <strong>tbl_graph</strong> object</h3>
+<p>Two functions of <strong>tidygraph</strong> package can be used to create network objects, they are:</p>
+<ul>
+<li><p><a href="https://tidygraph.data-imaginist.com/reference/tbl_graph.html"><code>tbl_graph()</code></a> creates a <strong>tbl_graph</strong> network object from nodes and edges data.</p></li>
+<li><p><a href="https://tidygraph.data-imaginist.com/reference/tbl_graph.html"><code>as_tbl_graph()</code></a> converts network data and objects to a <strong>tbl_graph</strong> network. Below are network data and objects supported by <code>as_tbl_graph()</code></p>
+<ul>
+<li>a node data.frame and an edge data.frame,</li>
+<li>data.frame, list, matrix from base,</li>
+<li>igraph from igraph,</li>
+<li>network from network,</li>
+<li>dendrogram and hclust from stats,</li>
+<li>Node from data.tree,</li>
+<li>phylo and evonet from ape, and</li>
+<li>graphNEL, graphAM, graphBAM from graph (in Bioconductor).</li>
+</ul></li>
+</ul>
+</section>
+<section id="the-dplyr-verbs-in-tidygraph" class="level3">
+<h3 class="anchored" data-anchor-id="the-dplyr-verbs-in-tidygraph">The <strong>dplyr</strong> verbs in <strong>tidygraph</strong></h3>
+<ul>
+<li><em>activate()</em> verb from <strong>tidygraph</strong> serves as a switch between tibbles for nodes and edges. All dplyr verbs applied to <strong>tbl_graph</strong> object are applied to the active tibble.</li>
+</ul>
+<p><img src="images/image3.jpg" class="img-fluid"></p>
+<ul>
+<li>In the above the <em>.N()</em> function is used to gain access to the node data while manipulating the edge data. Similarly <em>.E()</em> will give you the edge data and <em>.G()</em> will give you the <strong>tbl_graph</strong> object itself.</li>
+</ul>
+</section>
+<section id="using-tbl_graph-to-build-tidygraph-data-model." class="level3">
+<h3 class="anchored" data-anchor-id="using-tbl_graph-to-build-tidygraph-data-model.">Using <code>tbl_graph()</code> to build tidygraph data model.</h3>
+<p>In this section, you will use <code>tbl_graph()</code> of <strong>tinygraph</strong> package to build an tidygraph’s network graph data.frame.</p>
+<p>Before typing the codes, you are recommended to review to reference guide of <a href="https://tidygraph.data-imaginist.com/reference/tbl_graph.html"><code>tbl_graph()</code></a></p>
+<p><code>ayk GAStech_graph &lt;- tbl_graph(nodes = GAStech_nodes,                            edges = GAStech_edges_aggregated,                             directed = TRUE)}</code></p>
+</section>
+<section id="reviewing-the-output-tidygraphs-graph-object" class="level3">
+<h3 class="anchored" data-anchor-id="reviewing-the-output-tidygraphs-graph-object">Reviewing the output tidygraph’s graph object</h3>
+<pre class="{r} GAStech_graph}"><code></code></pre>
+</section>
+<section id="reviewing-the-output-tidygraphs-graph-object-1" class="level3">
+<h3 class="anchored" data-anchor-id="reviewing-the-output-tidygraphs-graph-object-1">Reviewing the output tidygraph’s graph object</h3>
+<ul>
+<li>The output above reveals that <em>GAStech_graph</em> is a tbl_graph object with 54 nodes and 4541 edges.</li>
+<li>The command also prints the first six rows of “Node Data” and the first three of “Edge Data”.</li>
+<li>It states that the Node Data is <strong>active</strong>. The notion of an active tibble within a tbl_graph object makes it possible to manipulate the data in one tibble at a time.</li>
+</ul>
+</section>
+<section id="changing-the-active-object" class="level3">
+<h3 class="anchored" data-anchor-id="changing-the-active-object">Changing the active object</h3>
+<p>The nodes tibble data frame is activated by default, but you can change which tibble data frame is active with the <em>activate()</em> function. Thus, if we wanted to rearrange the rows in the edges tibble to list those with the highest “weight” first, we could use <em>activate()</em> and then <em>arrange()</em>.</p>
+<p>For example,</p>
+<pre class="{r} #| eval: false GAStech_graph %>%   activate(edges) %>%   arrange(desc(Weight))}"><code></code></pre>
+<p>Visit the reference guide of <a href="https://tidygraph.data-imaginist.com/reference/activate.html"><em>activate()</em></a> to find out more about the function.</p>
 </section>
 </section>
 <section id="section" class="level2">
