@@ -1,0 +1,114 @@
+---
+title: "WHR2010-2019"
+---
+
+## Importing Packages
+
+```{r}
+pacman::p_load(skimr,tidyverse, patchwork, readr, dplyr, plotly, ggridges, ggiraph, ggthemes,corrplot,GGally)
+```
+
+## Importing Data
+
+```{r}
+WHRdata = read.csv ("data/WHRdataAllYear.csv")
+CountryRegion = read.csv("data/continents2.csv")
+head(WHRdata)
+```
+
+```{r}
+WHRdata=plyr::rename(WHRdata, replace = c( 
+  "Country.name" = "Country",
+  "year"="Year",
+  "Life.Ladder"="Happiness.Score",
+  "Log.GDP.per.capita"="Log.GDP.per.Capita",
+  "Social.support"="Social.Support",
+  "Healthy.life.expectancy.at.birth"="Healthy.Life.Expectancy",
+  "Freedom.to.make.life.choices"="Freedom",
+  "Generosity",
+  "Perceptions.of.corruption" = "Perceptions.of.Corruption",
+  "Positive.affect" = "Positive.Affect",
+  "Negative.affect" = "Negative.Affect" ))
+colnames(WHRdata)
+```
+
+```{r}
+CountryRegion=plyr::rename(CountryRegion, replace = c( 
+ "name" = "Country",
+ "region"="Region",
+ "sub-region" = "Sub.Region"))
+
+CountryRegion = subset(CountryRegion, select = c(Country,Region,sub.region))
+
+colnames(CountryRegion)
+```
+
+```{r}
+#WHRdata1 <- merge(WHRdata, CountryRegion, by = "Country", all.x = TRUE)
+
+# Display the first few rows of the merged dataset to verify
+#WHRdata1
+
+
+```
+
+```{r}
+str(WHRdata)
+```
+
+```{r}
+colSums(is.na(WHRdata))
+```
+
+```{r}
+WHRdata$Log.GDP.per.Capita <- ave(WHRdata$Log.GDP.per.Capita, WHRdata$Country, FUN = function(x) {
+  ifelse(is.na(x), median(x, na.rm = TRUE), x)
+})
+
+WHRdata$Social.Support <- ave(WHRdata$Social.Support, WHRdata$Country, FUN = function(x) {
+  ifelse(is.na(x), median(x, na.rm = TRUE), x)
+})
+
+WHRdata$Healthy.Life.Expectancy <- ave(WHRdata$Healthy.Life.Expectancy, WHRdata$Country, FUN = function(x) {
+  ifelse(is.na(x), median(x, na.rm = TRUE), x)
+})
+
+WHRdata$Freedom <- ave(WHRdata$Freedom, WHRdata$Country, FUN = function(x) {
+  ifelse(is.na(x), median(x, na.rm = TRUE), x)
+})
+
+WHRdata$Generosity <- ave(WHRdata$Generosity, WHRdata$Country, FUN = function(x) {
+  ifelse(is.na(x), median(x, na.rm = TRUE), x)
+})
+
+WHRdata$Perceptions.of.Corruption <- ave(WHRdata$Perceptions.of.Corruption, WHRdata$Country, FUN = function(x) {
+  ifelse(is.na(x), median(x, na.rm = TRUE), x)
+})
+
+WHRdata$Positive.Affect <- ave(WHRdata$Positive.Affect, WHRdata$Country, FUN = function(x) {
+  ifelse(is.na(x), median(x, na.rm = TRUE), x)
+})
+
+WHRdata$Negative.Affect <- ave(WHRdata$Negative.Affect, WHRdata$Country, FUN = function(x) {
+  ifelse(is.na(x), median(x, na.rm = TRUE), x)
+})
+
+colSums(is.na(WHRdata))
+```
+
+```{r}
+rows_with_missing <- which(rowSums(is.na(WHRdata)) > 0)
+
+# Show the rows containing missing values
+WHRdata[rows_with_missing, ]
+```
+
+```{r}
+WHRdata_clean <- na.omit(WHRdata)
+
+colSums(is.na(WHRdata_clean))
+```
+
+```{r}
+aggregate(WHRdata_clean$Country, by=list(WHRdata_clean$Year), FUN=length)
+```

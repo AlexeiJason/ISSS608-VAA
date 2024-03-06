@@ -103,6 +103,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="../../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="../../site_libs/vis-9.1.0/vis-network.min.css" rel="stylesheet">
+<script src="../../site_libs/vis-9.1.0/vis-network.min.js"></script>
+<script src="../../site_libs/visNetwork-binding-2.1.2/visNetwork.js"></script>
 
 
 <link rel="stylesheet" href="../../styles.css">
@@ -398,7 +402,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">March 6, 2024</p>
+      <p class="date-modified">March 7, 2024</p>
     </div>
   </div>
     
@@ -494,7 +498,13 @@ Warning
 <section id="wrangling-time" class="level3">
 <h3 class="anchored" data-anchor-id="wrangling-time">Wrangling time</h3>
 <p>The code chunk below will be used to perform the changes.</p>
-<p><code>bqc GAStech_edges &lt;- GAStech_edges %&gt;%   mutate(SendDate = dmy(SentDate)) %&gt;%   mutate(Weekday = wday(SentDate,                         label = TRUE,                         abbr = FALSE))}</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>GAStech_edges <span class="ot">&lt;-</span> GAStech_edges <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SendDate =</span> <span class="fu">dmy</span>(SentDate)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Weekday =</span> <span class="fu">wday</span>(SentDate,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">label =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">abbr =</span> <span class="cn">FALSE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -517,14 +527,37 @@ Things to learn from the code chunk above
 <section id="reviewing-the-revised-date-fields" class="level3">
 <h3 class="anchored" data-anchor-id="reviewing-the-revised-date-fields">Reviewing the revised date fields</h3>
 <p>Table below shows the data structure of the reformatted <em>GAStech_edges</em> data frame</p>
-<pre class="{r} #| echo: false glimpse(GAStech_edges)}"><code></code></pre>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 9,063
+Columns: 10
+$ source      &lt;dbl&gt; 43, 43, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 26, 26, 26…
+$ target      &lt;dbl&gt; 41, 40, 51, 52, 53, 45, 44, 46, 48, 49, 47, 54, 27, 28, 29…
+$ SentDate    &lt;chr&gt; "6/1/2014", "6/1/2014", "6/1/2014", "6/1/2014", "6/1/2014"…
+$ SentTime    &lt;time&gt; 08:39:00, 08:39:00, 08:58:00, 08:58:00, 08:58:00, 08:58:0…
+$ Subject     &lt;chr&gt; "GT-SeismicProcessorPro Bug Report", "GT-SeismicProcessorP…
+$ MainSubject &lt;chr&gt; "Work related", "Work related", "Work related", "Work rela…
+$ sourceLabel &lt;chr&gt; "Sven.Flecha", "Sven.Flecha", "Kanon.Herrero", "Kanon.Herr…
+$ targetLabel &lt;chr&gt; "Isak.Baza", "Lucas.Alcazar", "Felix.Resumir", "Hideki.Coc…
+$ SendDate    &lt;date&gt; 2014-01-06, 2014-01-06, 2014-01-06, 2014-01-06, 2014-01-0…
+$ Weekday     &lt;ord&gt; Friday, Friday, Friday, Friday, Friday, Friday, Friday, Fr…</code></pre>
+</div>
+</div>
 </section>
 <section id="wrangling-attributes" class="level3">
 <h3 class="anchored" data-anchor-id="wrangling-attributes">Wrangling attributes</h3>
 <p>A close examination of <em>GAStech_edges</em> data.frame reveals that it consists of individual e-mail flow records. This is not very useful for visualisation.</p>
 <p>In view of this, we will aggregate the individual by date, senders, receivers, main subject and day of the week.</p>
 <p>The code chunk:</p>
-<p><code>bqc GAStech_edges_aggregated &lt;- GAStech_edges %&gt;%   filter(MainSubject == "Work related") %&gt;%   group_by(source, target, Weekday) %&gt;%     summarise(Weight = n()) %&gt;%   filter(source!=target) %&gt;%   filter(Weight &gt; 1) %&gt;%   ungroup()}</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>GAStech_edges_aggregated <span class="ot">&lt;-</span> GAStech_edges <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(MainSubject <span class="sc">==</span> <span class="st">"Work related"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(source, target, Weekday) <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">Weight =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(source<span class="sc">!=</span>target) <span class="sc">%&gt;%</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Weight <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -546,7 +579,16 @@ Things to learn from the code chunk above:
 <section id="reviewing-the-revised-edges-file" class="level3">
 <h3 class="anchored" data-anchor-id="reviewing-the-revised-edges-file">Reviewing the revised edges file</h3>
 <p>Table below shows the data structure of the reformatted <em>GAStech_edges</em> data frame</p>
-<pre class="{r} #| echo: false glimpse(GAStech_edges_aggregated)}"><code></code></pre>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 1,372
+Columns: 4
+$ source  &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…
+$ target  &lt;dbl&gt; 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6,…
+$ Weekday &lt;ord&gt; Sunday, Monday, Tuesday, Wednesday, Friday, Sunday, Monday, Tu…
+$ Weight  &lt;int&gt; 5, 2, 3, 4, 6, 5, 2, 3, 4, 6, 5, 2, 3, 4, 6, 5, 2, 3, 4, 6, 5,…</code></pre>
+</div>
+</div>
 </section>
 </section>
 <section id="creating-network-objects-using-tidygraph" class="level2">
@@ -589,11 +631,45 @@ Things to learn from the code chunk above:
 <h3 class="anchored" data-anchor-id="using-tbl_graph-to-build-tidygraph-data-model.">Using <code>tbl_graph()</code> to build tidygraph data model.</h3>
 <p>In this section, you will use <code>tbl_graph()</code> of <strong>tinygraph</strong> package to build an tidygraph’s network graph data.frame.</p>
 <p>Before typing the codes, you are recommended to review to reference guide of <a href="https://tidygraph.data-imaginist.com/reference/tbl_graph.html"><code>tbl_graph()</code></a></p>
-<p><code>bqc GAStech_graph &lt;- tbl_graph(nodes = GAStech_nodes,                            edges = GAStech_edges_aggregated,                             directed = TRUE)}</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>GAStech_graph <span class="ot">&lt;-</span> <span class="fu">tbl_graph</span>(<span class="at">nodes =</span> GAStech_nodes,</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">edges =</span> GAStech_edges_aggregated, </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">directed =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="reviewing-the-output-tidygraphs-graph-object" class="level3">
 <h3 class="anchored" data-anchor-id="reviewing-the-output-tidygraphs-graph-object">Reviewing the output tidygraph’s graph object</h3>
-<pre class="{r} GAStech_graph}"><code></code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>GAStech_graph</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tbl_graph: 54 nodes and 1372 edges
+#
+# A directed multigraph with 1 component
+#
+# Node Data: 54 × 4 (active)
+      id label               Department     Title                               
+   &lt;dbl&gt; &lt;chr&gt;               &lt;chr&gt;          &lt;chr&gt;                               
+ 1     1 Mat.Bramar          Administration Assistant to CEO                    
+ 2     2 Anda.Ribera         Administration Assistant to CFO                    
+ 3     3 Rachel.Pantanal     Administration Assistant to CIO                    
+ 4     4 Linda.Lagos         Administration Assistant to COO                    
+ 5     5 Ruscella.Mies.Haber Administration Assistant to Engineering Group Mana…
+ 6     6 Carla.Forluniau     Administration Assistant to IT Group Manager       
+ 7     7 Cornelia.Lais       Administration Assistant to Security Group Manager 
+ 8    44 Kanon.Herrero       Security       Badging Office                      
+ 9    45 Varja.Lagos         Security       Badging Office                      
+10    46 Stenig.Fusil        Security       Building Control                    
+# ℹ 44 more rows
+#
+# Edge Data: 1,372 × 4
+   from    to Weekday Weight
+  &lt;int&gt; &lt;int&gt; &lt;ord&gt;    &lt;int&gt;
+1     1     2 Sunday       5
+2     1     2 Monday       2
+3     1     2 Tuesday      3
+# ℹ 1,369 more rows</code></pre>
+</div>
+</div>
 </section>
 <section id="reviewing-the-output-tidygraphs-graph-object-1" class="level3">
 <h3 class="anchored" data-anchor-id="reviewing-the-output-tidygraphs-graph-object-1">Reviewing the output tidygraph’s graph object</h3>
@@ -607,7 +683,11 @@ Things to learn from the code chunk above:
 <h3 class="anchored" data-anchor-id="changing-the-active-object">Changing the active object</h3>
 <p>The nodes tibble data frame is activated by default, but you can change which tibble data frame is active with the <em>activate()</em> function. Thus, if we wanted to rearrange the rows in the edges tibble to list those with the highest “weight” first, we could use <em>activate()</em> and then <em>arrange()</em>.</p>
 <p>For example,</p>
-<pre class="{r} #| eval: false GAStech_graph %>%   activate(edges) %>%   arrange(desc(Weight))}"><code></code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>GAStech_graph <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">activate</span>(edges) <span class="sc">%&gt;%</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Weight))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>Visit the reference guide of <a href="https://tidygraph.data-imaginist.com/reference/activate.html"><em>activate()</em></a> to find out more about the function.</p>
 </section>
 </section>
@@ -624,7 +704,18 @@ Things to learn from the code chunk above:
 <section id="plotting-a-basic-network-graph" class="level3">
 <h3 class="anchored" data-anchor-id="plotting-a-basic-network-graph">Plotting a basic network graph</h3>
 <p>The code chunk below uses <a href="https://ggraph.data-imaginist.com/reference/ggraph.html"><em>ggraph()</em></a>, <a href="https://ggraph.data-imaginist.com/reference/geom_edge_link.html"><em>geom-edge_link()</em></a> and <a href="https://ggraph.data-imaginist.com/reference/geom_node_point.html"><em>geom_node_point()</em></a> to plot a network graph by using <em>GAStech_graph</em>. Before your get started, it is advisable to read their respective reference guide at least once.</p>
-<pre class="{r} ggraph(GAStech_graph) +   geom_edge_link() +   geom_node_point()}"><code></code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggraph</span>(GAStech_graph) <span class="sc">+</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>() <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex08_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -644,7 +735,20 @@ Things to learn from the code chunk above:
 <section id="changing-the-default-network-graph-theme" class="level3">
 <h3 class="anchored" data-anchor-id="changing-the-default-network-graph-theme">Changing the default network graph theme</h3>
 <p>In this section, you will use <a href="https://ggraph.data-imaginist.com/reference/theme_graph.html"><em>theme_graph()</em></a> to remove the x and y axes. Before your get started, it is advisable to read it’s reference guide at least once.</p>
-<pre class="{r} g <- ggraph(GAStech_graph) +    geom_edge_link(aes()) +   geom_node_point(aes())  g + theme_graph()}"><code></code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggraph</span>(GAStech_graph) <span class="sc">+</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>()) <span class="sc">+</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>())</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>g <span class="sc">+</span> <span class="fu">theme_graph</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex08_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -665,7 +769,21 @@ Things to learn from the code chunk above:
 <section id="changing-the-coloring-of-the-plot" class="level3">
 <h3 class="anchored" data-anchor-id="changing-the-coloring-of-the-plot">Changing the coloring of the plot</h3>
 <p>Furthermore, <code>theme_graph()</code> makes it easy to change the coloring of the plot.</p>
-<p><code>bqc g &lt;- ggraph(GAStech_graph) +    geom_edge_link(aes(colour = 'grey50')) +   geom_node_point(aes(colour = 'grey40'))  g + theme_graph(background = 'grey10',                 text_colour = 'white')}</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggraph</span>(GAStech_graph) <span class="sc">+</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>(<span class="at">colour =</span> <span class="st">'grey50'</span>)) <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">colour =</span> <span class="st">'grey40'</span>))</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>g <span class="sc">+</span> <span class="fu">theme_graph</span>(<span class="at">background =</span> <span class="st">'grey10'</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">text_colour =</span> <span class="st">'white'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex08_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="working-with-ggraphs-layouts" class="level3">
 <h3 class="anchored" data-anchor-id="working-with-ggraphs-layouts">Working with <strong>ggraph</strong>’s layouts</h3>
@@ -676,7 +794,21 @@ Things to learn from the code chunk above:
 <section id="fruchterman-and-reingold-layout" class="level3">
 <h3 class="anchored" data-anchor-id="fruchterman-and-reingold-layout">Fruchterman and Reingold layout</h3>
 <p>The code chunks below will be used to plot the network graph using Fruchterman and Reingold layout.</p>
-<p><code>bqc g &lt;- ggraph(GAStech_graph,              layout = "fr") +   geom_edge_link(aes()) +   geom_node_point(aes())  g + theme_graph()}</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggraph</span>(GAStech_graph, </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">layout =</span> <span class="st">"fr"</span>) <span class="sc">+</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>()) <span class="sc">+</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>())</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>g <span class="sc">+</span> <span class="fu">theme_graph</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex08_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>Thing to learn from the code chunk above:</p>
 <ul>
 <li><em>layout</em> argument is used to define the layout to be used.</li>
@@ -685,7 +817,22 @@ Things to learn from the code chunk above:
 <section id="modifying-network-nodes" class="level3">
 <h3 class="anchored" data-anchor-id="modifying-network-nodes">Modifying network nodes</h3>
 <p>In this section, you will colour each node by referring to their respective departments.</p>
-<p><code>bqc g &lt;- ggraph(GAStech_graph,              layout = "nicely") +    geom_edge_link(aes()) +   geom_node_point(aes(colour = Department,                        size = 3))  g + theme_graph()}</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggraph</span>(GAStech_graph, </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">layout =</span> <span class="st">"nicely"</span>) <span class="sc">+</span> </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>()) <span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">colour =</span> Department, </span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">size =</span> <span class="dv">3</span>))</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>g <span class="sc">+</span> <span class="fu">theme_graph</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex08_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>Things to learn from the code chunks above:</p>
 <ul>
 <li><em>geom_node_point</em> is equivalent in functionality to <em>geo_point</em> of <strong>ggplot2</strong>. It allows for simple plotting of nodes in different shapes, colours and sizes. In the codes chnuks above colour and size are used.</li>
@@ -694,7 +841,24 @@ Things to learn from the code chunk above:
 <section id="modifying-edges" class="level3">
 <h3 class="anchored" data-anchor-id="modifying-edges">Modifying edges</h3>
 <p>In the code chunk below, the thickness of the edges will be mapped with the <em>Weight</em> variable.</p>
-<p><code>bqc g &lt;- ggraph(GAStech_graph,              layout = "nicely") +   geom_edge_link(aes(width=Weight),                   alpha=0.2) +   scale_edge_width(range = c(0.1, 5)) +   geom_node_point(aes(colour = Department),                    size = 3)  g + theme_graph()}</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggraph</span>(GAStech_graph, </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">layout =</span> <span class="st">"nicely"</span>) <span class="sc">+</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>(<span class="at">width=</span>Weight), </span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">alpha=</span><span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_edge_width</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="dv">5</span>)) <span class="sc">+</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">colour =</span> Department), </span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>                  <span class="at">size =</span> <span class="dv">3</span>)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>g <span class="sc">+</span> <span class="fu">theme_graph</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex08_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>Things to learn from the code chunks above:</p>
 <ul>
 <li><em>geom_edge_link</em> draws edges in the simplest way - as straight lines between the start and end nodes. But, it can do more that that. In the example above, argument <em>width</em> is used to map the width of the line in proportional to the Weight attribute and argument alpha is used to introduce opacity on the line.</li>
@@ -713,22 +877,105 @@ Things to learn from the code chunk above:
 <section id="working-with-facet_edges" class="level3">
 <h3 class="anchored" data-anchor-id="working-with-facet_edges">Working with <em>facet_edges()</em></h3>
 <p>In the code chunk below, <a href="https://ggraph.data-imaginist.com/reference/facet_edges.html"><em>facet_edges()</em></a> is used. Before getting started, it is advisable for you to read it’s reference guide at least once.</p>
-<p><code>bqc set_graph_style()  g &lt;- ggraph(GAStech_graph,              layout = "nicely") +    geom_edge_link(aes(width=Weight),                   alpha=0.2) +   scale_edge_width(range = c(0.1, 5)) +   geom_node_point(aes(colour = Department),                    size = 2)  g + facet_edges(~Weekday)}</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set_graph_style</span>()</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggraph</span>(GAStech_graph, </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">layout =</span> <span class="st">"nicely"</span>) <span class="sc">+</span> </span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>(<span class="at">width=</span>Weight), </span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">alpha=</span><span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_edge_width</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="dv">5</span>)) <span class="sc">+</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">colour =</span> Department), </span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">size =</span> <span class="dv">2</span>)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>g <span class="sc">+</span> <span class="fu">facet_edges</span>(<span class="sc">~</span>Weekday)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex08_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="working-with-facet_edges-1" class="level3">
 <h3 class="anchored" data-anchor-id="working-with-facet_edges-1">Working with <em>facet_edges()</em></h3>
 <p>The code chunk below uses <em>theme()</em> to change the position of the legend.</p>
-<p><code>bqc set_graph_style()  g &lt;- ggraph(GAStech_graph,              layout = "nicely") +    geom_edge_link(aes(width=Weight),                   alpha=0.2) +   scale_edge_width(range = c(0.1, 5)) +   geom_node_point(aes(colour = Department),                    size = 2) +   theme(legend.position = 'bottom')    g + facet_edges(~Weekday)}</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set_graph_style</span>()</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggraph</span>(GAStech_graph, </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">layout =</span> <span class="st">"nicely"</span>) <span class="sc">+</span> </span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>(<span class="at">width=</span>Weight), </span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">alpha=</span><span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_edge_width</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="dv">5</span>)) <span class="sc">+</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">colour =</span> Department), </span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">'bottom'</span>)</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>g <span class="sc">+</span> <span class="fu">facet_edges</span>(<span class="sc">~</span>Weekday)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex08_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="a-framed-facet-graph" class="level3">
 <h3 class="anchored" data-anchor-id="a-framed-facet-graph">A framed facet graph</h3>
 <p>The code chunk below adds frame to each graph.</p>
-<p><code>bqc set_graph_style()   g &lt;- ggraph(GAStech_graph,              layout = "nicely") +    geom_edge_link(aes(width=Weight),                   alpha=0.2) +   scale_edge_width(range = c(0.1, 5)) +   geom_node_point(aes(colour = Department),                    size = 2)    g + facet_edges(~Weekday) +   th_foreground(foreground = "grey80",                   border = TRUE) +   theme(legend.position = 'bottom')}</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set_graph_style</span>() </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggraph</span>(GAStech_graph, </span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">layout =</span> <span class="st">"nicely"</span>) <span class="sc">+</span> </span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>(<span class="at">width=</span>Weight), </span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">alpha=</span><span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_edge_width</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="dv">5</span>)) <span class="sc">+</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">colour =</span> Department), </span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">size =</span> <span class="dv">2</span>)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>g <span class="sc">+</span> <span class="fu">facet_edges</span>(<span class="sc">~</span>Weekday) <span class="sc">+</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">th_foreground</span>(<span class="at">foreground =</span> <span class="st">"grey80"</span>,  </span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>                <span class="at">border =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">'bottom'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex08_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="working-with-facet_nodes" class="level3">
 <h3 class="anchored" data-anchor-id="working-with-facet_nodes">Working with <em>facet_nodes()</em></h3>
 <p>In the code chunkc below, <a href="https://ggraph.data-imaginist.com/reference/facet_nodes.html"><em>facet_nodes()</em></a> is used. Before getting started, it is advisable for you to read it’s reference guide at least once.</p>
-<p><code>bqc set_graph_style()  g &lt;- ggraph(GAStech_graph,              layout = "nicely") +    geom_edge_link(aes(width=Weight),                   alpha=0.2) +   scale_edge_width(range = c(0.1, 5)) +   geom_node_point(aes(colour = Department),                    size = 2)    g + facet_nodes(~Department)+   th_foreground(foreground = "grey80",                   border = TRUE) +   theme(legend.position = 'bottom')}</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set_graph_style</span>()</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggraph</span>(GAStech_graph, </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">layout =</span> <span class="st">"nicely"</span>) <span class="sc">+</span> </span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>(<span class="at">width=</span>Weight), </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">alpha=</span><span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_edge_width</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="dv">5</span>)) <span class="sc">+</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">colour =</span> Department), </span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">size =</span> <span class="dv">2</span>)</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>g <span class="sc">+</span> <span class="fu">facet_nodes</span>(<span class="sc">~</span>Department)<span class="sc">+</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">th_foreground</span>(<span class="at">foreground =</span> <span class="st">"grey80"</span>,  </span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>                <span class="at">border =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">'bottom'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex08_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="network-metrics-analysis" class="level2">
@@ -736,7 +983,24 @@ Things to learn from the code chunk above:
 <section id="computing-centrality-indices" class="level3">
 <h3 class="anchored" data-anchor-id="computing-centrality-indices">Computing centrality indices</h3>
 <p>Centrality measures are a collection of statistical indices use to describe the relative important of the actors are to a network. There are four well-known centrality measures, namely: degree, betweenness, closeness and eigenvector. It is beyond the scope of this hands-on exercise to cover the principles and mathematics of these measure here. Students are encouraged to refer to <em>Chapter 7: Actor Prominence</em> of <strong>A User’s Guide to Network Analysis in R</strong> to gain better understanding of theses network measures.</p>
-<p><code>bqc g &lt;- GAStech_graph %&gt;%   mutate(betweenness_centrality = centrality_betweenness()) %&gt;%   ggraph(layout = "fr") +    geom_edge_link(aes(width=Weight),                   alpha=0.2) +   scale_edge_width(range = c(0.1, 5)) +   geom_node_point(aes(colour = Department,             size=betweenness_centrality)) g + theme_graph()}</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> GAStech_graph <span class="sc">%&gt;%</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">betweenness_centrality =</span> <span class="fu">centrality_betweenness</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggraph</span>(<span class="at">layout =</span> <span class="st">"fr"</span>) <span class="sc">+</span> </span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>(<span class="at">width=</span>Weight), </span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">alpha=</span><span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_edge_width</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="dv">5</span>)) <span class="sc">+</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">colour =</span> Department,</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">size=</span>betweenness_centrality))</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>g <span class="sc">+</span> <span class="fu">theme_graph</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex08_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>Things to learn from the code chunk above:</p>
 <ul>
 <li><em>mutate()</em> of <strong>dplyr</strong> is used to perform the computation.</li>
@@ -746,13 +1010,46 @@ Things to learn from the code chunk above:
 <section id="visualising-network-metrics" class="level3">
 <h3 class="anchored" data-anchor-id="visualising-network-metrics">Visualising network metrics</h3>
 <p>It is important to note that from <strong>ggraph v2.0</strong> onward tidygraph algorithms such as centrality measures can be accessed directly in ggraph calls. This means that it is no longer necessary to precompute and store derived node and edge centrality measures on the graph in order to use them in a plot.</p>
-<p><code>bqc g &lt;- GAStech_graph %&gt;%   ggraph(layout = "fr") +    geom_edge_link(aes(width=Weight),                   alpha=0.2) +   scale_edge_width(range = c(0.1, 5)) +   geom_node_point(aes(colour = Department,                        size = centrality_betweenness())) g + theme_graph()}</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> GAStech_graph <span class="sc">%&gt;%</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggraph</span>(<span class="at">layout =</span> <span class="st">"fr"</span>) <span class="sc">+</span> </span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>(<span class="at">width=</span>Weight), </span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">alpha=</span><span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_edge_width</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="dv">5</span>)) <span class="sc">+</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">colour =</span> Department, </span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">size =</span> <span class="fu">centrality_betweenness</span>()))</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>g <span class="sc">+</span> <span class="fu">theme_graph</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex08_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="visualising-community" class="level3">
 <h3 class="anchored" data-anchor-id="visualising-community">Visualising Community</h3>
 <p>tidygraph package inherits many of the community detection algorithms imbedded into igraph and makes them available to us, including <em>Edge-betweenness (group_edge_betweenness)</em>, <em>Leading eigenvector (group_leading_eigen)</em>, <em>Fast-greedy (group_fast_greedy)</em>, <em>Louvain (group_louvain)</em>, <em>Walktrap (group_walktrap)</em>, <em>Label propagation (group_label_prop)</em>, <em>InfoMAP (group_infomap)</em>, <em>Spinglass (group_spinglass)</em>, and <em>Optimal (group_optimal)</em>. Some community algorithms are designed to take into account direction or weight, while others ignore it. Use this <a href="https://tidygraph.data-imaginist.com/reference/group_graph.html">link</a> to find out more about community detection functions provided by tidygraph,</p>
 <p>In the code chunk below <em>group_edge_betweenness()</em> is used.</p>
-<p><code>bqc g &lt;- GAStech_graph %&gt;%   mutate(community = as.factor(group_edge_betweenness(weights = Weight, directed = TRUE))) %&gt;%   ggraph(layout = "fr") +    geom_edge_link(aes(width=Weight),                   alpha=0.2) +   scale_edge_width(range = c(0.1, 5)) +   geom_node_point(aes(colour = community))    g + theme_graph()}</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> GAStech_graph <span class="sc">%&gt;%</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">community =</span> <span class="fu">as.factor</span>(<span class="fu">group_edge_betweenness</span>(<span class="at">weights =</span> Weight, <span class="at">directed =</span> <span class="cn">TRUE</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggraph</span>(<span class="at">layout =</span> <span class="st">"fr"</span>) <span class="sc">+</span> </span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>(<span class="at">width=</span>Weight), </span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">alpha=</span><span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_edge_width</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="dv">5</span>)) <span class="sc">+</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">colour =</span> community))  </span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>g <span class="sc">+</span> <span class="fu">theme_graph</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex08_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="building-interactive-network-graph-with-visnetwork" class="level2">
@@ -773,33 +1070,82 @@ Things to learn from the code chunk above:
 <section id="data-preparation" class="level3">
 <h3 class="anchored" data-anchor-id="data-preparation">Data preparation</h3>
 <p>Before we can plot the interactive network graph, we need to prepare the data model by using the code chunk below.</p>
-<p><code>bqc GAStech_edges_aggregated &lt;- GAStech_edges %&gt;%   left_join(GAStech_nodes, by = c("sourceLabel" = "label")) %&gt;%   rename(from = id) %&gt;%   left_join(GAStech_nodes, by = c("targetLabel" = "label")) %&gt;%   rename(to = id) %&gt;%   filter(MainSubject == "Work related") %&gt;%   group_by(from, to) %&gt;%     summarise(weight = n()) %&gt;%   filter(from!=to) %&gt;%   filter(weight &gt; 1) %&gt;%   ungroup()}</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>GAStech_edges_aggregated <span class="ot">&lt;-</span> GAStech_edges <span class="sc">%&gt;%</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(GAStech_nodes, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"sourceLabel"</span> <span class="ot">=</span> <span class="st">"label"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">from =</span> id) <span class="sc">%&gt;%</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(GAStech_nodes, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"targetLabel"</span> <span class="ot">=</span> <span class="st">"label"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">to =</span> id) <span class="sc">%&gt;%</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(MainSubject <span class="sc">==</span> <span class="st">"Work related"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(from, to) <span class="sc">%&gt;%</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">weight =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(from<span class="sc">!=</span>to) <span class="sc">%&gt;%</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(weight <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="plotting-the-first-interactive-network-graph" class="level3">
 <h3 class="anchored" data-anchor-id="plotting-the-first-interactive-network-graph">Plotting the first interactive network graph</h3>
 <p>The code chunk below will be used to plot an interactive network graph by using the data prepared.</p>
-<p><code>bqc eval=FALSE visNetwork(GAStech_nodes,             GAStech_edges_aggregated)}</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">visNetwork</span>(GAStech_nodes, </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>           GAStech_edges_aggregated)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="working-with-layout" class="level3">
 <h3 class="anchored" data-anchor-id="working-with-layout">Working with layout</h3>
 <p>In the code chunk below, Fruchterman and Reingold layout is used.</p>
-<p><code>bqc visNetwork(GAStech_nodes,            GAStech_edges_aggregated) %&gt;%   visIgraphLayout(layout = "layout_with_fr")}</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">visNetwork</span>(GAStech_nodes,</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>           GAStech_edges_aggregated) <span class="sc">%&gt;%</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visIgraphLayout</span>(<span class="at">layout =</span> <span class="st">"layout_with_fr"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="visNetwork html-widget html-fill-item" id="htmlwidget-ca1ca1430b52cc934cc9" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-ca1ca1430b52cc934cc9">{"x":{"nodes":{"id":[1,2,3,4,5,6,7,44,45,46,8,9,10,11,12,13,14,15,16,21,26,17,18,19,20,39,40,41,42,43,27,28,29,47,48,49,50,22,51,52,53,54,23,24,25,30,31,32,33,34,35,36,37,38],"label":["Mat.Bramar","Anda.Ribera","Rachel.Pantanal","Linda.Lagos","Ruscella.Mies.Haber","Carla.Forluniau","Cornelia.Lais","Kanon.Herrero","Varja.Lagos","Stenig.Fusil","Marin.Onda","Axel.Calzas","Brand.Tempestad","Elsa.Orilla","Isande.Borrasca","Kare.Orilla","Felix.Balas","Lars.Azada","Lidelse.Dedos","Willem.Vasco-Pais","Bertrand.Ovan","Adra.Nubarron","Birgitta.Frente","Gustav.Cazar","Vira.Frente","Linnea.Bergen","Lucas.Alcazar","Isak.Baza","Nils.Calixto","Sven.Flecha","Emile.Arpa","Varro.Awelon","Dante.Coginian","Edvard.Vann","Hennie.Osvaldo","Isia.Vann","Minke.Mies","Sten.Sanjorge.Jr","Felix.Resumir","Hideki.Cocinaro","Inga.Ferro","Loreto.Bodrogi","Ingrid.Barranco","Ada.Campo-Corrente","Orhan.Strum","Adan.Morlun","Albina.Hafon","Benito.Hawelon","Cecilia.Morluniau","Claudio.Hawelon","Dylan.Scozzese","Henk.Mies","Irene.Nant","Valeria.Morlun"],"Department":["Administration","Administration","Administration","Administration","Administration","Administration","Administration","Security","Security","Security","Engineering","Engineering","Engineering","Engineering","Engineering","Engineering","Engineering","Engineering","Engineering","Executive","Facilities","Engineering","Engineering","Engineering","Engineering","Information Technology","Information Technology","Information Technology","Information Technology","Information Technology","Facilities","Facilities","Facilities","Security","Security","Security","Security","Executive","Security","Security","Security","Security","Executive","Executive","Executive","Facilities","Facilities","Facilities","Facilities","Facilities","Facilities","Facilities","Facilities","Facilities"],"Title":["Assistant to CEO","Assistant to CFO","Assistant to CIO","Assistant to COO","Assistant to Engineering Group Manager","Assistant to IT Group Manager","Assistant to Security Group Manager","Badging Office","Badging Office","Building Control","Drill Site Manager","Drill Technician","Drill Technician","Drill Technician","Drill Technician","Drill Technician","Engineer","Engineer","Engineering Group Manager","Environmental Safety Advisor","Facilities Group Manager","Geologist","Geologist","Hydraulic Technician","Hydraulic Technician","IT Group Manager","IT Helpdesk","IT Technician","IT Technician","IT Technician","Janitor","Janitor","Lead Janitor","Perimeter Control","Perimeter Control","Perimeter Control","Perimeter Control","President/CEO","Security Group Manager","Site Control","Site Control","Site Control","SVP/CFO","SVP/CIO","SVP/COO","Truck Driver","Truck Driver","Truck Driver","Truck Driver","Truck Driver","Truck Driver","Truck Driver","Truck Driver","Truck Driver"],"x":[-0.03009396029641098,-0.4317482911351672,-0.6967110677311212,-0.9748270860226841,-0.06440858596497767,-0.5925698521324583,-0.9724983843523863,-0.8856371018293014,-0.6459465711811088,-0.6947320639669891,0.3324207666288264,0.06156921879303168,0.03585811425119734,0.4440743263616542,-0.110025932813144,-0.1206174319824993,0.3616589443632243,-0.2458020921463007,0.2150320989264649,-0.06958143729609922,1,0.004256040039612774,0.2088936591649115,0.02565895490693393,-0.2714763333217378,0.4947127071944948,-0.1326283254167028,-1,-0.951634551033553,-0.7775230940801858,0.7365039901716195,0.5163947443657722,0.4015801763445892,-0.1047930704742055,-0.1881180379226333,-0.9188962244323241,-0.7418658711892495,0.1652710461937268,-0.4372499132400808,-0.4638484595358131,-0.3107435422562561,-0.69259392181751,0.03455222424068949,0.132497189731247,-0.273332831931299,0.9626141515837059,0.5606201126586716,0.8844136367729312,0.864371002360161,0.6932465900037115,0.7507512359777726,0.4510013147074918,0.8492921250121368,0.6837007251005818],"y":[0.03723939702607604,0.3171600126232159,0.2191198333672915,0.1511138556392986,-0.04765935754013262,0.04453180769585696,-0.03397944149552301,-0.3547687506113369,-0.4509587998944117,-0.7736761248568946,0.582210456697329,0.5735801206623223,1,0.6867645061243637,0.6005372689989219,0.9392235792264592,0.8552720714857496,0.8336587184055055,0.7563473784595121,-0.9850625506225453,-0.2818073021980082,0.1439392629860294,0.9484954941021193,0.8215445708461253,0.6649021735831233,-0.928286038848422,0.05084036375793088,0.5306939667682942,0.3476833937041621,0.677173170270388,-0.01519472820431045,-0.1801503872309714,-0.4520398030112621,-0.1222515341267795,-0.1084341799413119,-0.5191086247336859,-0.1824517252057243,-0.9589331248949728,-0.7419696734870488,-0.3637009705738541,-0.6084878439095458,-0.6223086821469719,-0.1357607951042087,-0.7957485920657148,-1,-0.0878046938850624,-0.02478457566420289,0.09166003984455107,-0.4609592901729797,-0.5257991906984374,-0.3504012407850708,-0.3363495608830901,-0.220496793603878,0.1511574146987416]},"edges":{"from":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,6,6,6,6,6,6,6,7,7,7,7,7,7,8,8,8,8,8,8,8,8,8,8,8,8,8,9,9,9,9,9,9,9,9,9,9,9,9,9,10,10,10,10,10,10,10,10,10,10,10,10,11,11,11,11,11,11,11,11,11,11,11,11,11,12,12,12,12,12,12,12,12,12,12,12,12,12,13,13,13,13,13,13,13,13,13,13,13,13,14,14,14,14,14,14,14,14,14,14,14,14,15,15,15,15,15,15,15,15,15,15,15,15,15,16,16,16,16,16,16,16,16,16,16,16,16,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,18,18,18,18,18,18,18,18,18,18,18,19,19,19,19,19,19,19,19,19,19,19,19,20,20,20,20,20,20,20,20,20,20,20,20,20,21,21,21,21,21,22,22,22,22,22,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,24,24,24,24,24,25,25,25,25,25,26,26,26,26,26,26,26,26,26,26,26,26,27,27,27,27,27,27,27,27,27,27,27,27,27,28,28,28,28,28,28,28,28,28,28,28,28,28,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,30,30,30,30,30,30,30,30,30,30,30,30,31,31,31,31,31,31,31,31,31,31,31,31,32,32,32,32,32,32,32,32,32,32,32,32,32,33,33,33,33,33,33,33,33,33,33,33,33,33,34,34,34,34,34,34,34,34,34,34,34,35,35,35,35,35,35,35,35,35,35,35,35,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,37,37,37,37,37,37,37,37,37,37,37,37,38,38,38,38,38,38,38,38,38,39,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,41,41,41,42,42,42,42,43,43,43,44,44,44,44,44,44,44,44,44,44,44,45,45,45,45,45,45,45,45,45,45,46,46,46,46,46,46,46,46,46,46,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,49,49,49,49,49,49,49,50,50,50,50,50,50,51,51,51,51,51,51,51,51,51,51,51,52,52,52,52,52,52,52,52,52,52,52,52,53,53,53,53,53,53,53,53,53,53,53,53,54,54,54,54,54,54,54,54,54,54,54],"to":[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,1,3,4,5,6,7,15,36,38,1,2,4,5,6,7,48,1,2,3,5,6,7,1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,1,2,3,4,5,7,28,1,2,3,4,5,6,9,10,11,12,13,14,15,16,17,18,19,20,27,8,10,11,12,13,14,15,16,17,18,19,20,45,8,9,11,12,13,14,15,16,17,18,19,20,8,9,10,12,13,14,15,16,17,18,19,20,32,8,9,10,11,13,14,15,16,17,18,19,20,52,8,9,10,11,12,14,15,16,17,18,19,20,8,9,10,11,12,13,15,16,17,18,19,20,2,8,9,10,11,12,13,14,16,17,18,19,20,8,9,10,11,12,13,14,15,17,18,19,20,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,8,9,10,11,12,13,14,15,17,19,20,8,9,10,11,12,13,14,15,16,17,18,20,8,9,10,11,12,13,14,15,16,17,18,19,50,22,23,24,25,53,21,23,24,25,36,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,5,21,22,23,25,21,22,23,24,46,27,28,29,30,31,32,33,34,35,36,37,38,8,28,29,30,31,32,33,34,35,36,37,38,40,6,26,27,29,30,31,32,33,34,35,36,37,38,1,26,27,28,30,31,32,33,34,35,36,37,38,40,51,52,26,27,28,29,31,32,33,34,35,36,37,38,3,27,28,29,30,32,33,34,35,36,37,38,11,26,27,28,29,30,31,33,34,35,36,37,38,23,26,27,28,29,30,31,32,34,35,36,37,38,27,28,29,30,31,32,33,35,36,37,38,26,27,28,29,30,31,32,33,34,36,37,38,2,22,26,27,28,29,30,31,32,33,34,35,37,38,53,26,27,28,29,30,31,32,33,34,35,36,38,27,28,29,30,31,32,34,35,36,34,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,41,42,43,44,45,46,47,48,49,50,51,52,53,54,40,42,43,40,41,43,44,40,41,42,42,45,46,47,48,49,50,51,52,53,54,44,46,47,48,49,50,51,52,53,54,44,45,47,48,49,50,51,52,53,54,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,48,49,50,51,52,53,54,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,49,50,51,52,53,54,3,45,46,47,48,52,54,5,20,48,49,53,54,29,44,45,46,47,48,49,50,52,53,54,7,12,29,44,45,46,47,48,49,50,51,53,5,21,36,44,45,47,48,49,50,51,52,54,5,44,45,46,47,48,49,50,51,52,53],"weight":[21,21,21,21,21,21,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,16,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,6,6,6,6,6,9,2,2,2,8,8,8,8,8,8,2,12,12,12,12,12,12,20,20,20,20,20,20,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,11,11,10,10,11,11,11,11,11,11,11,11,3,12,15,12,12,12,12,3,4,3,3,4,4,3,3,4,3,4,3,3,4,4,9,4,7,7,11,5,4,5,6,8,3,8,8,7,9,9,6,9,10,10,7,5,7,11,10,11,6,11,7,11,9,10,7,10,8,3,9,10,8,8,11,6,7,5,3,6,5,6,2,9,5,10,7,7,4,3,4,7,2,3,3,6,5,7,4,6,6,7,5,7,6,3,4,3,6,13,8,8,5,6,6,11,9,6,2,7,6,8,7,5,5,7,6,7,7,5,4,6,2,2,2,2,2,2,2,6,4,7,7,6,6,6,6,5,5,4,4,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,3,4,5,3,3,2,5,2,3,2,4,8,5,9,6,5,4,10,7,4,4,5,5,10,5,7,4,5,4,4,4,3,2,4,3,4,2,4,7,2,7,5,10,4,2,4,4,4,4,4,4,4,4,4,4,4,4,6,4,4,4,4,4,4,4,6,10,17,9,4,4,4,4,4,4,4,5,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,2,5,9,7,3,8,2,3,4,2,26,25,25,25,25,25,24,25,25,26,25,26,3,4,3,6,4,3,3,6,5,3,4,5,3,3,2,3,6,5,8,6,6,7,4,6,6,6,2,2,6,5,7,5,6,5,7,6,6,5,5,3,2,3,3,5,7,9,12,9,9,6,13,12,9,11,2,5,4,6,6,9,7,6,12,7,7,8,4,2,8,6,9,7,10,7,9,6,10,5,8,2,4,2,3,5,7,8,4,7,5,7,6,4,5,6,4,7,8,5,9,6,6,10,6,3,11,7,9,11,15,7,11,11,9,13,13,2,2,3,12,11,12,16,15,19,12,11,14,11,13,3,3,4,5,6,7,7,6,9,10,7,5,3,2,5,5,2,2,2,4,4,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,4,2,3,2,2,2,2,2,2,2,2,2,2,40,22,30,2,2,2,2,2,2,2,2,2,2,2,28,19,24,25,19,28,2,15,16,24,3,4,2,5,6,2,5,5,2,6,3,6,4,2,6,5,5,4,7,5,6,6,3,4,9,5,6,8,7,4,6,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,2,2,2,2,2,2,2,5,4,3,7,5,6,6,5,5,5,2,2,4,2,4,2,2,2,2,2,2,2,2,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,4,4,5,3,8,6,5,5,5,6,2,3,2,3,3,4,2,2,4,2,2,5,2,3,3,3,3,4,4,2,3,3,3,3,2,2,4,2,4,4,3,4,5,3,2,4,3,3,4,3,3,2,5,4,8,2,2,5,2,3,4,3,2,5,4,4,2,3,4]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","physics":false},"manipulation":{"enabled":false},"edges":{"smooth":false},"physics":{"stabilization":false}},"groups":null,"width":null,"height":null,"idselection":{"enabled":false},"byselection":{"enabled":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","igraphlayout":{"type":"square"}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
 <p>Visit <a href="http://datastorm-open.github.io/visNetwork/igraph.html">Igraph</a> to find out more about <em>visIgraphLayout</em>’s argument.</p>
 </section>
 <section id="working-with-visual-attributes---nodes" class="level3">
 <h3 class="anchored" data-anchor-id="working-with-visual-attributes---nodes">Working with visual attributes - Nodes</h3>
 <p>visNetwork() looks for a field called “group” in the nodes object and colour the nodes according to the values of the group field.</p>
 <p>The code chunk below rename Department field to group.</p>
-<p><code>bqc GAStech_nodes &lt;- GAStech_nodes %&gt;%   rename(group = Department)}</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>GAStech_nodes <span class="ot">&lt;-</span> GAStech_nodes <span class="sc">%&gt;%</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">group =</span> Department) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>When we rerun the code chunk below, visNetwork shades the nodes by assigning unique colour to each category in the <em>group</em> field.</p>
-<p><code>bqc visNetwork(GAStech_nodes,            GAStech_edges_aggregated) %&gt;%   visIgraphLayout(layout = "layout_with_fr") %&gt;%   visLegend() %&gt;%   visLayout(randomSeed = 123)}</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">visNetwork</span>(GAStech_nodes,</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>           GAStech_edges_aggregated) <span class="sc">%&gt;%</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visIgraphLayout</span>(<span class="at">layout =</span> <span class="st">"layout_with_fr"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visLegend</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visLayout</span>(<span class="at">randomSeed =</span> <span class="dv">123</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="visNetwork html-widget html-fill-item" id="htmlwidget-a483fbe01178bf7e67cc" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-a483fbe01178bf7e67cc">{"x":{"nodes":{"id":[1,2,3,4,5,6,7,44,45,46,8,9,10,11,12,13,14,15,16,21,26,17,18,19,20,39,40,41,42,43,27,28,29,47,48,49,50,22,51,52,53,54,23,24,25,30,31,32,33,34,35,36,37,38],"label":["Mat.Bramar","Anda.Ribera","Rachel.Pantanal","Linda.Lagos","Ruscella.Mies.Haber","Carla.Forluniau","Cornelia.Lais","Kanon.Herrero","Varja.Lagos","Stenig.Fusil","Marin.Onda","Axel.Calzas","Brand.Tempestad","Elsa.Orilla","Isande.Borrasca","Kare.Orilla","Felix.Balas","Lars.Azada","Lidelse.Dedos","Willem.Vasco-Pais","Bertrand.Ovan","Adra.Nubarron","Birgitta.Frente","Gustav.Cazar","Vira.Frente","Linnea.Bergen","Lucas.Alcazar","Isak.Baza","Nils.Calixto","Sven.Flecha","Emile.Arpa","Varro.Awelon","Dante.Coginian","Edvard.Vann","Hennie.Osvaldo","Isia.Vann","Minke.Mies","Sten.Sanjorge.Jr","Felix.Resumir","Hideki.Cocinaro","Inga.Ferro","Loreto.Bodrogi","Ingrid.Barranco","Ada.Campo-Corrente","Orhan.Strum","Adan.Morlun","Albina.Hafon","Benito.Hawelon","Cecilia.Morluniau","Claudio.Hawelon","Dylan.Scozzese","Henk.Mies","Irene.Nant","Valeria.Morlun"],"group":["Administration","Administration","Administration","Administration","Administration","Administration","Administration","Security","Security","Security","Engineering","Engineering","Engineering","Engineering","Engineering","Engineering","Engineering","Engineering","Engineering","Executive","Facilities","Engineering","Engineering","Engineering","Engineering","Information Technology","Information Technology","Information Technology","Information Technology","Information Technology","Facilities","Facilities","Facilities","Security","Security","Security","Security","Executive","Security","Security","Security","Security","Executive","Executive","Executive","Facilities","Facilities","Facilities","Facilities","Facilities","Facilities","Facilities","Facilities","Facilities"],"Title":["Assistant to CEO","Assistant to CFO","Assistant to CIO","Assistant to COO","Assistant to Engineering Group Manager","Assistant to IT Group Manager","Assistant to Security Group Manager","Badging Office","Badging Office","Building Control","Drill Site Manager","Drill Technician","Drill Technician","Drill Technician","Drill Technician","Drill Technician","Engineer","Engineer","Engineering Group Manager","Environmental Safety Advisor","Facilities Group Manager","Geologist","Geologist","Hydraulic Technician","Hydraulic Technician","IT Group Manager","IT Helpdesk","IT Technician","IT Technician","IT Technician","Janitor","Janitor","Lead Janitor","Perimeter Control","Perimeter Control","Perimeter Control","Perimeter Control","President/CEO","Security Group Manager","Site Control","Site Control","Site Control","SVP/CFO","SVP/CIO","SVP/COO","Truck Driver","Truck Driver","Truck Driver","Truck Driver","Truck Driver","Truck Driver","Truck Driver","Truck Driver","Truck Driver"],"x":[0.1166973979036732,0.4991143143404886,0.4944200504300313,0.5423471241923683,-0.06470758944986266,0.7123426598724929,0.3319374297092721,-0.4961573293115797,-0.5564081851703759,-0.4264733637399687,-0.1049412522917581,-0.6377251255917396,-0.5184102366178407,-0.1485732005480699,-0.4949077654425236,-0.02858242778559061,-0.6584543860352184,-0.141034091634867,-0.4740586615087825,-0.7306826351368281,0.6659028033429848,-0.03847151853193731,-0.3184880808022065,-0.3416275940472386,-0.4285540752225707,0.9749037483153011,-0.1073505540160858,-1,-0.9761630244416599,-0.987770299770354,0.4885957046342342,0.8250552367726973,0.5949676108977111,0.02798133963462801,0.00946160971907184,-0.04826806739195599,-0.2993271706040901,-0.6256497511454495,0.06603555433295138,-0.2080055079727511,-0.08903334649578876,-0.2482213729317018,-0.03234917747673516,-0.8099508308071435,-0.960838582187258,0.8349109143716404,0.7984386661572156,0.6115097143452861,0.6481365997043564,1,0.8347450743760387,0.4748459526875608,0.9730283256265058,0.9687051000588651],"y":[-0.005770386769352487,-0.3624874889822713,-0.6413865199582031,-0.8608000443518127,-0.09919051523900446,-0.60166259384631,-0.853182666648849,-0.8782097776478329,-0.6717015675189077,-0.654809379141811,0.7727779408074105,0.5139920910050177,0.7867264249345804,0.978701249508807,0.5742410323855109,0.929327014012997,0.8083350034605701,0.5898150278561938,0.9654514384390622,-0.3641322867733239,0.7367773330575182,0.1894787508732982,1,0.7924097757933177,0.4249923860620248,-0.4931933944657753,0.07223909554290064,0.08165393303051127,-0.1770792328847104,0.2954026261144294,0.5058544787741224,-0.003910216373918529,-0.0123510067004301,-0.0687848505486971,-0.1518809051340146,-1,-0.7130550168467399,-0.09135038627834491,-0.7916987225477126,-0.4667951693044874,-0.6603883924533581,-0.968122281594273,0.03131040172470967,-0.5802141889811645,-0.4098773898487106,0.5863191374796559,0.1799711769700796,0.5993616881683204,0.3725858365034698,0.2214556310297908,0.3955717033673363,0.1520188679356638,0.4459603277077442,0.04143591354037524]},"edges":{"from":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,6,6,6,6,6,6,6,7,7,7,7,7,7,8,8,8,8,8,8,8,8,8,8,8,8,8,9,9,9,9,9,9,9,9,9,9,9,9,9,10,10,10,10,10,10,10,10,10,10,10,10,11,11,11,11,11,11,11,11,11,11,11,11,11,12,12,12,12,12,12,12,12,12,12,12,12,12,13,13,13,13,13,13,13,13,13,13,13,13,14,14,14,14,14,14,14,14,14,14,14,14,15,15,15,15,15,15,15,15,15,15,15,15,15,16,16,16,16,16,16,16,16,16,16,16,16,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,18,18,18,18,18,18,18,18,18,18,18,19,19,19,19,19,19,19,19,19,19,19,19,20,20,20,20,20,20,20,20,20,20,20,20,20,21,21,21,21,21,22,22,22,22,22,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,24,24,24,24,24,25,25,25,25,25,26,26,26,26,26,26,26,26,26,26,26,26,27,27,27,27,27,27,27,27,27,27,27,27,27,28,28,28,28,28,28,28,28,28,28,28,28,28,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,30,30,30,30,30,30,30,30,30,30,30,30,31,31,31,31,31,31,31,31,31,31,31,31,32,32,32,32,32,32,32,32,32,32,32,32,32,33,33,33,33,33,33,33,33,33,33,33,33,33,34,34,34,34,34,34,34,34,34,34,34,35,35,35,35,35,35,35,35,35,35,35,35,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,37,37,37,37,37,37,37,37,37,37,37,37,38,38,38,38,38,38,38,38,38,39,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,41,41,41,42,42,42,42,43,43,43,44,44,44,44,44,44,44,44,44,44,44,45,45,45,45,45,45,45,45,45,45,46,46,46,46,46,46,46,46,46,46,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,49,49,49,49,49,49,49,50,50,50,50,50,50,51,51,51,51,51,51,51,51,51,51,51,52,52,52,52,52,52,52,52,52,52,52,52,53,53,53,53,53,53,53,53,53,53,53,53,54,54,54,54,54,54,54,54,54,54,54],"to":[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,1,3,4,5,6,7,15,36,38,1,2,4,5,6,7,48,1,2,3,5,6,7,1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,1,2,3,4,5,7,28,1,2,3,4,5,6,9,10,11,12,13,14,15,16,17,18,19,20,27,8,10,11,12,13,14,15,16,17,18,19,20,45,8,9,11,12,13,14,15,16,17,18,19,20,8,9,10,12,13,14,15,16,17,18,19,20,32,8,9,10,11,13,14,15,16,17,18,19,20,52,8,9,10,11,12,14,15,16,17,18,19,20,8,9,10,11,12,13,15,16,17,18,19,20,2,8,9,10,11,12,13,14,16,17,18,19,20,8,9,10,11,12,13,14,15,17,18,19,20,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,8,9,10,11,12,13,14,15,17,19,20,8,9,10,11,12,13,14,15,16,17,18,20,8,9,10,11,12,13,14,15,16,17,18,19,50,22,23,24,25,53,21,23,24,25,36,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,5,21,22,23,25,21,22,23,24,46,27,28,29,30,31,32,33,34,35,36,37,38,8,28,29,30,31,32,33,34,35,36,37,38,40,6,26,27,29,30,31,32,33,34,35,36,37,38,1,26,27,28,30,31,32,33,34,35,36,37,38,40,51,52,26,27,28,29,31,32,33,34,35,36,37,38,3,27,28,29,30,32,33,34,35,36,37,38,11,26,27,28,29,30,31,33,34,35,36,37,38,23,26,27,28,29,30,31,32,34,35,36,37,38,27,28,29,30,31,32,33,35,36,37,38,26,27,28,29,30,31,32,33,34,36,37,38,2,22,26,27,28,29,30,31,32,33,34,35,37,38,53,26,27,28,29,30,31,32,33,34,35,36,38,27,28,29,30,31,32,34,35,36,34,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,41,42,43,44,45,46,47,48,49,50,51,52,53,54,40,42,43,40,41,43,44,40,41,42,42,45,46,47,48,49,50,51,52,53,54,44,46,47,48,49,50,51,52,53,54,44,45,47,48,49,50,51,52,53,54,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,48,49,50,51,52,53,54,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,49,50,51,52,53,54,3,45,46,47,48,52,54,5,20,48,49,53,54,29,44,45,46,47,48,49,50,52,53,54,7,12,29,44,45,46,47,48,49,50,51,53,5,21,36,44,45,47,48,49,50,51,52,54,5,44,45,46,47,48,49,50,51,52,53],"weight":[21,21,21,21,21,21,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,16,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,6,6,6,6,6,9,2,2,2,8,8,8,8,8,8,2,12,12,12,12,12,12,20,20,20,20,20,20,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,11,11,10,10,11,11,11,11,11,11,11,11,3,12,15,12,12,12,12,3,4,3,3,4,4,3,3,4,3,4,3,3,4,4,9,4,7,7,11,5,4,5,6,8,3,8,8,7,9,9,6,9,10,10,7,5,7,11,10,11,6,11,7,11,9,10,7,10,8,3,9,10,8,8,11,6,7,5,3,6,5,6,2,9,5,10,7,7,4,3,4,7,2,3,3,6,5,7,4,6,6,7,5,7,6,3,4,3,6,13,8,8,5,6,6,11,9,6,2,7,6,8,7,5,5,7,6,7,7,5,4,6,2,2,2,2,2,2,2,6,4,7,7,6,6,6,6,5,5,4,4,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,3,4,5,3,3,2,5,2,3,2,4,8,5,9,6,5,4,10,7,4,4,5,5,10,5,7,4,5,4,4,4,3,2,4,3,4,2,4,7,2,7,5,10,4,2,4,4,4,4,4,4,4,4,4,4,4,4,6,4,4,4,4,4,4,4,6,10,17,9,4,4,4,4,4,4,4,5,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,2,5,9,7,3,8,2,3,4,2,26,25,25,25,25,25,24,25,25,26,25,26,3,4,3,6,4,3,3,6,5,3,4,5,3,3,2,3,6,5,8,6,6,7,4,6,6,6,2,2,6,5,7,5,6,5,7,6,6,5,5,3,2,3,3,5,7,9,12,9,9,6,13,12,9,11,2,5,4,6,6,9,7,6,12,7,7,8,4,2,8,6,9,7,10,7,9,6,10,5,8,2,4,2,3,5,7,8,4,7,5,7,6,4,5,6,4,7,8,5,9,6,6,10,6,3,11,7,9,11,15,7,11,11,9,13,13,2,2,3,12,11,12,16,15,19,12,11,14,11,13,3,3,4,5,6,7,7,6,9,10,7,5,3,2,5,5,2,2,2,4,4,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,4,2,3,2,2,2,2,2,2,2,2,2,2,40,22,30,2,2,2,2,2,2,2,2,2,2,2,28,19,24,25,19,28,2,15,16,24,3,4,2,5,6,2,5,5,2,6,3,6,4,2,6,5,5,4,7,5,6,6,3,4,9,5,6,8,7,4,6,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,2,2,2,2,2,2,2,5,4,3,7,5,6,6,5,5,5,2,2,4,2,4,2,2,2,2,2,2,2,2,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,4,4,5,3,8,6,5,5,5,6,2,3,2,3,3,4,2,2,4,2,2,5,2,3,3,3,3,4,4,2,3,3,3,3,2,2,4,2,4,4,3,4,5,3,2,4,3,3,4,3,3,2,5,4,8,2,2,5,2,3,4,3,2,5,4,4,2,3,4]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","physics":false},"manipulation":{"enabled":false},"edges":{"smooth":false},"physics":{"stabilization":false},"layout":{"randomSeed":123}},"groups":["Administration","Security","Engineering","Executive","Facilities","Information Technology"],"width":null,"height":null,"idselection":{"enabled":false},"byselection":{"enabled":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","igraphlayout":{"type":"square"},"legend":{"width":0.2,"useGroups":true,"position":"left","ncol":1,"stepX":100,"stepY":100,"zoom":true}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
 </section>
 <section id="working-with-visual-attributes---edges" class="level3">
 <h3 class="anchored" data-anchor-id="working-with-visual-attributes---edges">Working with visual attributes - Edges</h3>
 <p>In the code run below <em>visEdges()</em> is used to symbolise the edges.<br>
 - The argument <em>arrows</em> is used to define where to place the arrow.<br>
 - The <em>smooth</em> argument is used to plot the edges using a smooth curve.</p>
-<p><code>bqc visNetwork(GAStech_nodes,            GAStech_edges_aggregated) %&gt;%   visIgraphLayout(layout = "layout_with_fr") %&gt;%   visEdges(arrows = "to",             smooth = list(enabled = TRUE,                           type = "curvedCW")) %&gt;%   visLegend() %&gt;%   visLayout(randomSeed = 123)}</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">visNetwork</span>(GAStech_nodes,</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>           GAStech_edges_aggregated) <span class="sc">%&gt;%</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visIgraphLayout</span>(<span class="at">layout =</span> <span class="st">"layout_with_fr"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visEdges</span>(<span class="at">arrows =</span> <span class="st">"to"</span>, </span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">smooth =</span> <span class="fu">list</span>(<span class="at">enabled =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">type =</span> <span class="st">"curvedCW"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visLegend</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visLayout</span>(<span class="at">randomSeed =</span> <span class="dv">123</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="visNetwork html-widget html-fill-item" id="htmlwidget-fca8cc495d43bd0e0b29" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-fca8cc495d43bd0e0b29">{"x":{"nodes":{"id":[1,2,3,4,5,6,7,44,45,46,8,9,10,11,12,13,14,15,16,21,26,17,18,19,20,39,40,41,42,43,27,28,29,47,48,49,50,22,51,52,53,54,23,24,25,30,31,32,33,34,35,36,37,38],"label":["Mat.Bramar","Anda.Ribera","Rachel.Pantanal","Linda.Lagos","Ruscella.Mies.Haber","Carla.Forluniau","Cornelia.Lais","Kanon.Herrero","Varja.Lagos","Stenig.Fusil","Marin.Onda","Axel.Calzas","Brand.Tempestad","Elsa.Orilla","Isande.Borrasca","Kare.Orilla","Felix.Balas","Lars.Azada","Lidelse.Dedos","Willem.Vasco-Pais","Bertrand.Ovan","Adra.Nubarron","Birgitta.Frente","Gustav.Cazar","Vira.Frente","Linnea.Bergen","Lucas.Alcazar","Isak.Baza","Nils.Calixto","Sven.Flecha","Emile.Arpa","Varro.Awelon","Dante.Coginian","Edvard.Vann","Hennie.Osvaldo","Isia.Vann","Minke.Mies","Sten.Sanjorge.Jr","Felix.Resumir","Hideki.Cocinaro","Inga.Ferro","Loreto.Bodrogi","Ingrid.Barranco","Ada.Campo-Corrente","Orhan.Strum","Adan.Morlun","Albina.Hafon","Benito.Hawelon","Cecilia.Morluniau","Claudio.Hawelon","Dylan.Scozzese","Henk.Mies","Irene.Nant","Valeria.Morlun"],"group":["Administration","Administration","Administration","Administration","Administration","Administration","Administration","Security","Security","Security","Engineering","Engineering","Engineering","Engineering","Engineering","Engineering","Engineering","Engineering","Engineering","Executive","Facilities","Engineering","Engineering","Engineering","Engineering","Information Technology","Information Technology","Information Technology","Information Technology","Information Technology","Facilities","Facilities","Facilities","Security","Security","Security","Security","Executive","Security","Security","Security","Security","Executive","Executive","Executive","Facilities","Facilities","Facilities","Facilities","Facilities","Facilities","Facilities","Facilities","Facilities"],"Title":["Assistant to CEO","Assistant to CFO","Assistant to CIO","Assistant to COO","Assistant to Engineering Group Manager","Assistant to IT Group Manager","Assistant to Security Group Manager","Badging Office","Badging Office","Building Control","Drill Site Manager","Drill Technician","Drill Technician","Drill Technician","Drill Technician","Drill Technician","Engineer","Engineer","Engineering Group Manager","Environmental Safety Advisor","Facilities Group Manager","Geologist","Geologist","Hydraulic Technician","Hydraulic Technician","IT Group Manager","IT Helpdesk","IT Technician","IT Technician","IT Technician","Janitor","Janitor","Lead Janitor","Perimeter Control","Perimeter Control","Perimeter Control","Perimeter Control","President/CEO","Security Group Manager","Site Control","Site Control","Site Control","SVP/CFO","SVP/CIO","SVP/COO","Truck Driver","Truck Driver","Truck Driver","Truck Driver","Truck Driver","Truck Driver","Truck Driver","Truck Driver","Truck Driver"],"x":[0.1144100879022187,0.5953710502036367,0.4491646757812806,0.8934634474999839,0.08453326954498941,0.6376989800603172,0.7814108625671154,-0.2957573156092014,-0.430032824752707,-0.3932512208732177,0.576960173294909,0.4863551355085061,0.7921574263398363,0.7752247447329921,0.6878812835500432,0.995625973531592,0.9027997539600781,0.7744065515706671,0.65925572002642,-0.840960239583847,-0.6314772843157925,0.187454829331607,0.8968010353108176,1,0.5434867485265931,0.5215944838207582,-0.05247185625299644,-0.8915794022368319,-0.7853646098576391,-1,-0.03891735488922954,-0.1109464961612149,-0.3967488899131416,-0.01099447712172719,-0.02158123303680559,-0.2198072434105736,0.06848245967097899,-0.9254181226941468,-0.5530110257960377,-0.0001824474250186059,-0.3997871256096752,-0.1208283175585007,-0.1238875628638868,-0.7415264227166075,-0.9698640244166393,-0.3307832064324768,-0.05315006231719543,0.0965166207082726,-0.4802790366018613,-0.2041726848527013,-0.3607133115867971,-0.2787445081962988,-0.5104425739519716,0.07518899212659735],"y":[0.06245948522590838,0.3782553425320547,0.4885914279706531,0.4540645397710203,-0.03950005643504617,0.6808933318034891,0.2628131451881131,-1,-0.9656964205834067,-0.8104390029799388,-0.3247892362143431,-0.793474210447488,-0.7877446495813947,-0.130609842976572,-0.5667261311374989,-0.2852725716740214,-0.4265559625275703,-0.3017479226023444,-0.8520700878694996,-0.6312595514565129,0.6906381871341554,-0.1355440229560841,-0.6583443748763824,-0.5392849714959196,-0.6405774171798959,0.9694005991885823,0.02361258313437031,0.280359802713317,-0.354963894115532,0.09755311273862288,0.5493270449129262,0.7777406504760707,0.3497263288117849,-0.1884868713477263,-0.1109315533489794,-0.5726357824332349,-0.9767000897203392,-0.1009987575652295,-0.6224935286383441,-0.6380874328776074,-0.5526865234172837,-0.9163708977891245,-0.07299635143447103,-0.1131978145358479,-0.4405792394840811,0.7519112040445082,0.9821249822204399,0.6768116948269693,0.6068613540809153,1,0.9358493235974434,0.4645640000076761,0.8584160955767657,0.8733805649198683]},"edges":{"from":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,6,6,6,6,6,6,6,7,7,7,7,7,7,8,8,8,8,8,8,8,8,8,8,8,8,8,9,9,9,9,9,9,9,9,9,9,9,9,9,10,10,10,10,10,10,10,10,10,10,10,10,11,11,11,11,11,11,11,11,11,11,11,11,11,12,12,12,12,12,12,12,12,12,12,12,12,12,13,13,13,13,13,13,13,13,13,13,13,13,14,14,14,14,14,14,14,14,14,14,14,14,15,15,15,15,15,15,15,15,15,15,15,15,15,16,16,16,16,16,16,16,16,16,16,16,16,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,18,18,18,18,18,18,18,18,18,18,18,19,19,19,19,19,19,19,19,19,19,19,19,20,20,20,20,20,20,20,20,20,20,20,20,20,21,21,21,21,21,22,22,22,22,22,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,24,24,24,24,24,25,25,25,25,25,26,26,26,26,26,26,26,26,26,26,26,26,27,27,27,27,27,27,27,27,27,27,27,27,27,28,28,28,28,28,28,28,28,28,28,28,28,28,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,30,30,30,30,30,30,30,30,30,30,30,30,31,31,31,31,31,31,31,31,31,31,31,31,32,32,32,32,32,32,32,32,32,32,32,32,32,33,33,33,33,33,33,33,33,33,33,33,33,33,34,34,34,34,34,34,34,34,34,34,34,35,35,35,35,35,35,35,35,35,35,35,35,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,37,37,37,37,37,37,37,37,37,37,37,37,38,38,38,38,38,38,38,38,38,39,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,41,41,41,42,42,42,42,43,43,43,44,44,44,44,44,44,44,44,44,44,44,45,45,45,45,45,45,45,45,45,45,46,46,46,46,46,46,46,46,46,46,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,49,49,49,49,49,49,49,50,50,50,50,50,50,51,51,51,51,51,51,51,51,51,51,51,52,52,52,52,52,52,52,52,52,52,52,52,53,53,53,53,53,53,53,53,53,53,53,53,54,54,54,54,54,54,54,54,54,54,54],"to":[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,1,3,4,5,6,7,15,36,38,1,2,4,5,6,7,48,1,2,3,5,6,7,1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,1,2,3,4,5,7,28,1,2,3,4,5,6,9,10,11,12,13,14,15,16,17,18,19,20,27,8,10,11,12,13,14,15,16,17,18,19,20,45,8,9,11,12,13,14,15,16,17,18,19,20,8,9,10,12,13,14,15,16,17,18,19,20,32,8,9,10,11,13,14,15,16,17,18,19,20,52,8,9,10,11,12,14,15,16,17,18,19,20,8,9,10,11,12,13,15,16,17,18,19,20,2,8,9,10,11,12,13,14,16,17,18,19,20,8,9,10,11,12,13,14,15,17,18,19,20,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,8,9,10,11,12,13,14,15,17,19,20,8,9,10,11,12,13,14,15,16,17,18,20,8,9,10,11,12,13,14,15,16,17,18,19,50,22,23,24,25,53,21,23,24,25,36,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,5,21,22,23,25,21,22,23,24,46,27,28,29,30,31,32,33,34,35,36,37,38,8,28,29,30,31,32,33,34,35,36,37,38,40,6,26,27,29,30,31,32,33,34,35,36,37,38,1,26,27,28,30,31,32,33,34,35,36,37,38,40,51,52,26,27,28,29,31,32,33,34,35,36,37,38,3,27,28,29,30,32,33,34,35,36,37,38,11,26,27,28,29,30,31,33,34,35,36,37,38,23,26,27,28,29,30,31,32,34,35,36,37,38,27,28,29,30,31,32,33,35,36,37,38,26,27,28,29,30,31,32,33,34,36,37,38,2,22,26,27,28,29,30,31,32,33,34,35,37,38,53,26,27,28,29,30,31,32,33,34,35,36,38,27,28,29,30,31,32,34,35,36,34,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,41,42,43,44,45,46,47,48,49,50,51,52,53,54,40,42,43,40,41,43,44,40,41,42,42,45,46,47,48,49,50,51,52,53,54,44,46,47,48,49,50,51,52,53,54,44,45,47,48,49,50,51,52,53,54,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,48,49,50,51,52,53,54,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,49,50,51,52,53,54,3,45,46,47,48,52,54,5,20,48,49,53,54,29,44,45,46,47,48,49,50,52,53,54,7,12,29,44,45,46,47,48,49,50,51,53,5,21,36,44,45,47,48,49,50,51,52,54,5,44,45,46,47,48,49,50,51,52,53],"weight":[21,21,21,21,21,21,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,16,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,6,6,6,6,6,9,2,2,2,8,8,8,8,8,8,2,12,12,12,12,12,12,20,20,20,20,20,20,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,11,11,10,10,11,11,11,11,11,11,11,11,3,12,15,12,12,12,12,3,4,3,3,4,4,3,3,4,3,4,3,3,4,4,9,4,7,7,11,5,4,5,6,8,3,8,8,7,9,9,6,9,10,10,7,5,7,11,10,11,6,11,7,11,9,10,7,10,8,3,9,10,8,8,11,6,7,5,3,6,5,6,2,9,5,10,7,7,4,3,4,7,2,3,3,6,5,7,4,6,6,7,5,7,6,3,4,3,6,13,8,8,5,6,6,11,9,6,2,7,6,8,7,5,5,7,6,7,7,5,4,6,2,2,2,2,2,2,2,6,4,7,7,6,6,6,6,5,5,4,4,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,3,4,5,3,3,2,5,2,3,2,4,8,5,9,6,5,4,10,7,4,4,5,5,10,5,7,4,5,4,4,4,3,2,4,3,4,2,4,7,2,7,5,10,4,2,4,4,4,4,4,4,4,4,4,4,4,4,6,4,4,4,4,4,4,4,6,10,17,9,4,4,4,4,4,4,4,5,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,2,5,9,7,3,8,2,3,4,2,26,25,25,25,25,25,24,25,25,26,25,26,3,4,3,6,4,3,3,6,5,3,4,5,3,3,2,3,6,5,8,6,6,7,4,6,6,6,2,2,6,5,7,5,6,5,7,6,6,5,5,3,2,3,3,5,7,9,12,9,9,6,13,12,9,11,2,5,4,6,6,9,7,6,12,7,7,8,4,2,8,6,9,7,10,7,9,6,10,5,8,2,4,2,3,5,7,8,4,7,5,7,6,4,5,6,4,7,8,5,9,6,6,10,6,3,11,7,9,11,15,7,11,11,9,13,13,2,2,3,12,11,12,16,15,19,12,11,14,11,13,3,3,4,5,6,7,7,6,9,10,7,5,3,2,5,5,2,2,2,4,4,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,4,2,3,2,2,2,2,2,2,2,2,2,2,40,22,30,2,2,2,2,2,2,2,2,2,2,2,28,19,24,25,19,28,2,15,16,24,3,4,2,5,6,2,5,5,2,6,3,6,4,2,6,5,5,4,7,5,6,6,3,4,9,5,6,8,7,4,6,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,2,2,2,2,2,2,2,5,4,3,7,5,6,6,5,5,5,2,2,4,2,4,2,2,2,2,2,2,2,2,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,4,4,5,3,8,6,5,5,5,6,2,3,2,3,3,4,2,2,4,2,2,5,2,3,3,3,3,4,4,2,3,3,3,3,2,2,4,2,4,4,3,4,5,3,2,4,3,3,4,3,3,2,5,4,8,2,2,5,2,3,4,3,2,5,4,4,2,3,4]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","physics":false},"manipulation":{"enabled":false},"edges":{"arrows":"to","smooth":{"enabled":true,"type":"curvedCW"}},"physics":{"stabilization":false},"layout":{"randomSeed":123}},"groups":["Administration","Security","Engineering","Executive","Facilities","Information Technology"],"width":null,"height":null,"idselection":{"enabled":false},"byselection":{"enabled":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","igraphlayout":{"type":"square"},"legend":{"width":0.2,"useGroups":true,"position":"left","ncol":1,"stepX":100,"stepY":100,"zoom":true}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
 <p>Visit <a href="http://datastorm-open.github.io/visNetwork/edges.html">Option</a> to find out more about visEdges’s argument.</p>
 </section>
 <section id="interactivity" class="level3">
@@ -809,7 +1155,19 @@ Things to learn from the code chunk above:
 <li>The argument <em>highlightNearest</em> highlights nearest when clicking a node.</li>
 <li>The argument <em>nodesIdSelection</em> adds an id node selection creating an HTML select element.</li>
 </ul>
-<p><code>bqc visNetwork(GAStech_nodes,            GAStech_edges_aggregated) %&gt;%   visIgraphLayout(layout = "layout_with_fr") %&gt;%   visOptions(highlightNearest = TRUE,              nodesIdSelection = TRUE) %&gt;%   visLegend() %&gt;%   visLayout(randomSeed = 123)}</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">visNetwork</span>(GAStech_nodes,</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>           GAStech_edges_aggregated) <span class="sc">%&gt;%</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visIgraphLayout</span>(<span class="at">layout =</span> <span class="st">"layout_with_fr"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visOptions</span>(<span class="at">highlightNearest =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">nodesIdSelection =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visLegend</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visLayout</span>(<span class="at">randomSeed =</span> <span class="dv">123</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="visNetwork html-widget html-fill-item" id="htmlwidget-4205707f17db672ebe5c" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-4205707f17db672ebe5c">{"x":{"nodes":{"id":[1,2,3,4,5,6,7,44,45,46,8,9,10,11,12,13,14,15,16,21,26,17,18,19,20,39,40,41,42,43,27,28,29,47,48,49,50,22,51,52,53,54,23,24,25,30,31,32,33,34,35,36,37,38],"label":["Mat.Bramar","Anda.Ribera","Rachel.Pantanal","Linda.Lagos","Ruscella.Mies.Haber","Carla.Forluniau","Cornelia.Lais","Kanon.Herrero","Varja.Lagos","Stenig.Fusil","Marin.Onda","Axel.Calzas","Brand.Tempestad","Elsa.Orilla","Isande.Borrasca","Kare.Orilla","Felix.Balas","Lars.Azada","Lidelse.Dedos","Willem.Vasco-Pais","Bertrand.Ovan","Adra.Nubarron","Birgitta.Frente","Gustav.Cazar","Vira.Frente","Linnea.Bergen","Lucas.Alcazar","Isak.Baza","Nils.Calixto","Sven.Flecha","Emile.Arpa","Varro.Awelon","Dante.Coginian","Edvard.Vann","Hennie.Osvaldo","Isia.Vann","Minke.Mies","Sten.Sanjorge.Jr","Felix.Resumir","Hideki.Cocinaro","Inga.Ferro","Loreto.Bodrogi","Ingrid.Barranco","Ada.Campo-Corrente","Orhan.Strum","Adan.Morlun","Albina.Hafon","Benito.Hawelon","Cecilia.Morluniau","Claudio.Hawelon","Dylan.Scozzese","Henk.Mies","Irene.Nant","Valeria.Morlun"],"group":["Administration","Administration","Administration","Administration","Administration","Administration","Administration","Security","Security","Security","Engineering","Engineering","Engineering","Engineering","Engineering","Engineering","Engineering","Engineering","Engineering","Executive","Facilities","Engineering","Engineering","Engineering","Engineering","Information Technology","Information Technology","Information Technology","Information Technology","Information Technology","Facilities","Facilities","Facilities","Security","Security","Security","Security","Executive","Security","Security","Security","Security","Executive","Executive","Executive","Facilities","Facilities","Facilities","Facilities","Facilities","Facilities","Facilities","Facilities","Facilities"],"Title":["Assistant to CEO","Assistant to CFO","Assistant to CIO","Assistant to COO","Assistant to Engineering Group Manager","Assistant to IT Group Manager","Assistant to Security Group Manager","Badging Office","Badging Office","Building Control","Drill Site Manager","Drill Technician","Drill Technician","Drill Technician","Drill Technician","Drill Technician","Engineer","Engineer","Engineering Group Manager","Environmental Safety Advisor","Facilities Group Manager","Geologist","Geologist","Hydraulic Technician","Hydraulic Technician","IT Group Manager","IT Helpdesk","IT Technician","IT Technician","IT Technician","Janitor","Janitor","Lead Janitor","Perimeter Control","Perimeter Control","Perimeter Control","Perimeter Control","President/CEO","Security Group Manager","Site Control","Site Control","Site Control","SVP/CFO","SVP/CIO","SVP/COO","Truck Driver","Truck Driver","Truck Driver","Truck Driver","Truck Driver","Truck Driver","Truck Driver","Truck Driver","Truck Driver"],"x":[-0.03847511705656592,-0.1528266368385328,0.06044541659750968,0.2011049419923203,0.03711346144589345,-0.2141300452245655,0.2882322115865825,0.9248626576971872,0.8406542751054471,1,-0.2396821376333033,0.2304183435129357,-0.3565788994796661,-0.4436192649521679,0.03664341043285857,-0.4557862276617718,-0.09263796173147532,-0.2384659323623567,-0.06263778127759267,0.9193708514300061,-0.8603777511698436,-0.06590125962497961,-0.2429026328836198,0.08541828704818388,0.1218995185919929,-0.9340938015458752,-0.07399670791772506,0.08706214951261559,0.6670224516814787,0.4975261396353463,-0.6541395370932811,-0.7857068138843426,-0.4005449014356762,0.1295250593111648,0.1393155404005257,0.767285303117186,0.737125710759529,0.4682271536006544,0.5760225536839472,0.5135558293555682,0.6099221264873578,0.8781930300384491,0.01401621286429067,0.6819154465281791,0.7963413234705861,-0.9685744398093314,-0.6234435519270898,-0.8157197259917368,-0.9241611118129293,-1,-0.8246467326453875,-0.4433214743118368,-0.7034097337575511,-0.6260497782296143],"y":[-0.1255464259052061,-0.5682003463738594,-0.6906660014923282,-0.8894165250338287,-0.06896547463258473,-0.8633151601111305,-0.710520565080389,-0.3635838067411074,0.05235393638853592,-0.0236426824751701,0.6863236539800055,0.8181562837861098,0.8770407257995949,0.6277693510735649,0.5950719485485738,0.7863355874009463,1,0.5077568281696856,0.846941662277213,0.4106381261760095,-0.3774636598375912,0.1686632958265801,0.9540869327129453,0.9542197355880226,0.7250548897037912,0.4520426492293323,-0.03156596242550469,-1,-0.7326448233070546,-0.8825483623144937,0.004847397309330148,-0.5813398904485449,-0.3985687791783595,-0.04848830976844942,0.03692885866406592,-0.3595417165179655,0.2284561087125865,0.4672561549722003,-0.4104540595437336,-0.1999025326717303,-0.03003380428437774,-0.1660278873738034,0.08261544019129308,0.5453505632586539,0.6670205362966815,-0.4336205225959294,-0.4681714113290883,0.0407694312488196,-0.04948869975285397,-0.2052573003898868,-0.1781458430882836,-0.1634736022454731,-0.2946467184306241,-0.6235875825606076]},"edges":{"from":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,6,6,6,6,6,6,6,7,7,7,7,7,7,8,8,8,8,8,8,8,8,8,8,8,8,8,9,9,9,9,9,9,9,9,9,9,9,9,9,10,10,10,10,10,10,10,10,10,10,10,10,11,11,11,11,11,11,11,11,11,11,11,11,11,12,12,12,12,12,12,12,12,12,12,12,12,12,13,13,13,13,13,13,13,13,13,13,13,13,14,14,14,14,14,14,14,14,14,14,14,14,15,15,15,15,15,15,15,15,15,15,15,15,15,16,16,16,16,16,16,16,16,16,16,16,16,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,18,18,18,18,18,18,18,18,18,18,18,19,19,19,19,19,19,19,19,19,19,19,19,20,20,20,20,20,20,20,20,20,20,20,20,20,21,21,21,21,21,22,22,22,22,22,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,24,24,24,24,24,25,25,25,25,25,26,26,26,26,26,26,26,26,26,26,26,26,27,27,27,27,27,27,27,27,27,27,27,27,27,28,28,28,28,28,28,28,28,28,28,28,28,28,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,30,30,30,30,30,30,30,30,30,30,30,30,31,31,31,31,31,31,31,31,31,31,31,31,32,32,32,32,32,32,32,32,32,32,32,32,32,33,33,33,33,33,33,33,33,33,33,33,33,33,34,34,34,34,34,34,34,34,34,34,34,35,35,35,35,35,35,35,35,35,35,35,35,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,37,37,37,37,37,37,37,37,37,37,37,37,38,38,38,38,38,38,38,38,38,39,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,41,41,41,42,42,42,42,43,43,43,44,44,44,44,44,44,44,44,44,44,44,45,45,45,45,45,45,45,45,45,45,46,46,46,46,46,46,46,46,46,46,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,49,49,49,49,49,49,49,50,50,50,50,50,50,51,51,51,51,51,51,51,51,51,51,51,52,52,52,52,52,52,52,52,52,52,52,52,53,53,53,53,53,53,53,53,53,53,53,53,54,54,54,54,54,54,54,54,54,54,54],"to":[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,1,3,4,5,6,7,15,36,38,1,2,4,5,6,7,48,1,2,3,5,6,7,1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,1,2,3,4,5,7,28,1,2,3,4,5,6,9,10,11,12,13,14,15,16,17,18,19,20,27,8,10,11,12,13,14,15,16,17,18,19,20,45,8,9,11,12,13,14,15,16,17,18,19,20,8,9,10,12,13,14,15,16,17,18,19,20,32,8,9,10,11,13,14,15,16,17,18,19,20,52,8,9,10,11,12,14,15,16,17,18,19,20,8,9,10,11,12,13,15,16,17,18,19,20,2,8,9,10,11,12,13,14,16,17,18,19,20,8,9,10,11,12,13,14,15,17,18,19,20,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,8,9,10,11,12,13,14,15,17,19,20,8,9,10,11,12,13,14,15,16,17,18,20,8,9,10,11,12,13,14,15,16,17,18,19,50,22,23,24,25,53,21,23,24,25,36,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,5,21,22,23,25,21,22,23,24,46,27,28,29,30,31,32,33,34,35,36,37,38,8,28,29,30,31,32,33,34,35,36,37,38,40,6,26,27,29,30,31,32,33,34,35,36,37,38,1,26,27,28,30,31,32,33,34,35,36,37,38,40,51,52,26,27,28,29,31,32,33,34,35,36,37,38,3,27,28,29,30,32,33,34,35,36,37,38,11,26,27,28,29,30,31,33,34,35,36,37,38,23,26,27,28,29,30,31,32,34,35,36,37,38,27,28,29,30,31,32,33,35,36,37,38,26,27,28,29,30,31,32,33,34,36,37,38,2,22,26,27,28,29,30,31,32,33,34,35,37,38,53,26,27,28,29,30,31,32,33,34,35,36,38,27,28,29,30,31,32,34,35,36,34,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,41,42,43,44,45,46,47,48,49,50,51,52,53,54,40,42,43,40,41,43,44,40,41,42,42,45,46,47,48,49,50,51,52,53,54,44,46,47,48,49,50,51,52,53,54,44,45,47,48,49,50,51,52,53,54,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,48,49,50,51,52,53,54,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,49,50,51,52,53,54,3,45,46,47,48,52,54,5,20,48,49,53,54,29,44,45,46,47,48,49,50,52,53,54,7,12,29,44,45,46,47,48,49,50,51,53,5,21,36,44,45,47,48,49,50,51,52,54,5,44,45,46,47,48,49,50,51,52,53],"weight":[21,21,21,21,21,21,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,16,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,6,6,6,6,6,9,2,2,2,8,8,8,8,8,8,2,12,12,12,12,12,12,20,20,20,20,20,20,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,11,11,10,10,11,11,11,11,11,11,11,11,3,12,15,12,12,12,12,3,4,3,3,4,4,3,3,4,3,4,3,3,4,4,9,4,7,7,11,5,4,5,6,8,3,8,8,7,9,9,6,9,10,10,7,5,7,11,10,11,6,11,7,11,9,10,7,10,8,3,9,10,8,8,11,6,7,5,3,6,5,6,2,9,5,10,7,7,4,3,4,7,2,3,3,6,5,7,4,6,6,7,5,7,6,3,4,3,6,13,8,8,5,6,6,11,9,6,2,7,6,8,7,5,5,7,6,7,7,5,4,6,2,2,2,2,2,2,2,6,4,7,7,6,6,6,6,5,5,4,4,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,3,4,5,3,3,2,5,2,3,2,4,8,5,9,6,5,4,10,7,4,4,5,5,10,5,7,4,5,4,4,4,3,2,4,3,4,2,4,7,2,7,5,10,4,2,4,4,4,4,4,4,4,4,4,4,4,4,6,4,4,4,4,4,4,4,6,10,17,9,4,4,4,4,4,4,4,5,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,2,5,9,7,3,8,2,3,4,2,26,25,25,25,25,25,24,25,25,26,25,26,3,4,3,6,4,3,3,6,5,3,4,5,3,3,2,3,6,5,8,6,6,7,4,6,6,6,2,2,6,5,7,5,6,5,7,6,6,5,5,3,2,3,3,5,7,9,12,9,9,6,13,12,9,11,2,5,4,6,6,9,7,6,12,7,7,8,4,2,8,6,9,7,10,7,9,6,10,5,8,2,4,2,3,5,7,8,4,7,5,7,6,4,5,6,4,7,8,5,9,6,6,10,6,3,11,7,9,11,15,7,11,11,9,13,13,2,2,3,12,11,12,16,15,19,12,11,14,11,13,3,3,4,5,6,7,7,6,9,10,7,5,3,2,5,5,2,2,2,4,4,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,4,2,3,2,2,2,2,2,2,2,2,2,2,40,22,30,2,2,2,2,2,2,2,2,2,2,2,28,19,24,25,19,28,2,15,16,24,3,4,2,5,6,2,5,5,2,6,3,6,4,2,6,5,5,4,7,5,6,6,3,4,9,5,6,8,7,4,6,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,2,2,2,2,2,2,2,5,4,3,7,5,6,6,5,5,5,2,2,4,2,4,2,2,2,2,2,2,2,2,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,4,4,5,3,8,6,5,5,5,6,2,3,2,3,3,4,2,2,4,2,2,5,2,3,3,3,3,4,4,2,3,3,3,3,2,2,4,2,4,4,3,4,5,3,2,4,3,3,4,3,3,2,5,4,8,2,2,5,2,3,4,3,2,5,4,4,2,3,4]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","physics":false},"manipulation":{"enabled":false},"edges":{"smooth":false},"physics":{"stabilization":false},"layout":{"randomSeed":123}},"groups":["Administration","Security","Engineering","Executive","Facilities","Information Technology"],"width":null,"height":null,"idselection":{"enabled":true,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","igraphlayout":{"type":"square"},"highlight":{"enabled":true,"hoverNearest":false,"degree":1,"algorithm":"all","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":false,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"},"legend":{"width":0.2,"useGroups":true,"position":"left","ncol":1,"stepX":100,"stepY":100,"zoom":true}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
 <p>Visit <a href="http://datastorm-open.github.io/visNetwork/options.html">Option</a> to find out more about visOption’s argument.</p>
 
 
