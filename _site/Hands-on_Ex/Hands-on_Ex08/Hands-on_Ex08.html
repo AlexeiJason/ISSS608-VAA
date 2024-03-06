@@ -334,7 +334,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#reviewing-the-output-tidygraphs-graph-object-1" id="toc-reviewing-the-output-tidygraphs-graph-object-1" class="nav-link" data-scroll-target="#reviewing-the-output-tidygraphs-graph-object-1">Reviewing the output tidygraph’s graph object</a></li>
   <li><a href="#changing-the-active-object" id="toc-changing-the-active-object" class="nav-link" data-scroll-target="#changing-the-active-object">Changing the active object</a></li>
   </ul></li>
-  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"></a></li>
+  <li><a href="#plotting-static-network-graphs-with-ggraph-package" id="toc-plotting-static-network-graphs-with-ggraph-package" class="nav-link" data-scroll-target="#plotting-static-network-graphs-with-ggraph-package">Plotting Static Network Graphs with <strong>ggraph</strong> package</a>
+  <ul class="collapse">
+  <li><a href="#plotting-a-basic-network-graph" id="toc-plotting-a-basic-network-graph" class="nav-link" data-scroll-target="#plotting-a-basic-network-graph">Plotting a basic network graph</a></li>
+  <li><a href="#changing-the-default-network-graph-theme" id="toc-changing-the-default-network-graph-theme" class="nav-link" data-scroll-target="#changing-the-default-network-graph-theme">Changing the default network graph theme</a></li>
+  <li><a href="#changing-the-coloring-of-the-plot" id="toc-changing-the-coloring-of-the-plot" class="nav-link" data-scroll-target="#changing-the-coloring-of-the-plot">Changing the coloring of the plot</a></li>
+  <li><a href="#working-with-ggraphs-layouts" id="toc-working-with-ggraphs-layouts" class="nav-link" data-scroll-target="#working-with-ggraphs-layouts">Working with <strong>ggraph</strong>’s layouts</a></li>
+  <li><a href="#fruchterman-and-reingold-layout" id="toc-fruchterman-and-reingold-layout" class="nav-link" data-scroll-target="#fruchterman-and-reingold-layout">Fruchterman and Reingold layout</a></li>
+  <li><a href="#modifying-network-nodes" id="toc-modifying-network-nodes" class="nav-link" data-scroll-target="#modifying-network-nodes">Modifying network nodes</a></li>
+  <li><a href="#modifying-edges" id="toc-modifying-edges" class="nav-link" data-scroll-target="#modifying-edges">Modifying edges</a></li>
+  </ul></li>
+  <li><a href="#creating-facet-graphs" id="toc-creating-facet-graphs" class="nav-link" data-scroll-target="#creating-facet-graphs">Creating facet graphs</a>
+  <ul class="collapse">
+  <li><a href="#working-with-facet_edges" id="toc-working-with-facet_edges" class="nav-link" data-scroll-target="#working-with-facet_edges">Working with <em>facet_edges()</em></a></li>
+  <li><a href="#working-with-facet_edges-1" id="toc-working-with-facet_edges-1" class="nav-link" data-scroll-target="#working-with-facet_edges-1">Working with <em>facet_edges()</em></a></li>
+  <li><a href="#a-framed-facet-graph" id="toc-a-framed-facet-graph" class="nav-link" data-scroll-target="#a-framed-facet-graph">A framed facet graph</a></li>
+  <li><a href="#working-with-facet_nodes" id="toc-working-with-facet_nodes" class="nav-link" data-scroll-target="#working-with-facet_nodes">Working with <em>facet_nodes()</em></a></li>
+  </ul></li>
+  <li><a href="#network-metrics-analysis" id="toc-network-metrics-analysis" class="nav-link" data-scroll-target="#network-metrics-analysis">Network Metrics Analysis</a>
+  <ul class="collapse">
+  <li><a href="#computing-centrality-indices" id="toc-computing-centrality-indices" class="nav-link" data-scroll-target="#computing-centrality-indices">Computing centrality indices</a></li>
+  <li><a href="#visualising-network-metrics" id="toc-visualising-network-metrics" class="nav-link" data-scroll-target="#visualising-network-metrics">Visualising network metrics</a></li>
+  <li><a href="#visualising-community" id="toc-visualising-community" class="nav-link" data-scroll-target="#visualising-community">Visualising Community</a></li>
+  </ul></li>
+  <li><a href="#building-interactive-network-graph-with-visnetwork" id="toc-building-interactive-network-graph-with-visnetwork" class="nav-link" data-scroll-target="#building-interactive-network-graph-with-visnetwork">Building Interactive Network Graph with visNetwork</a>
+  <ul class="collapse">
+  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation">Data preparation</a></li>
+  <li><a href="#plotting-the-first-interactive-network-graph" id="toc-plotting-the-first-interactive-network-graph" class="nav-link" data-scroll-target="#plotting-the-first-interactive-network-graph">Plotting the first interactive network graph</a></li>
+  <li><a href="#working-with-layout" id="toc-working-with-layout" class="nav-link" data-scroll-target="#working-with-layout">Working with layout</a></li>
+  <li><a href="#working-with-visual-attributes---nodes" id="toc-working-with-visual-attributes---nodes" class="nav-link" data-scroll-target="#working-with-visual-attributes---nodes">Working with visual attributes - Nodes</a></li>
+  <li><a href="#working-with-visual-attributes---edges" id="toc-working-with-visual-attributes---edges" class="nav-link" data-scroll-target="#working-with-visual-attributes---edges">Working with visual attributes - Edges</a></li>
+  <li><a href="#interactivity" id="toc-interactivity" class="nav-link" data-scroll-target="#interactivity">Interactivity</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -463,7 +494,7 @@ Warning
 <section id="wrangling-time" class="level3">
 <h3 class="anchored" data-anchor-id="wrangling-time">Wrangling time</h3>
 <p>The code chunk below will be used to perform the changes.</p>
-<p><code>ayk GAStech_edges &lt;- GAStech_edges %&gt;%   mutate(SendDate = dmy(SentDate)) %&gt;%   mutate(Weekday = wday(SentDate,                         label = TRUE,                         abbr = FALSE))}</code></p>
+<p><code>bqc GAStech_edges &lt;- GAStech_edges %&gt;%   mutate(SendDate = dmy(SentDate)) %&gt;%   mutate(Weekday = wday(SentDate,                         label = TRUE,                         abbr = FALSE))}</code></p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -493,7 +524,7 @@ Things to learn from the code chunk above
 <p>A close examination of <em>GAStech_edges</em> data.frame reveals that it consists of individual e-mail flow records. This is not very useful for visualisation.</p>
 <p>In view of this, we will aggregate the individual by date, senders, receivers, main subject and day of the week.</p>
 <p>The code chunk:</p>
-<p><code>ayk GAStech_edges_aggregated &lt;- GAStech_edges %&gt;%   filter(MainSubject == "Work related") %&gt;%   group_by(source, target, Weekday) %&gt;%     summarise(Weight = n()) %&gt;%   filter(source!=target) %&gt;%   filter(Weight &gt; 1) %&gt;%   ungroup()}</code></p>
+<p><code>bqc GAStech_edges_aggregated &lt;- GAStech_edges %&gt;%   filter(MainSubject == "Work related") %&gt;%   group_by(source, target, Weekday) %&gt;%     summarise(Weight = n()) %&gt;%   filter(source!=target) %&gt;%   filter(Weight &gt; 1) %&gt;%   ungroup()}</code></p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -558,7 +589,7 @@ Things to learn from the code chunk above:
 <h3 class="anchored" data-anchor-id="using-tbl_graph-to-build-tidygraph-data-model.">Using <code>tbl_graph()</code> to build tidygraph data model.</h3>
 <p>In this section, you will use <code>tbl_graph()</code> of <strong>tinygraph</strong> package to build an tidygraph’s network graph data.frame.</p>
 <p>Before typing the codes, you are recommended to review to reference guide of <a href="https://tidygraph.data-imaginist.com/reference/tbl_graph.html"><code>tbl_graph()</code></a></p>
-<p><code>ayk GAStech_graph &lt;- tbl_graph(nodes = GAStech_nodes,                            edges = GAStech_edges_aggregated,                             directed = TRUE)}</code></p>
+<p><code>bqc GAStech_graph &lt;- tbl_graph(nodes = GAStech_nodes,                            edges = GAStech_edges_aggregated,                             directed = TRUE)}</code></p>
 </section>
 <section id="reviewing-the-output-tidygraphs-graph-object" class="level3">
 <h3 class="anchored" data-anchor-id="reviewing-the-output-tidygraphs-graph-object">Reviewing the output tidygraph’s graph object</h3>
@@ -580,10 +611,209 @@ Things to learn from the code chunk above:
 <p>Visit the reference guide of <a href="https://tidygraph.data-imaginist.com/reference/activate.html"><em>activate()</em></a> to find out more about the function.</p>
 </section>
 </section>
-<section id="section" class="level2">
-<h2 class="anchored" data-anchor-id="section"></h2>
+<section id="plotting-static-network-graphs-with-ggraph-package" class="level2">
+<h2 class="anchored" data-anchor-id="plotting-static-network-graphs-with-ggraph-package">Plotting Static Network Graphs with <strong>ggraph</strong> package</h2>
+<p><a href="https://ggraph.data-imaginist.com/index.html"><strong>ggraph</strong></a> is an extension of <strong>ggplot2</strong>, making it easier to carry over basic ggplot skills to the design of network graphs.</p>
+<p>As in all network graph, there are three main aspects to a <strong>ggraph</strong>’s network graph, they are:</p>
+<ul>
+<li><a href="https://cran.r-project.org/web/packages/ggraph/vignettes/Nodes.html">nodes</a>,</li>
+<li><a href="https://cran.r-project.org/web/packages/ggraph/vignettes/Edges.html">edges</a> and</li>
+<li><a href="https://cran.r-project.org/web/packages/ggraph/vignettes/Layouts.html">layouts</a>.</li>
+</ul>
+<p>For a comprehensive discussion of each of this aspect of graph, please refer to their respective vignettes provided.</p>
+<section id="plotting-a-basic-network-graph" class="level3">
+<h3 class="anchored" data-anchor-id="plotting-a-basic-network-graph">Plotting a basic network graph</h3>
+<p>The code chunk below uses <a href="https://ggraph.data-imaginist.com/reference/ggraph.html"><em>ggraph()</em></a>, <a href="https://ggraph.data-imaginist.com/reference/geom_edge_link.html"><em>geom-edge_link()</em></a> and <a href="https://ggraph.data-imaginist.com/reference/geom_node_point.html"><em>geom_node_point()</em></a> to plot a network graph by using <em>GAStech_graph</em>. Before your get started, it is advisable to read their respective reference guide at least once.</p>
+<pre class="{r} ggraph(GAStech_graph) +   geom_edge_link() +   geom_node_point()}"><code></code></pre>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Things to learn from the code chunk above:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>The basic plotting function is <code>ggraph()</code>, which takes the data to be used for the graph and the type of layout desired. Both of the arguments for <code>ggraph()</code> are built around <em>igraph</em>. Therefore, <code>ggraph()</code> can use either an <em>igraph</em> object or a <em>tbl_graph</em> object.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="changing-the-default-network-graph-theme" class="level3">
+<h3 class="anchored" data-anchor-id="changing-the-default-network-graph-theme">Changing the default network graph theme</h3>
+<p>In this section, you will use <a href="https://ggraph.data-imaginist.com/reference/theme_graph.html"><em>theme_graph()</em></a> to remove the x and y axes. Before your get started, it is advisable to read it’s reference guide at least once.</p>
+<pre class="{r} g <- ggraph(GAStech_graph) +    geom_edge_link(aes()) +   geom_node_point(aes())  g + theme_graph()}"><code></code></pre>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Things to learn from the code chunk above:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>ggraph</strong> introduces a special ggplot theme that provides better defaults for network graphs than the normal ggplot defaults. <code>theme_graph()</code>, besides removing axes, grids, and border, changes the font to Arial Narrow (this can be overridden).</li>
+<li>The ggraph theme can be set for a series of plots with the <code>set_graph_style()</code> command run before the graphs are plotted or by using <code>theme_graph()</code> in the individual plots.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="changing-the-coloring-of-the-plot" class="level3">
+<h3 class="anchored" data-anchor-id="changing-the-coloring-of-the-plot">Changing the coloring of the plot</h3>
+<p>Furthermore, <code>theme_graph()</code> makes it easy to change the coloring of the plot.</p>
+<p><code>bqc g &lt;- ggraph(GAStech_graph) +    geom_edge_link(aes(colour = 'grey50')) +   geom_node_point(aes(colour = 'grey40'))  g + theme_graph(background = 'grey10',                 text_colour = 'white')}</code></p>
+</section>
+<section id="working-with-ggraphs-layouts" class="level3">
+<h3 class="anchored" data-anchor-id="working-with-ggraphs-layouts">Working with <strong>ggraph</strong>’s layouts</h3>
+<p><strong>ggraph</strong> support many layout for standard used, they are: star, circle, nicely (default), dh, gem, graphopt, grid, mds, spahere, randomly, fr, kk, drl and lgl. Figures below and on the right show layouts supported by <code>ggraph()</code>.</p>
+<p><img src="images/image4.jpg" class="img-fluid"></p>
+<p><img src="images/image5.jpg" class="img-fluid"></p>
+</section>
+<section id="fruchterman-and-reingold-layout" class="level3">
+<h3 class="anchored" data-anchor-id="fruchterman-and-reingold-layout">Fruchterman and Reingold layout</h3>
+<p>The code chunks below will be used to plot the network graph using Fruchterman and Reingold layout.</p>
+<p><code>bqc g &lt;- ggraph(GAStech_graph,              layout = "fr") +   geom_edge_link(aes()) +   geom_node_point(aes())  g + theme_graph()}</code></p>
+<p>Thing to learn from the code chunk above:</p>
+<ul>
+<li><em>layout</em> argument is used to define the layout to be used.</li>
+</ul>
+</section>
+<section id="modifying-network-nodes" class="level3">
+<h3 class="anchored" data-anchor-id="modifying-network-nodes">Modifying network nodes</h3>
+<p>In this section, you will colour each node by referring to their respective departments.</p>
+<p><code>bqc g &lt;- ggraph(GAStech_graph,              layout = "nicely") +    geom_edge_link(aes()) +   geom_node_point(aes(colour = Department,                        size = 3))  g + theme_graph()}</code></p>
+<p>Things to learn from the code chunks above:</p>
+<ul>
+<li><em>geom_node_point</em> is equivalent in functionality to <em>geo_point</em> of <strong>ggplot2</strong>. It allows for simple plotting of nodes in different shapes, colours and sizes. In the codes chnuks above colour and size are used.</li>
+</ul>
+</section>
+<section id="modifying-edges" class="level3">
+<h3 class="anchored" data-anchor-id="modifying-edges">Modifying edges</h3>
+<p>In the code chunk below, the thickness of the edges will be mapped with the <em>Weight</em> variable.</p>
+<p><code>bqc g &lt;- ggraph(GAStech_graph,              layout = "nicely") +   geom_edge_link(aes(width=Weight),                   alpha=0.2) +   scale_edge_width(range = c(0.1, 5)) +   geom_node_point(aes(colour = Department),                    size = 3)  g + theme_graph()}</code></p>
+<p>Things to learn from the code chunks above:</p>
+<ul>
+<li><em>geom_edge_link</em> draws edges in the simplest way - as straight lines between the start and end nodes. But, it can do more that that. In the example above, argument <em>width</em> is used to map the width of the line in proportional to the Weight attribute and argument alpha is used to introduce opacity on the line.</li>
+</ul>
+</section>
+</section>
+<section id="creating-facet-graphs" class="level2">
+<h2 class="anchored" data-anchor-id="creating-facet-graphs">Creating facet graphs</h2>
+<p>Another very useful feature of <strong>ggraph</strong> is faceting. In visualising network data, this technique can be used to reduce edge over-plotting in a very meaning way by spreading nodes and edges out based on their attributes. In this section, you will learn how to use faceting technique to visualise network data.</p>
+<p>There are three functions in ggraph to implement faceting, they are:</p>
+<ul>
+<li><a href=""><em>facet_nodes()</em></a> whereby edges are only draw in a panel if both terminal nodes are present here,</li>
+<li><a href="https://ggraph.data-imaginist.com/reference/facet_edges.html"><em>facet_edges()</em></a> whereby nodes are always drawn in al panels even if the node data contains an attribute named the same as the one used for the edge facetting, and</li>
+<li><a href="https://ggraph.data-imaginist.com/reference/facet_graph.html"><em>facet_graph()</em></a> faceting on two variables simultaneously.</li>
+</ul>
+<section id="working-with-facet_edges" class="level3">
+<h3 class="anchored" data-anchor-id="working-with-facet_edges">Working with <em>facet_edges()</em></h3>
+<p>In the code chunk below, <a href="https://ggraph.data-imaginist.com/reference/facet_edges.html"><em>facet_edges()</em></a> is used. Before getting started, it is advisable for you to read it’s reference guide at least once.</p>
+<p><code>bqc set_graph_style()  g &lt;- ggraph(GAStech_graph,              layout = "nicely") +    geom_edge_link(aes(width=Weight),                   alpha=0.2) +   scale_edge_width(range = c(0.1, 5)) +   geom_node_point(aes(colour = Department),                    size = 2)  g + facet_edges(~Weekday)}</code></p>
+</section>
+<section id="working-with-facet_edges-1" class="level3">
+<h3 class="anchored" data-anchor-id="working-with-facet_edges-1">Working with <em>facet_edges()</em></h3>
+<p>The code chunk below uses <em>theme()</em> to change the position of the legend.</p>
+<p><code>bqc set_graph_style()  g &lt;- ggraph(GAStech_graph,              layout = "nicely") +    geom_edge_link(aes(width=Weight),                   alpha=0.2) +   scale_edge_width(range = c(0.1, 5)) +   geom_node_point(aes(colour = Department),                    size = 2) +   theme(legend.position = 'bottom')    g + facet_edges(~Weekday)}</code></p>
+</section>
+<section id="a-framed-facet-graph" class="level3">
+<h3 class="anchored" data-anchor-id="a-framed-facet-graph">A framed facet graph</h3>
+<p>The code chunk below adds frame to each graph.</p>
+<p><code>bqc set_graph_style()   g &lt;- ggraph(GAStech_graph,              layout = "nicely") +    geom_edge_link(aes(width=Weight),                   alpha=0.2) +   scale_edge_width(range = c(0.1, 5)) +   geom_node_point(aes(colour = Department),                    size = 2)    g + facet_edges(~Weekday) +   th_foreground(foreground = "grey80",                   border = TRUE) +   theme(legend.position = 'bottom')}</code></p>
+</section>
+<section id="working-with-facet_nodes" class="level3">
+<h3 class="anchored" data-anchor-id="working-with-facet_nodes">Working with <em>facet_nodes()</em></h3>
+<p>In the code chunkc below, <a href="https://ggraph.data-imaginist.com/reference/facet_nodes.html"><em>facet_nodes()</em></a> is used. Before getting started, it is advisable for you to read it’s reference guide at least once.</p>
+<p><code>bqc set_graph_style()  g &lt;- ggraph(GAStech_graph,              layout = "nicely") +    geom_edge_link(aes(width=Weight),                   alpha=0.2) +   scale_edge_width(range = c(0.1, 5)) +   geom_node_point(aes(colour = Department),                    size = 2)    g + facet_nodes(~Department)+   th_foreground(foreground = "grey80",                   border = TRUE) +   theme(legend.position = 'bottom')}</code></p>
+</section>
+</section>
+<section id="network-metrics-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="network-metrics-analysis">Network Metrics Analysis</h2>
+<section id="computing-centrality-indices" class="level3">
+<h3 class="anchored" data-anchor-id="computing-centrality-indices">Computing centrality indices</h3>
+<p>Centrality measures are a collection of statistical indices use to describe the relative important of the actors are to a network. There are four well-known centrality measures, namely: degree, betweenness, closeness and eigenvector. It is beyond the scope of this hands-on exercise to cover the principles and mathematics of these measure here. Students are encouraged to refer to <em>Chapter 7: Actor Prominence</em> of <strong>A User’s Guide to Network Analysis in R</strong> to gain better understanding of theses network measures.</p>
+<p><code>bqc g &lt;- GAStech_graph %&gt;%   mutate(betweenness_centrality = centrality_betweenness()) %&gt;%   ggraph(layout = "fr") +    geom_edge_link(aes(width=Weight),                   alpha=0.2) +   scale_edge_width(range = c(0.1, 5)) +   geom_node_point(aes(colour = Department,             size=betweenness_centrality)) g + theme_graph()}</code></p>
+<p>Things to learn from the code chunk above:</p>
+<ul>
+<li><em>mutate()</em> of <strong>dplyr</strong> is used to perform the computation.</li>
+<li>the algorithm used, on the other hand, is the <em>centrality_betweenness()</em> of <strong>tidygraph</strong>.</li>
+</ul>
+</section>
+<section id="visualising-network-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="visualising-network-metrics">Visualising network metrics</h3>
+<p>It is important to note that from <strong>ggraph v2.0</strong> onward tidygraph algorithms such as centrality measures can be accessed directly in ggraph calls. This means that it is no longer necessary to precompute and store derived node and edge centrality measures on the graph in order to use them in a plot.</p>
+<p><code>bqc g &lt;- GAStech_graph %&gt;%   ggraph(layout = "fr") +    geom_edge_link(aes(width=Weight),                   alpha=0.2) +   scale_edge_width(range = c(0.1, 5)) +   geom_node_point(aes(colour = Department,                        size = centrality_betweenness())) g + theme_graph()}</code></p>
+</section>
+<section id="visualising-community" class="level3">
+<h3 class="anchored" data-anchor-id="visualising-community">Visualising Community</h3>
+<p>tidygraph package inherits many of the community detection algorithms imbedded into igraph and makes them available to us, including <em>Edge-betweenness (group_edge_betweenness)</em>, <em>Leading eigenvector (group_leading_eigen)</em>, <em>Fast-greedy (group_fast_greedy)</em>, <em>Louvain (group_louvain)</em>, <em>Walktrap (group_walktrap)</em>, <em>Label propagation (group_label_prop)</em>, <em>InfoMAP (group_infomap)</em>, <em>Spinglass (group_spinglass)</em>, and <em>Optimal (group_optimal)</em>. Some community algorithms are designed to take into account direction or weight, while others ignore it. Use this <a href="https://tidygraph.data-imaginist.com/reference/group_graph.html">link</a> to find out more about community detection functions provided by tidygraph,</p>
+<p>In the code chunk below <em>group_edge_betweenness()</em> is used.</p>
+<p><code>bqc g &lt;- GAStech_graph %&gt;%   mutate(community = as.factor(group_edge_betweenness(weights = Weight, directed = TRUE))) %&gt;%   ggraph(layout = "fr") +    geom_edge_link(aes(width=Weight),                   alpha=0.2) +   scale_edge_width(range = c(0.1, 5)) +   geom_node_point(aes(colour = community))    g + theme_graph()}</code></p>
+</section>
+</section>
+<section id="building-interactive-network-graph-with-visnetwork" class="level2">
+<h2 class="anchored" data-anchor-id="building-interactive-network-graph-with-visnetwork">Building Interactive Network Graph with visNetwork</h2>
+<ul>
+<li><p><a href="http://datastorm-open.github.io/visNetwork/">visNetwork()</a> is a R package for network visualization, using <a href="http://visjs.org">vis.js</a> javascript library.</p></li>
+<li><p><em>visNetwork()</em> function uses a nodes list and edges list to create an interactive graph.</p>
+<ul>
+<li>The nodes list must include an “id” column, and the edge list must have “from” and “to” columns.</li>
+<li>The function also plots the labels for the nodes, using the names of the actors from the “label” column in the node list.</li>
+</ul></li>
+<li><p>The resulting graph is fun to play around with.</p>
+<ul>
+<li>You can move the nodes and the graph will use an algorithm to keep the nodes properly spaced.</li>
+<li>You can also zoom in and out on the plot and move it around to re-center it.</li>
+</ul></li>
+</ul>
+<section id="data-preparation" class="level3">
+<h3 class="anchored" data-anchor-id="data-preparation">Data preparation</h3>
+<p>Before we can plot the interactive network graph, we need to prepare the data model by using the code chunk below.</p>
+<p><code>bqc GAStech_edges_aggregated &lt;- GAStech_edges %&gt;%   left_join(GAStech_nodes, by = c("sourceLabel" = "label")) %&gt;%   rename(from = id) %&gt;%   left_join(GAStech_nodes, by = c("targetLabel" = "label")) %&gt;%   rename(to = id) %&gt;%   filter(MainSubject == "Work related") %&gt;%   group_by(from, to) %&gt;%     summarise(weight = n()) %&gt;%   filter(from!=to) %&gt;%   filter(weight &gt; 1) %&gt;%   ungroup()}</code></p>
+</section>
+<section id="plotting-the-first-interactive-network-graph" class="level3">
+<h3 class="anchored" data-anchor-id="plotting-the-first-interactive-network-graph">Plotting the first interactive network graph</h3>
+<p>The code chunk below will be used to plot an interactive network graph by using the data prepared.</p>
+<p><code>bqc eval=FALSE visNetwork(GAStech_nodes,             GAStech_edges_aggregated)}</code></p>
+</section>
+<section id="working-with-layout" class="level3">
+<h3 class="anchored" data-anchor-id="working-with-layout">Working with layout</h3>
+<p>In the code chunk below, Fruchterman and Reingold layout is used.</p>
+<p><code>bqc visNetwork(GAStech_nodes,            GAStech_edges_aggregated) %&gt;%   visIgraphLayout(layout = "layout_with_fr")}</code></p>
+<p>Visit <a href="http://datastorm-open.github.io/visNetwork/igraph.html">Igraph</a> to find out more about <em>visIgraphLayout</em>’s argument.</p>
+</section>
+<section id="working-with-visual-attributes---nodes" class="level3">
+<h3 class="anchored" data-anchor-id="working-with-visual-attributes---nodes">Working with visual attributes - Nodes</h3>
+<p>visNetwork() looks for a field called “group” in the nodes object and colour the nodes according to the values of the group field.</p>
+<p>The code chunk below rename Department field to group.</p>
+<p><code>bqc GAStech_nodes &lt;- GAStech_nodes %&gt;%   rename(group = Department)}</code></p>
+<p>When we rerun the code chunk below, visNetwork shades the nodes by assigning unique colour to each category in the <em>group</em> field.</p>
+<p><code>bqc visNetwork(GAStech_nodes,            GAStech_edges_aggregated) %&gt;%   visIgraphLayout(layout = "layout_with_fr") %&gt;%   visLegend() %&gt;%   visLayout(randomSeed = 123)}</code></p>
+</section>
+<section id="working-with-visual-attributes---edges" class="level3">
+<h3 class="anchored" data-anchor-id="working-with-visual-attributes---edges">Working with visual attributes - Edges</h3>
+<p>In the code run below <em>visEdges()</em> is used to symbolise the edges.<br>
+- The argument <em>arrows</em> is used to define where to place the arrow.<br>
+- The <em>smooth</em> argument is used to plot the edges using a smooth curve.</p>
+<p><code>bqc visNetwork(GAStech_nodes,            GAStech_edges_aggregated) %&gt;%   visIgraphLayout(layout = "layout_with_fr") %&gt;%   visEdges(arrows = "to",             smooth = list(enabled = TRUE,                           type = "curvedCW")) %&gt;%   visLegend() %&gt;%   visLayout(randomSeed = 123)}</code></p>
+<p>Visit <a href="http://datastorm-open.github.io/visNetwork/edges.html">Option</a> to find out more about visEdges’s argument.</p>
+</section>
+<section id="interactivity" class="level3">
+<h3 class="anchored" data-anchor-id="interactivity">Interactivity</h3>
+<p>In the code chunk below, <em>visOptions()</em> is used to incorporate interactivity features in the data visualisation.</p>
+<ul>
+<li>The argument <em>highlightNearest</em> highlights nearest when clicking a node.</li>
+<li>The argument <em>nodesIdSelection</em> adds an id node selection creating an HTML select element.</li>
+</ul>
+<p><code>bqc visNetwork(GAStech_nodes,            GAStech_edges_aggregated) %&gt;%   visIgraphLayout(layout = "layout_with_fr") %&gt;%   visOptions(highlightNearest = TRUE,              nodesIdSelection = TRUE) %&gt;%   visLegend() %&gt;%   visLayout(randomSeed = 123)}</code></p>
+<p>Visit <a href="http://datastorm-open.github.io/visNetwork/options.html">Option</a> to find out more about visOption’s argument.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
