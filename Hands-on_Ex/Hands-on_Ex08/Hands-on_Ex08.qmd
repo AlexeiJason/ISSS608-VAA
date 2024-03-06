@@ -73,4 +73,53 @@ glimpse(GAStech_edges)
 The output report of GAStech_edges above reveals that the *SentDate* is treated as "Character" data type instead of *date* data type. This is an error! Before we continue, it is important for us to change the data type of *SentDate* field back to "Date"" data type.
 :::
 
-### 
+### Wrangling time
+
+The code chunk below will be used to perform the changes.
+
+```{r} GAStech_edges <- GAStech_edges %>%   mutate(SendDate = dmy(SentDate)) %>%   mutate(Weekday = wday(SentDate,                         label = TRUE,                         abbr = FALSE))}
+```
+
+::: callout-tip
+## Things to learn from the code chunk above
+
+-   both *dmy()* and *wday()* are functions of **lubridate** package. [lubridate](cran.r-project.org/web/packages/lubridate/vignettes/lubridate.html) is an R package that makes it easier to work with dates and times.
+-   *dmy()* transforms the SentDate to Date data type.
+-   *wday()* returns the day of the week as a decimal number or an ordered factor if label is TRUE. The argument abbr is FALSE keep the daya spells in full, i.e. Monday. The function will create a new column in the data.frame i.e. Weekday and the output of *wday()* will save in this newly created field.
+-   the values in the *Weekday* field are in ordinal scale.
+:::
+
+### Reviewing the revised date fields
+
+Table below shows the data structure of the reformatted *GAStech_edges* data frame
+
+```{r} #| echo: false glimpse(GAStech_edges)}
+```
+
+### Wrangling attributes
+
+A close examination of *GAStech_edges* data.frame reveals that it consists of individual e-mail flow records. This is not very useful for visualisation.
+
+In view of this, we will aggregate the individual by date, senders, receivers, main subject and day of the week.
+
+The code chunk:
+
+```{r} GAStech_edges_aggregated <- GAStech_edges %>%   filter(MainSubject == "Work related") %>%   group_by(source, target, Weekday) %>%     summarise(Weight = n()) %>%   filter(source!=target) %>%   filter(Weight > 1) %>%   ungroup()}
+```
+
+::: callout-tip
+## Things to learn from the code chunk above:
+
+-   four functions from **dplyr** package are used. They are: *filter()*, *group()*, *summarise()*, and *ungroup()*.
+-   The output data.frame is called **GAStech_edges_aggregated**.
+-   A new field called *Weight* has been added in GAStech_edges_aggregated.
+:::
+
+### Reviewing the revised edges file
+
+Table below shows the data structure of the reformatted *GAStech_edges* data frame
+
+```{r} #| echo: false glimpse(GAStech_edges_aggregated)}
+```
+
+## 

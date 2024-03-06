@@ -320,8 +320,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#the-nodes-data" id="toc-the-nodes-data" class="nav-link" data-scroll-target="#the-nodes-data">The nodes data</a></li>
   <li><a href="#importing-network-data-from-files" id="toc-importing-network-data-from-files" class="nav-link" data-scroll-target="#importing-network-data-from-files">Importing network data from files</a></li>
   <li><a href="#reviewing-the-imported-data" id="toc-reviewing-the-imported-data" class="nav-link" data-scroll-target="#reviewing-the-imported-data">Reviewing the imported data</a></li>
-  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"></a></li>
+  <li><a href="#wrangling-time" id="toc-wrangling-time" class="nav-link" data-scroll-target="#wrangling-time">Wrangling time</a></li>
+  <li><a href="#reviewing-the-revised-date-fields" id="toc-reviewing-the-revised-date-fields" class="nav-link" data-scroll-target="#reviewing-the-revised-date-fields">Reviewing the revised date fields</a></li>
+  <li><a href="#wrangling-attributes" id="toc-wrangling-attributes" class="nav-link" data-scroll-target="#wrangling-attributes">Wrangling attributes</a></li>
+  <li><a href="#reviewing-the-revised-edges-file" id="toc-reviewing-the-revised-edges-file" class="nav-link" data-scroll-target="#reviewing-the-revised-edges-file">Reviewing the revised edges file</a></li>
   </ul></li>
+  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"></a></li>
   </ul>
 </nav>
     </div>
@@ -387,28 +391,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(igraph, tidygraph, ggraph, </span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>               visNetwork, lubridate, clock,</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>               tidyverse, graphlayouts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>package 'tidygraph' successfully unpacked and MD5 sums checked
-
-The downloaded binary packages are in
-    C:\Users\alexe\AppData\Local\Temp\RtmpeiHoUq\downloaded_packages
-package 'polyclip' successfully unpacked and MD5 sums checked
-package 'ggplot2' successfully unpacked and MD5 sums checked
-package 'ggforce' successfully unpacked and MD5 sums checked
-package 'graphlayouts' successfully unpacked and MD5 sums checked
-package 'ggraph' successfully unpacked and MD5 sums checked
-
-The downloaded binary packages are in
-    C:\Users\alexe\AppData\Local\Temp\RtmpeiHoUq\downloaded_packages
-package 'visNetwork' successfully unpacked and MD5 sums checked
-
-The downloaded binary packages are in
-    C:\Users\alexe\AppData\Local\Temp\RtmpeiHoUq\downloaded_packages
-package 'clock' successfully unpacked and MD5 sums checked
-
-The downloaded binary packages are in
-    C:\Users\alexe\AppData\Local\Temp\RtmpeiHoUq\downloaded_packages</code></pre>
-</div>
 </div>
 </section>
 </section>
@@ -433,15 +415,15 @@ The downloaded binary packages are in
 <h3 class="anchored" data-anchor-id="importing-network-data-from-files">Importing network data from files</h3>
 <p>In this step, you will import GAStech_email_node.csv and GAStech_email_edges-v2.csv into RStudio environment by using <code>read_csv()</code> of <strong>readr</strong> package.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>GAStech_nodes <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/GAStech_email_node.csv"</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>GAStech_edges <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/GAStech_email_edge-v2.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>GAStech_nodes <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/GAStech_email_node.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>GAStech_edges <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/GAStech_email_edge-v2.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="reviewing-the-imported-data" class="level3">
 <h3 class="anchored" data-anchor-id="reviewing-the-imported-data">Reviewing the imported data</h3>
 <p>Next, we will examine the structure of the data frame using <em>glimpse()</em> of <strong>dplyr</strong>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(GAStech_edges)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(GAStech_edges)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 9,063
 Columns: 8
@@ -469,11 +451,68 @@ Warning
 </div>
 </div>
 </section>
-<section id="section" class="level3">
-<h3 class="anchored" data-anchor-id="section"></h3>
-
-
+<section id="wrangling-time" class="level3">
+<h3 class="anchored" data-anchor-id="wrangling-time">Wrangling time</h3>
+<p>The code chunk below will be used to perform the changes.</p>
+<p><code>kah GAStech_edges &lt;- GAStech_edges %&gt;%   mutate(SendDate = dmy(SentDate)) %&gt;%   mutate(Weekday = wday(SentDate,                         label = TRUE,                         abbr = FALSE))}</code></p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Things to learn from the code chunk above
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>both <em>dmy()</em> and <em>wday()</em> are functions of <strong>lubridate</strong> package. <a href="cran.r-project.org/web/packages/lubridate/vignettes/lubridate.html">lubridate</a> is an R package that makes it easier to work with dates and times.</li>
+<li><em>dmy()</em> transforms the SentDate to Date data type.</li>
+<li><em>wday()</em> returns the day of the week as a decimal number or an ordered factor if label is TRUE. The argument abbr is FALSE keep the daya spells in full, i.e.&nbsp;Monday. The function will create a new column in the data.frame i.e.&nbsp;Weekday and the output of <em>wday()</em> will save in this newly created field.</li>
+<li>the values in the <em>Weekday</em> field are in ordinal scale.</li>
+</ul>
+</div>
+</div>
 </section>
+<section id="reviewing-the-revised-date-fields" class="level3">
+<h3 class="anchored" data-anchor-id="reviewing-the-revised-date-fields">Reviewing the revised date fields</h3>
+<p>Table below shows the data structure of the reformatted <em>GAStech_edges</em> data frame</p>
+<pre class="{r} #| echo: false glimpse(GAStech_edges)}"><code></code></pre>
+</section>
+<section id="wrangling-attributes" class="level3">
+<h3 class="anchored" data-anchor-id="wrangling-attributes">Wrangling attributes</h3>
+<p>A close examination of <em>GAStech_edges</em> data.frame reveals that it consists of individual e-mail flow records. This is not very useful for visualisation.</p>
+<p>In view of this, we will aggregate the individual by date, senders, receivers, main subject and day of the week.</p>
+<p>The code chunk:</p>
+<p><code>kah GAStech_edges_aggregated &lt;- GAStech_edges %&gt;%   filter(MainSubject == "Work related") %&gt;%   group_by(source, target, Weekday) %&gt;%     summarise(Weight = n()) %&gt;%   filter(source!=target) %&gt;%   filter(Weight &gt; 1) %&gt;%   ungroup()}</code></p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Things to learn from the code chunk above:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>four functions from <strong>dplyr</strong> package are used. They are: <em>filter()</em>, <em>group()</em>, <em>summarise()</em>, and <em>ungroup()</em>.</li>
+<li>The output data.frame is called <strong>GAStech_edges_aggregated</strong>.</li>
+<li>A new field called <em>Weight</em> has been added in GAStech_edges_aggregated.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="reviewing-the-revised-edges-file" class="level3">
+<h3 class="anchored" data-anchor-id="reviewing-the-revised-edges-file">Reviewing the revised edges file</h3>
+<p>Table below shows the data structure of the reformatted <em>GAStech_edges</em> data frame</p>
+<pre class="{r} #| echo: false glimpse(GAStech_edges_aggregated)}"><code></code></pre>
+</section>
+</section>
+<section id="section" class="level2">
+<h2 class="anchored" data-anchor-id="section"></h2>
+
+
 </section>
 
 </main> <!-- /main -->
