@@ -55,3 +55,17 @@ tm_shape(mpsz2019) +
 
 tmap_mode("plot")
 ```
+
+```{r}
+grid <- terra::rast(mpsz2019,
+                    nrows = 690,
+                    ncols = 1075)
+
+xy <- terra::xyFromCell(grid,
+                        1:ncell(grid))
+```
+
+```{r}
+coop <- st_as_sf(as.data.frame(xy)
+                 )
+```
