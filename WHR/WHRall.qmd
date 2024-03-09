@@ -112,3 +112,43 @@ colSums(is.na(WHRdata_clean))
 ```{r}
 aggregate(WHRdata_clean$Country, by=list(WHRdata_clean$Year), FUN=length)
 ```
+
+```{r}
+Country_2010 = subset(WHRdata_clean, Year == 2010)$Country
+Country_2011 = subset(WHRdata_clean, Year == 2011)$Country
+Country_2012 = subset(WHRdata_clean, Year == 2012)$Country
+Country_2013 = subset(WHRdata_clean, Year == 2013)$Country
+Country_2014 = subset(WHRdata_clean, Year == 2014)$Country
+Country_2015 = subset(WHRdata_clean, Year == 2015)$Country
+Country_2016 = subset(WHRdata_clean, Year == 2016)$Country
+Country_2017 = subset(WHRdata_clean, Year == 2017)$Country
+Country_2018 = subset(WHRdata_clean, Year == 2018)$Country
+Country_2019 = subset(WHRdata_clean, Year == 2019)$Country
+```
+
+```{r}
+common_country =intersect(intersect(intersect(intersect(intersect(intersect(intersect(intersect(intersect(Country_2010,
+Country_2011),Country_2012),Country_2013),Country_2014),Country_2015),Country_2016),Country_2017),Country_2018),Country_2019)
+length(common_country)
+```
+
+```{r}
+WHRdata_cleaned = subset(WHRdata_clean,Country %in% common_country)
+print(paste("The amount of rows in the dataset is: ",dim(WHRdata_cleaned)[1]))
+print(paste("The amount of columns in the dataset is: ",dim(WHRdata_cleaned)[2]))
+```
+
+```{r}
+WHRdata1 <- merge(WHRdata_cleaned, CountryRegion, by = "Country", all.x = TRUE)
+
+WHRdata1
+colSums(is.na(WHRdata1))
+```
+
+```{r}
+skimr::skim_without_charts(WHRdata1)
+```
+
+```{r}
+write_csv(WHRdata_cleaned, file = "World Happiness Data (2010-2019)_cleaned.csv")
+```

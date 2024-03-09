@@ -136,6 +136,16 @@ Country_2016),Country_2017),Country_2018),Country_2019)
 length(common_country)
 ```
 
+Country_2015 = subset(WHRdata, Year == 2015)\$Country
+
+Country_2016 = subset(WHRdata, Year == 2016)\$Country
+
+Country_2017 = subset(WHRdata, Year == 2017)\$Country
+
+Country_2018 = subset(WHRdata, Year == 2018)\$Country
+
+Country_2019 = subset(WHRdata, Year == 2019)\$Country
+
 ```{r}
 WHRdata_cleaned = subset(WHRdata,Country %in% common_country)
 print(paste("The amount of rows in the dataset is: ",dim(WHRdata_cleaned)[1]))
@@ -175,6 +185,10 @@ skimr::skim_without_charts(WHRdata_cleaned)
 
 ```{r}
 DT::datatable(WHRdata_cleaned, class= "compact")
+```
+
+```{r}
+aggregate(WHRdata_cleaned$Country, by=list(WHRdata_cleaned$Year), FUN=length)
 ```
 
 ```{r}

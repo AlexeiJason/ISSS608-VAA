@@ -9,3 +9,172 @@ execute:
   warning: false
 editor: visual
 ---
+
+# Data Preparation
+
+## Importing packages
+
+```{r}
+pacman::p_load(tidyverse, patchwork, readr, dplyr,ggiraph,forecast, plotly)
+```
+
+## Importing Datasets
+
+```{r}
+Household_Income = read.csv ("data/Household_Income.csv")
+Household_Expend = read.csv ("data/Household_Expend.csv")
+
+head(Household_Income)
+```
+
+```{r}
+Income_long <- gather(Household_Income, Type, Income, -Year)
+
+Expend_long <- gather(Household_Expend, Category, Expenditure, -Year)
+
+```
+
+## **Average Monthly Household Income from Work Among Resident and Resident Employed Households**
+
+```{r}
+point_desc <- c(paste0(
+  "Type: ", Income_long$Type,
+  "\nYear: ",Income_long$Year,
+  "\nExpenditure: ", "$SGD"," ",Income_long$Income))
+
+line <- ggplot(data = Income_long,
+               aes(x = Year, y = Income,
+                   group = Type,
+                   color = Type,
+                   data_id = Type)) +
+  geom_line_interactive(size = 0.5) +
+  geom_point_interactive(aes(tooltip = point_desc),
+                         fill = "grey90",
+                         size = 1,
+                         stroke = 1,
+                         shape = 21) +
+ 
+  labs(y = "Income ($SGD)",
+       x = "Year",
+       title = "Income Trends by Household Type Over Time")
+
+girafe(ggobj = line, 
+       width_svg = 10,
+       height_svg = 5 ,
+       options = list(
+         opts_hover(css = "stroke-width: 1; opacity: 1;"),
+         opts_hover_inv(css = "stroke-width: 1;opacity:0.1;")))
+```
+
+A resident household refers to a household where the household reference person is a Singapore citizen or permanent resident. A resident employed household refers to a resident household with at least one employed person.
+
+### Forecast
+
+```{r}
+ts_data <- ts(Income_long$Income, frequency = 10)
+
+# Fit ARIMA model
+arima_model <- auto.arima(ts_data)
+
+# Forecast until 2027 (assuming yearly data)
+forecast_values <- forecast(arima_model, h = 5)
+
+# Create extended dataset until 2027
+extended_years <- seq(max(Income_long$Year) + 1, max(Income_long$Year)+5,1)
+extended_data <- data.frame(Year = extended_years, Income = as.numeric(forecast_values$mean))
+
+# Add a placeholder for the 'Type' variable in extended_data
+extended_data$Type <- "Forecast"
+
+# Combine original data and forecast data
+combined_data <- rbind(Income_long, extended_data)
+
+# Create point descriptions for the forecasted data
+point_desc_forecast <- paste("Forecast",
+                             "\nYear: ", extended_data$Year,
+                             "\nIncome: $SGD ", round(extended_data$Income, 2))
+
+# Create the ggplot object with forecast
+line_forecast <- ggplot(data = combined_data,
+                        aes(x = Year, y = Income,
+                            group = ifelse(Year %in% extended_years, "Forecast", Type),
+                            color = Type,
+                            data_id = Type)) +
+                   geom_line_interactive(size = 0.5) +
+                   geom_point_interactive(aes(tooltip = ifelse(Year %in% extended_years, point_desc_forecast, point_desc)),
+                                          fill = "grey90", size = 1, shape = 21) +
+                   labs(y = "Income ($SGD)", x = "Year",
+                        title = "Income Trends by Household Type Over Time")
+
+# Create the interactive plot with girafe
+girafe(ggobj = line_forecast, 
+       width_svg = 10, height_svg = 5,
+       options = list(opts_hover(css = "stroke-width: 1; opacity: 1;"),
+                      opts_hover_inv(css = "stroke-width: 1; opacity: 0.1;")))
+```
+
+## **Average Monthly Household Expenditure Among Resident Households By Type Of Goods And Services**
+
+```{r}
+point_desc <- c(paste0(
+  "Category: ", Expend_long$Category,
+  "\nYear: ",Expend_long$Year,
+  "\nExpenditure: ", "$SGD"," ",Expend_long$Expenditure))
+
+line <- ggplot(data = Expend_long,
+               aes(x = Year, y = Expenditure,
+                   group = Category,
+                   color = Category,
+                   data_id = Category)) +
+  geom_line_interactive(size = 0.5) +
+  geom_point_interactive(aes(tooltip = point_desc),
+                         fill = "grey90",
+                         size = 1,
+                         stroke = 1,
+                         shape = 21) +
+ 
+  labs(y = "Expenditure ($SGD)",
+       x = "Year",
+       title = "Expenditure Trends by Category Over Time")
+
+girafe(ggobj = line, 
+       width_svg = 10,
+       height_svg = 5 ,
+       options = list(
+         opts_hover(css = "stroke-width: 1; opacity: 1;"),
+         opts_hover_inv(css = "stroke-width: 1;opacity:0.1;")))
+
+```
+
+Expenditure by the type of goods and services are classified according to the Singapore Classification of Individual Consumption according to purpose (SCOICOP). In line with the principles of the United Nations (UN) COICOP, the SCOICOP categorises consumption expenditures according to their primary “functions” or “purposes”. Broad divisions include: “Food & Non-Alcoholic Beverages”, “Food Serving Services”, “Housing & Utilities”, “Health”, “Transport”, “Communication” etc.
+
+### Forecast
+
+```{r}
+Expend_long$Year <- as.numeric(Expend_long$Year)
+Expend_long$Expenditure <- as.numeric(Expend_long$Expenditure)
+
+# Create a time series object
+expenditure_ts <- ts(Expend_long$Expenditure, start = min(Expend_long$Year), end = max(Expend_long$Year), frequency = 1)
+
+# Fit an ARIMA model to the time series data
+arima_model <- auto.arima(expenditure_ts)
+
+# Forecast future values for the next 5 years
+forecast_values <- forecast(arima_model, h = 5)
+
+# Create a dataframe for plotting
+plot_data <- data.frame(Year = c(time(expenditure_ts), time(forecast_values$mean)),
+                        Expenditure = c(expenditure_ts, forecast_values$mean),
+                        Type = rep(c("Actual", "Forecast"), c(length(expenditure_ts), length(forecast_values$mean))))
+
+# Create an interactive plot using Plotly
+plot_ly(plot_data, x = ~Year, y = ~Expenditure, color = ~Type, type = 'scatter', mode = 'lines') %>%
+  layout(title = "Total Expenditure Forecast",
+         xaxis = list(title = "Year"),
+         yaxis = list(title = "Expenditure"))
+```
+
+```{r}
+
+```
