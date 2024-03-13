@@ -139,14 +139,14 @@ print(paste("The amount of columns in the dataset is: ",dim(WHRdata_cleaned)[2])
 ```
 
 ```{r}
-WHRdata1 <- merge(WHRdata_cleaned, CountryRegion, by = "Country", all.x = TRUE)
+WHRdata_cleaned <- merge(WHRdata_cleaned, CountryRegion, by = "Country", all.x = TRUE)
 
-WHRdata1
-colSums(is.na(WHRdata1))
+WHRdata_cleaned
+colSums(is.na(WHRdata_cleaned))
 ```
 
 ```{r}
-skimr::skim_without_charts(WHRdata1)
+skimr::skim_without_charts(WHRdata_cleaned)
 ```
 
 ```{r}

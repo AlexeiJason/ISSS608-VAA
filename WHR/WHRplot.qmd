@@ -1,0 +1,313 @@
+---
+title: "WHRplot"
+---
+
+```{r}
+pacman::p_load(skimr,tidyverse, patchwork, readr, dplyr, plotly, ggridges, ggiraph, ggthemes,corrplot,GGally)
+```
+
+```{r}
+data = read.csv ("World Happiness Data (2010-2019)_cleaned.csv")
+```
+
+```{r}
+WHRdata <- data %>%
+  filter(Year >= 2010 & Year <= 2019)
+```
+
+# Scatter Plot
+
+## GDP
+
+```{r}
+scp1 = ggplot(WHRdata, aes(x = Log.GDP.per.Capita, y = Happiness.Score)) + 
+  geom_point(size = .5, alpha = 0.8) +  
+  geom_smooth(method = "lm", fullrange = TRUE) +
+  theme_bw() + labs(title = "Scatter plot with regression line")
+
+scp1a= ggplot(WHRdata, aes(x = Log.GDP.per.Capita, y = Happiness.Score)) + 
+  geom_point(aes(color=Region), size = .5, alpha = 0.8) +  
+  geom_smooth(aes(color = Region, fill = Region), 
+              method = "lm", fullrange = TRUE) +
+  facet_wrap(~Region) +
+  theme_bw() + labs(title = "Scatter plot with regression line")
+
+scp1
+scp1a
+```
+
+## Social Support
+
+```{r}
+scp2 = ggplot(WHRdata, aes(x = Social.Support, y = Happiness.Score)) + 
+  geom_point(size = .5, alpha = 0.8) +  
+  geom_smooth(method = "lm", fullrange = TRUE) +
+  theme_bw() + labs(title = "Scatter plot with regression line")
+
+scp2a = ggplot(WHRdata, aes(x = Social.Support, y = Happiness.Score)) + 
+  geom_point(aes(color=Region), size = .5, alpha = 0.8) +  
+  geom_smooth(aes(color = Region, fill = Region), 
+              method = "lm", fullrange = TRUE) +
+  facet_wrap(~Region) +
+  theme_bw() + labs(title = "Scatter plot with regression line")
+
+scp2
+scp2a
+```
+
+## Life Expectancy
+
+```{r}
+scp3 = ggplot(WHRdata, aes(x = Healthy.Life.Expectancy, y = Happiness.Score)) + 
+  geom_point(size = .5, alpha = 0.8) +  
+  geom_smooth(method = "lm", fullrange = TRUE) +
+  theme_bw() + labs(title = "Scatter plot with regression line")
+
+scp3a = ggplot(WHRdata, aes(x = Healthy.Life.Expectancy, y = Happiness.Score)) + 
+  geom_point(aes(color=Region), size = .5, alpha = 0.8) +  
+  geom_smooth(aes(color = Region, fill = Region), 
+              method = "lm", fullrange = TRUE) +
+  facet_wrap(~Region) +
+  theme_bw() + labs(title = "Scatter plot with regression line")
+
+scp3
+scp3a
+```
+
+## Freedom
+
+```{r}
+scp4 = ggplot(WHRdata, aes(x =Freedom, y = Happiness.Score)) + 
+  geom_point(size = .5, alpha = 0.8) +  
+  geom_smooth(method = "lm", fullrange = TRUE) +
+  theme_bw() + labs(title = "Scatter plot with regression line")
+
+scp4a = ggplot(WHRdata, aes(x =Freedom, y = Happiness.Score)) + 
+  geom_point(aes(color=Region), size = .5, alpha = 0.8) +  
+  geom_smooth(aes(color = Region, fill = Region), 
+              method = "lm", fullrange = TRUE) +
+  facet_wrap(~Region) +
+  theme_bw() + labs(title = "Scatter plot with regression line")
+
+scp4
+scp4a
+```
+
+## Corruption
+
+```{r}
+scp5 = ggplot(WHRdata, aes(x = Perceptions.of.Corruption, y = Happiness.Score)) + 
+  geom_point(size = .5, alpha = 0.8) +  
+  geom_smooth(method = "lm", fullrange = TRUE) +
+  theme_bw() + labs(title = "Scatter plot with regression line")
+
+scp5a = ggplot(WHRdata, aes(x = Perceptions.of.Corruption, y = Happiness.Score)) + 
+  geom_point(aes(color=Region), size = .5, alpha = 0.8) +  
+  geom_smooth(aes(color = Region, fill = Region), 
+              method = "lm", fullrange = TRUE) +
+  facet_wrap(~Region) +
+  theme_bw() + labs(title = "Scatter plot with regression line")
+
+scp5
+scp5a
+```
+
+## Generosity
+
+```{r}
+scp6 = ggplot(WHRdata, aes(x = Generosity, y = Happiness.Score)) + 
+  geom_point(size = .5, alpha = 0.8) +  
+  geom_smooth(method = "lm", fullrange = TRUE) +
+  theme_bw() + labs(title = "Scatter plot with regression line")
+
+scp6a = ggplot(WHRdata, aes(x = Generosity, y = Happiness.Score)) + 
+  geom_point(aes(color=Region), size = .5, alpha = 0.8) +  
+  geom_smooth(aes(color = Region, fill = Region), 
+              method = "lm", fullrange = TRUE) +
+  facet_wrap(~Region) +
+  theme_bw() + labs(title = "Scatter plot with regression line")
+
+scp6
+scp6a
+```
+
+# Scatter Plot Interactive
+
+## GDP
+
+```{r}
+scp1 = ggplot(WHRdata, aes(x = Log.GDP.per.Capita, y = Happiness.Score)) + 
+  geom_point(size = .5, alpha = 0.8) +  
+  geom_smooth(method = "lm", fullrange = TRUE) +
+  theme_bw() + labs(title = "Scatter plot with regression line")
+
+scp1a= ggplot(WHRdata, aes(x = Log.GDP.per.Capita, y = Happiness.Score)) + 
+  geom_point(aes(color=Region), size = .5, alpha = 0.8) +  
+  geom_smooth(aes(color = Region, fill = Region), 
+              method = "lm", fullrange = TRUE) +
+  facet_wrap(~Region) +
+  theme_bw() + labs(title = "Scatter plot with regression line")
+
+scp1b= ggplot(WHRdata, aes(x = Log.GDP.per.Capita, y = Happiness.Score)) + 
+  geom_point(aes(color=sub.region), size = .5, alpha = 0.8) +  
+  geom_smooth(aes(color = sub.region, fill = sub.region), 
+              method = "lm", fullrange = TRUE) +
+  facet_wrap(~sub.region) +
+  theme_bw() + labs(title = "Scatter plot with regression line")
+scp1b_interactive <- ggplotly(scp1b)
+
+scp1_interactive <- ggplotly(scp1)
+
+# Interactive scatter plot with regression line, colored by Region and faceted
+scp1a_interactive <- ggplotly(scp1a)
+
+# Displaying the interactive plots side by side
+subplot(scp1_interactive, nrows = 1)
+subplot(scp1a_interactive, nrows = 1)
+subplot(scp1b_interactive, nrows = 1)
+```
+
+## Social Support
+
+```{r}
+scp2 = ggplot(WHRdata, aes(x = Social.Support, y = Happiness.Score)) + 
+  geom_point(size = .5, alpha = 0.8) +  
+  geom_smooth(method = "lm", fullrange = TRUE) +
+  theme_bw() + labs(title = "Scatter plot with regression line")
+
+scp2a = ggplot(WHRdata, aes(x = Social.Support, y = Happiness.Score)) + 
+  geom_point(aes(color=Region), size = .5, alpha = 0.8) +  
+  geom_smooth(aes(color = Region, fill = Region), 
+              method = "lm", fullrange = TRUE) +
+  facet_wrap(~Region) +
+  theme_bw() + labs(title = "Scatter plot with regression line")
+
+scp2_interactive <- ggplotly(scp2)
+
+# Interactive scatter plot with regression line, colored by Region and faceted
+scp2a_interactive <- ggplotly(scp2a)
+
+# Displaying the interactive plots side by side
+subplot(scp2_interactive, nrows = 1)
+subplot(scp2a_interactive, nrows = 1)
+```
+
+## Life Expectancy
+
+```{r}
+scp3 = ggplot(WHRdata, aes(x = Healthy.Life.Expectancy, y = Happiness.Score)) + 
+  geom_point(size = .5, alpha = 0.8) +  
+  geom_smooth(method = "lm", fullrange = TRUE) +
+  theme_bw() + labs(title = "Scatter plot with regression line")
+
+scp3a = ggplot(WHRdata, aes(x = Healthy.Life.Expectancy, y = Happiness.Score)) + 
+  geom_point(aes(color=Region), size = .5, alpha = 0.8) +  
+  geom_smooth(aes(color = Region, fill = Region), 
+              method = "lm", fullrange = TRUE) +
+  facet_wrap(~Region) +
+  theme_bw() + labs(title = "Scatter plot with regression line")
+
+scp3_interactive <- ggplotly(scp3)
+
+# Interactive scatter plot with regression line, colored by Region and faceted
+scp3a_interactive <- ggplotly(scp3a)
+
+# Displaying the interactive plots side by side
+subplot(scp3_interactive, nrows = 1)
+subplot(scp3a_interactive, nrows = 1)
+```
+
+## Freedom
+
+```{r}
+scp4 = ggplot(WHRdata, aes(x =Freedom, y = Happiness.Score)) + 
+  geom_point(size = .5, alpha = 0.8) +  
+  geom_smooth(method = "lm", fullrange = TRUE) +
+  theme_bw() + labs(title = "Scatter plot with regression line")
+
+scp4a = ggplot(WHRdata, aes(x =Freedom, y = Happiness.Score)) + 
+  geom_point(aes(color=Region), size = .5, alpha = 0.8) +  
+  geom_smooth(aes(color = Region, fill = Region), 
+              method = "lm", fullrange = TRUE) +
+  facet_wrap(~Region) +
+  theme_bw() + labs(title = "Scatter plot with regression line")
+
+scp4_interactive <- ggplotly(scp4)
+
+# Interactive scatter plot with regression line, colored by Region and faceted
+scp4a_interactive <- ggplotly(scp4a)
+
+# Displaying the interactive plots side by side
+subplot(scp4_interactive, nrows = 1)
+subplot(scp4a_interactive, nrows = 1)
+```
+
+## Corruption
+
+```{r}
+scp5 = ggplot(WHRdata, aes(x = Perceptions.of.Corruption, y = Happiness.Score)) + 
+  geom_point(size = .5, alpha = 0.8) +  
+  geom_smooth(method = "lm", fullrange = TRUE) +
+  theme_bw() + labs(title = "Scatter plot with regression line")
+
+scp5a = ggplot(WHRdata, aes(x = Perceptions.of.Corruption, y = Happiness.Score)) + 
+  geom_point(aes(color=Region), size = .5, alpha = 0.8) +  
+  geom_smooth(aes(color = Region, fill = Region), 
+              method = "lm", fullrange = TRUE) +
+  facet_wrap(~Region) +
+  theme_bw() + labs(title = "Scatter plot with regression line")
+
+scp5_interactive <- ggplotly(scp5)
+
+# Interactive scatter plot with regression line, colored by Region and faceted
+scp5a_interactive <- ggplotly(scp5a)
+
+# Displaying the interactive plots side by side
+subplot(scp5_interactive, nrows = 1)
+subplot(scp5a_interactive, nrows = 1)
+```
+
+## Generosity
+
+```{r}
+scp6 = ggplot(WHRdata, aes(x = Generosity, y = Happiness.Score)) + 
+  geom_point(size = .5, alpha = 0.8) +  
+  geom_smooth(method = "lm", fullrange = TRUE) +
+  theme_bw() + labs(title = "Scatter plot with regression line")
+
+scp6a = ggplot(WHRdata, aes(x = Generosity, y = Happiness.Score)) + 
+  geom_point(aes(color=Region), size = .5, alpha = 0.8) +  
+  geom_smooth(aes(color = Region, fill = Region), 
+              method = "lm", fullrange = TRUE) +
+  facet_wrap(~Region) +
+  theme_bw() + labs(title = "Scatter plot with regression line")
+
+scp6_interactive <- ggplotly(scp6)
+
+# Interactive scatter plot with regression line, colored by Region and faceted
+scp6a_interactive <- ggplotly(scp6a)
+
+# Displaying the interactive plots side by side
+subplot(scp6_interactive, nrows = 1)
+subplot(scp6a_interactive, nrows = 1)
+```
+
+# Correlation Matrix
+
+```{r}
+dataset = select(WHRdata,-c("Year","Country","Region","sub.region"))
+head(dataset)
+```
+
+```{r}
+Num.cols <- sapply(dataset, is.numeric)
+Cor.data <- cor(dataset[, Num.cols])
+
+corrplot(Cor.data, method = 'color') 
+```
+
+```{r}
+ggcorr(dataset, label = TRUE, label_round = 2, label_size = 3.5, size = 2, hjust = .85) +
+  ggtitle("Correlation Heatmap") +
+  theme(plot.title = element_text(hjust = 0.5))
+```

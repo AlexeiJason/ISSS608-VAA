@@ -1,0 +1,134 @@
+---
+title: "WHR 2015-2023"
+---
+
+# Data Preparation
+
+## Importing packages
+
+```{r}
+pacman::p_load(skimr,tidyverse, patchwork, readr, dplyr, plotly, ggridges, ggiraph, ggthemes,corrplot,GGally)
+```
+
+## Importing Datasets
+
+```{r}
+WHRdata2015 = read.csv ("data/WHR2023/WHR_2015.csv")
+WHRdata2016 = read.csv ("data/WHR2023/WHR_2016.csv")
+WHRdata2017 = read.csv ("data/WHR2023/WHR_2017.csv")
+WHRdata2018 = read.csv ("data/WHR2023/WHR_2018.csv")
+WHRdata2019 = read.csv ("data/WHR2023/WHR_2019.csv")
+WHRdata2020 = read.csv ("data/WHR2023/WHR_2020.csv")
+WHRdata2021 = read.csv ("data/WHR2023/WHR_2021.csv")
+WHRdata2022 = read.csv ("data/WHR2023/WHR_2022.csv")
+WHRdata2023 = read.csv ("data/WHR2023/WHR_2023.csv")
+head(WHRdata2015)
+```
+
+```{r}
+WHRdata2018$perceptions_of_corruption = as.numeric(WHRdata2018$perceptions_of_corruption)
+
+str(WHRdata2018)
+```
+
+```{r}
+WHRdata2015<-cbind(Year=2015,WHRdata2015)
+
+WHRdata2016<-cbind(Year=2016,WHRdata2016)
+
+WHRdata2017<-cbind(Year=2017,WHRdata2017)
+
+WHRdata2018<-cbind(Year=2018,WHRdata2018)
+
+WHRdata2019<-cbind(Year=2019,WHRdata2019)
+
+WHRdata2020<-cbind(Year=2020,WHRdata2020)
+
+WHRdata2021<-cbind(Year=2021,WHRdata2021)
+
+WHRdata2022<-cbind(Year=2022,WHRdata2022)
+
+WHRdata2023<-cbind(Year=2023,WHRdata2023)
+```
+
+```{r}
+WHRdata20152016<-dplyr::bind_rows(WHRdata2015,WHRdata2016)
+
+WHRdata201520162017<-dplyr::bind_rows(WHRdata20152016,WHRdata2017)
+
+WHRdata20182019<-dplyr::bind_rows(WHRdata2018,WHRdata2019)
+
+WHRdata20202021<-dplyr::bind_rows(WHRdata2020,WHRdata2021)
+
+WHRdata20222023<-dplyr::bind_rows(WHRdata2022,WHRdata2023)
+
+WHRdata2<-dplyr::bind_rows(WHRdata20202021,WHRdata20222023)
+
+WHRdata1<-dplyr::bind_rows(WHRdata201520162017,WHRdata20182019)
+
+WHRdata<-dplyr::bind_rows(WHRdata1,WHRdata2)
+head(WHRdata)
+```
+
+```{r}
+colSums(is.na(WHRdata))
+```
+
+```{r}
+WHRdata$healthy_life_expectancy[is.na(WHRdata$healthy_life_expectancy)] <- median(WHRdata$healthy_life_expectancy, na.rm = T)
+
+WHRdata$perceptions_of_corruption[is.na(WHRdata$perceptions_of_corruption)] <- median(WHRdata$perceptions_of_corruption, na.rm = T)
+
+colSums(is.na(WHRdata))
+```
+
+```{r}
+Country_2015 = subset(WHRdata, Year == 2015)$country
+Country_2016 = subset(WHRdata, Year == 2016)$country
+Country_2017 = subset(WHRdata, Year == 2017)$country
+Country_2018 = subset(WHRdata, Year == 2018)$country
+Country_2019 = subset(WHRdata, Year == 2019)$country
+Country_2020 = subset(WHRdata, Year == 2020)$country
+Country_2021 = subset(WHRdata, Year == 2021)$country
+Country_2022 = subset(WHRdata, Year == 2022)$country
+Country_2023 = subset(WHRdata, Year == 2023)$country
+```
+
+```{r}
+common_country =intersect(intersect(intersect(intersect(intersect(intersect(intersect(intersect(Country_2015,
+Country_2016),Country_2017),Country_2018),Country_2019),Country_2020),Country_2021),Country_2022),Country_2023)
+
+length(common_country)
+```
+
+```{r}
+WHRdata_cleaned = subset(WHRdata,country %in% common_country)
+```
+
+```{r}
+
+skimr::skim_without_charts(WHRdata_cleaned)
+```
+
+# Data
+
+```{r}
+
+colSums(is.na(WHRdata_cleaned))
+```
+
+```{r}
+DT::datatable(WHRdata_cleaned, class= "compact")
+```
+
+```{r}
+aggregate(WHRdata_cleaned$country, by=list(WHRdata_cleaned$Year), FUN=length)
+```
+
+```{r}
+write_csv(WHRdata_cleaned, file = "World Happiness Data (2015-2023)_cleaned.csv")
+```
+
+```{r}
+
+```
