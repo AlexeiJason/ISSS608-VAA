@@ -1,7 +1,7 @@
 ---
-title: "Hands-on Exercise 8: Modelling, Visualising and Analysing Network Data with R"
+title: "Hands-on Exercise 9: Modelling, Visualising and Analysing Network Data with R"
 author: "Alexei Jason"
-date: "March 5, 2024"
+date: "March 13, 2024"
 date-modified: "last-modified"
 execute: 
   eval: true
@@ -44,13 +44,13 @@ The data sets used in this hands-on exercise is from an oil exploration and extr
 
 -   *GAStech-email_edges.csv* which consists of two weeks of 9063 emails correspondances between 55 employees.
 
-![](images/image2 (2).jpg)
+![](images/image2%20(2).jpg)
 
 ### The nodes data
 
 -   *GAStech_email_nodes.csv* which consist of the names, department and title of the 55 employees.
 
-![](images/image1 (2).jpg)
+![](images/image1%20(2).jpg)
 
 ### Importing network data from files
 
