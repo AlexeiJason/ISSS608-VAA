@@ -1,0 +1,11 @@
+---
+title: "In-class Exercise 9: Modelling, Visualising and Analysing Network Data with R"
+author: "Alexei Jason"
+date: "March 16, 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+---
