@@ -15,85 +15,108 @@ editor: visual
 ## Importing packages
 
 ```{r}
-pacman::p_load(tidyverse, patchwork, readr, dplyr,ggiraph,forecast, plotly)
+pacman::p_load(tidyverse, patchwork, readr, dplyr,ggiraph,forecast, plotly, timetk)
 ```
 
 ## Importing Datasets
 
 ```{r}
-CPI_data = read.csv ("data/CPISingapore.csv")
+GDP_growth = read.csv ("data/GDPgrowth.csv")
 
-head(CPI_data)
+DT::datatable(GDP_growth, class= "compact")
 ```
 
-## Consumer Price Index (CPI), 2019 As Base Year, Annual
+```{r}
+GDP_data <- pivot_longer(GDP_growth, cols = starts_with("X"), names_to = "Quarter", values_to = "Growth.Percentage")
+
+# Extract Year and Quarter from the Quarter column
+GDP_data <- GDP_data %>%
+  mutate(
+    Year = str_extract(Quarter, "\\d{4}"),
+    Quarter = str_extract(Quarter, "([1-4])Q"),
+    Quarter = case_when(
+      Quarter == "1Q" ~ "Q1",
+      Quarter == "2Q" ~ "Q2",
+      Quarter == "3Q" ~ "Q3",
+      Quarter == "4Q" ~ "Q4"
+    )
+  )
+
+# Reorder the columns
+GDP_data <- GDP_data %>%
+  select(Year, Quarter, Data.Series, `Growth.Percentage`)
+```
 
 ```{r}
-point_desc <- c(paste0(
-  "Variable: ", CPI_data$Variable,
-  "\nYear: ",CPI_data$Year,
-  "\nPrice Index: ", CPI_data$CPI))
+library(dplyr)
+library(zoo)
 
-line <- ggplot(data = CPI_data,
-               aes(x = Year, y = CPI,
-                   group = Variable,
-                   color = Variable,
-                   data_id = Variable)) +
-  geom_line_interactive(size = 0.5) +
-  geom_point_interactive(aes(tooltip = point_desc),
-                         fill = "grey90",
-                         size = 1,
-                         stroke = 1,
-                         shape = 21) +
- 
-  labs(y = "Consumer Price Index ",
+# Assuming GDP_data is your modified dataset with 'Year' and 'Quarter' columns
+# Replace "GDP_data" with your dataset name if different
+
+# Combine 'Year' and 'Quarter' columns into a single date format
+GDP_data1 <- GDP_data %>%
+  mutate(Date = as.yearqtr(paste0(Year, Quarter)))
+
+# Remove 'Year' and 'Quarter' columns as they're redundant now
+GDP_data1 <- GDP_data1 %>%
+  select(-Year, -Quarter)
+
+# Print the modified dataset
+print(GDP_data1)
+```
+
+```{r}
+ggplot(GDP_data1, aes(x = Date, y = Data.Series, fill = `Growth.Percentage`))om_tile(color = "white") +
+  scale_fill_viridis() +
+  labs(title = "Heatmap of GDP At Current Market Prices",
        x = "Year",
-       title = "Consumer Price Index (CPI), 2019 As Base Year, Annual")
-
-girafe(ggobj = line, 
-       width_svg = 10,
-       height_svg = 5 ,
-       options = list(
-         opts_hover(css = "stroke-width: 1; opacity: 1;"),
-         opts_hover_inv(css = "stroke-width: 1;opacity:0.1;")))
+       y = "Data Series",
+       fill = "GDP") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
 ```
 
-The weighting pattern of the Consumer Price Index (CPI) was derived from the expenditure values collected from the 2017/18 Household Expenditure Survey (HES) and updated to 2019 values by taking into account price changes between 2017/18 and 2019.
-
-Prior to 2019, data pertain to taxi services only. From 2019 onwards, data pertain to taxi and private hire car services.
-
-Accommodation, one of the groups in the Housing & Utilities expenditure division of the CPI, comprises 'rented and owner-occupied accommodation', as well as 'housing maintenance & repairs'. A significant share of the Accommodation group is 'owner-occupied accommodation (OOA)' cost, which is meant to reflect the costs to homeowners of utilising the flow of services provided by their homes over an extended period of time. As the cost of using housing services is not directly observed for homeowners, it is computed based on the imputed rental concept under the rental equivalence method, i.e. proxied by market rentals. Imputed rentals on OOA have no impact on the cash expenditure of owner-occupied households. For “All Items less imputed rentals on owner-occupied accommodation”, actual rentals paid on rented homes are still included in this measure.
-
-### Forecast
+```{r}
+GDP <- GDP_data %>% 
+  select(Data.Series, Year, Quarter,Growth.Percentage) %>%
+  filter(Year >= 2010, Data.Series == "GDP At Current Market Prices")
+```
 
 ```{r}
-CPI_fc <- filter(CPI_data, Variable == "All Items")
+hline.data <- GDP %>% 
+  group_by(Quarter) %>%
+  summarise(avgvalue = mean(`Growth.Percentage`))
+```
 
-CPI_fc$Year <- as.numeric(CPI_fc$Year)
-CPI_fc$CPI <- as.numeric(CPI_fc$CPI)
-
-
-CPI_ts <- ts(CPI_fc$CPI, start = min(CPI_data$Year), end = max(CPI_data$Year), frequency = 1)
-                    
-
-
-arima_model <- auto.arima(CPI_ts)
-
-
-forecast_values <- forecast(arima_model, h = 5)
-
-
-plot_data <- data.frame(Year = c(time(CPI_ts), time(forecast_values$mean)),
-                        CPI = c(CPI_ts, forecast_values$mean),
-                        Variable = rep(c("Actual", "Forecast"), c(length(CPI_ts), length(forecast_values$mean))))
-
-
-plot_ly(plot_data, x = ~Year, y = ~CPI, color = ~Variable, type = 'scatter', mode = 'lines') %>%
-  layout(title = "Total Expenditure Forecast",
-         xaxis = list(title = "Year"),
-         yaxis = list(title = "Expenditure"))
+```{r}
+ggplot() + 
+  geom_line(data=GDP,
+            aes(x=Year, 
+                y=`Growth.Percentage`, 
+                group=Quarter), 
+            colour="black") +
+  geom_hline(aes(yintercept=avgvalue), 
+             data=hline.data, 
+             linetype=6, 
+             colour="red", 
+             size=0.5) + 
+  facet_grid(~Quarter) +
+  labs(axis.text.x = element_blank(),
+       title = "Growth Rate of GDP At Current Market Prices from 2010-2023") +
+  xlab("") +
+  ylab("Growth Percentage") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
 ```
 
 ```{r}
 
 ```
+
+## Nowcast
+
+## Dashboard Design Prototype
+
+![](images/UI-Nowcasted.png)
+
+![](images/UI-Historical.png)
