@@ -91,7 +91,7 @@ ggplotly(a)
 
 This analysis to do a growth rate analysis for each GDP's good and services category in Singapore. Here we are going to pick "GDP At Current Market Prices" as our category.
 
-### Cycle Plot for  "GDP At Current Market Prices"
+### Cycle Plot for "GDP At Current Market Prices"
 
 ```{r}
 GDP <- GDP_data %>% 
@@ -156,7 +156,7 @@ Here, we are going to analyse the breakdown of goods and services of GDP. Which 
 
 We are going to analyse it with Time Series Analysis, Heatmap and Horizon Plot.
 
-### Time Series Analysis 
+### Time Series Analysis
 
 #### Goods Producing Industries
 
@@ -368,7 +368,7 @@ Here are the RShiny Dashboard Design Prototype for our project:
 
 ## Home
 
-![](images/Screenshot 2024-03-18 093019-01.png)
+![](images/Screenshot%202024-03-18%20093019-01.png)
 
 Start by selecting the year range of the historical data to be explored using the `Year Range` slider. The default year range is from `1976` to `2023`
 
@@ -376,7 +376,7 @@ Upon modifications of the filters, The visualization of time series analysis for
 
 ## Explore
 
-![](images/Screenshot 2024-03-18 092732.png)
+![](images/Screenshot%202024-03-18%20092732.png)
 
 Start by selecting the year range of the historical data to be explored using the `Year Range` slider. The default year range is from 2010 to `2023`.
 
@@ -390,7 +390,7 @@ The visualization of calendar heatmap analysis to compare the GDP Growth Rate by
 
 ## Demographic
 
-![](images/Screenshot 2024-03-18 092222.png)
+![](images/Screenshot%202024-03-18%20092222.png)
 
 The left panel depicts the analysis by Goods Producing Industries while the right panel depicts the analysis by Services Producing Industries.
 
@@ -410,7 +410,7 @@ f\. The visualization of horizon pot analysis for GDP Growth Rate by Services Pr
 
 ## Nowcast
 
-![](images/Screenshot 2024-03-18 094151.png)
+![](images/Screenshot%202024-03-18%20094151.png)
 
 Start by selecting the year range of the historical data to be explored using the `Year Range` slider. The default year range is from 2010 to `2023`
 
@@ -420,7 +420,7 @@ Choose the Forecast Model for Nowcasting, the default model will be ARIMA.
 
 Upon pressing the 'Forecast' button, the visualizations in the Nowcast will be automatically updated
 
-![](images/Screenshot 2024-03-18 094720.png)
+![](images/Screenshot%202024-03-18%20094720.png)
 
 The 'Details' tab will show you these following three information:
 

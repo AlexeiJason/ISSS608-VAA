@@ -26,3 +26,5 @@ ggplot(data_long, aes(x = Region, y = Value, fill = Income_Level)) +
   labs(title = "Stacked Bar Chart of Singapore Income Level by Region", x = "Region", y = "Value") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
   scale_y_continuous(labels = comma)
+
+write_csv(mpsz, path = "MPSZ.csv")

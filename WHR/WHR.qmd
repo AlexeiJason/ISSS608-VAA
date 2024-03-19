@@ -212,8 +212,7 @@ scp1a= ggplot(WHRdata_cleaned, aes(x = GDP.per.Capita, y = Happiness.Score)) +
   facet_wrap(~Region) +
   theme_bw() + labs(title = "Scatter plot with regression line")
 
-scp1
-scp1a
+scp1|scp1a
 ```
 
 ## Social Support
