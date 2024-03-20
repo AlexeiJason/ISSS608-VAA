@@ -21,6 +21,8 @@ WHRdata2019 = read.csv ("data/WHRdata2019.csv")
 head(WHRdata2019)
 ```
 
+## Rename all the column so the column name are same (so we can combine all the datasets together). I rename them based on columns at year 2017.
+
 ```{r}
 WHRdata2019=plyr::rename(WHRdata2019, replace = c( "Country.or.region"="Country", 
                                   "Overall.rank"="Happiness.Rank" ,
@@ -67,6 +69,8 @@ WHRdata2016=plyr::rename(WHRdata2016, replace = c( "Happiness Rank" = "Happiness
 colnames(WHRdata2016)
 ```
 
+## I put a column called 'Year' to identify every data set year. So later when I combine all the data sets, there will be column called year which identify that year's data.
+
 ```{r}
 WHRdata2015<-cbind(Year=2015,WHRdata2015)
 
@@ -79,11 +83,15 @@ WHRdata2018<-cbind(Year=2018,WHRdata2018)
 WHRdata2019<-cbind(Year=2019,WHRdata2019)
 ```
 
+## Changing the data type of 'Trust..Government.Corruption.' from year 2018 to the correct data type which is numeric.
+
 ```{r}
 WHRdata2018$Trust..Government.Corruption. = as.numeric(WHRdata2018$Trust..Government.Corruption.)
 
 str(WHRdata2018)
 ```
+
+## Combining all the data sets.
 
 ```{r}
 WHRdata20152016<-dplyr::bind_rows(WHRdata2015,WHRdata2016)
@@ -96,15 +104,21 @@ WHRdata<-dplyr::bind_rows(WHRdata201520162017,WHRdata20182019)
 head(WHRdata)
 ```
 
+## Changing the data type of 'Happiness.Rank' to numeric for further analysis.
+
 ```{r}
 WHRdata$Happiness.Rank  = as.numeric(WHRdata$Happiness.Rank )
 
 str(WHRdata)
 ```
 
+## Checking missing values.
+
 ```{r}
 colSums(is.na(WHRdata))
 ```
+
+## Remove unnecessary column containing missing values.
 
 ```{r}
 WHRdata = subset(WHRdata, select = -c(Lower.Confidence.Interval,Upper.Confidence.Interval,Dystopia.Residual,Standard.Error,Whisker.high,Whisker.low))
@@ -112,15 +126,22 @@ WHRdata = subset(WHRdata, select = -c(Lower.Confidence.Interval,Upper.Confidence
 colSums(is.na(WHRdata))
 ```
 
+## Imputing missing value with median for the 'Trust..Government.Corruption.
+
 ```{r}
 WHRdata$Trust..Government.Corruption.[is.na(WHRdata$Trust..Government.Corruption.)] <- median(WHRdata$Trust..Government.Corruption., na.rm = T)
 
 colSums(is.na(WHRdata))
 ```
 
+We are going to check how many countries for each year then we are going to filter uncommon data in Country Column due to the data is describing the happiness score and relative factors for countries across different years. So, it is important to view the uniformity of the data in Year column of the data.
+
 ```{r}
 aggregate(WHRdata$Country, by=list(WHRdata$Year), FUN=length)
+
 ```
+
+From the table shown as above, the number of countries involved in this dataset for different year is different. Therefore, it is necessary to make an intersection of them to get the most common country list.
 
 ```{r}
 Country_2015 = subset(WHRdata, Year == 2015)$Country
@@ -136,15 +157,7 @@ Country_2016),Country_2017),Country_2018),Country_2019)
 length(common_country)
 ```
 
-Country_2015 = subset(WHRdata, Year == 2015)\$Country
-
-Country_2016 = subset(WHRdata, Year == 2016)\$Country
-
-Country_2017 = subset(WHRdata, Year == 2017)\$Country
-
-Country_2018 = subset(WHRdata, Year == 2018)\$Country
-
-Country_2019 = subset(WHRdata, Year == 2019)\$Country
+Therefore, there are 141 countries’ data existing across from 2015-2019 in this dataset.Then we need to filter the original dataset by this common_country list.
 
 ```{r}
 WHRdata_cleaned = subset(WHRdata,Country %in% common_country)
@@ -152,11 +165,15 @@ print(paste("The amount of rows in the dataset is: ",dim(WHRdata_cleaned)[1]))
 print(paste("The amount of columns in the dataset is: ",dim(WHRdata_cleaned)[2]))
 ```
 
+Create a new dataset for storing common region and country
+
 ```{r}
 common_region <- unique(subset(WHRdata_cleaned, Region!="NA", c(Country, Region)))
 
 head(common_country)
 ```
+
+Fill relate region to missing value of region column
 
 ```{r}
 assign_region <- function(x){
@@ -167,6 +184,8 @@ for(country in common_country)
       WHRdata_cleaned$Region[WHRdata_cleaned$Country == country] <- assign_region(country)
 ```
 
+Rename all the column to better collumn-name for further anlaysis.
+
 ```{r}
 WHRdata_cleaned=plyr::rename(WHRdata_cleaned, replace = c( 
                                   "Economy..GDP.per.Capita."="GDP.per.Capita",
@@ -175,6 +194,8 @@ WHRdata_cleaned=plyr::rename(WHRdata_cleaned, replace = c(
                                   "Family"="Social.Support"))
 colnames(WHRdata_cleaned)
 ```
+
+checking all the data details incluidng missing values.
 
 ```{r}
 
@@ -187,145 +208,8 @@ skimr::skim_without_charts(WHRdata_cleaned)
 DT::datatable(WHRdata_cleaned, class= "compact")
 ```
 
-```{r}
-aggregate(WHRdata_cleaned$Country, by=list(WHRdata_cleaned$Year), FUN=length)
-```
+export the dataset to csv file
 
 ```{r}
 write_csv(WHRdata_cleaned, file = "World Happiness Data (2015-2019)_cleaned.csv")
-```
-
-# Scatter Plot
-
-## GDP
-
-```{r}
-scp1 = ggplot(WHRdata_cleaned, aes(x = GDP.per.Capita, y = Happiness.Score)) + 
-  geom_point(size = .5, alpha = 0.8) +  
-  geom_smooth(method = "lm", fullrange = TRUE) +
-  theme_bw() + labs(title = "Scatter plot with regression line")
-
-scp1a= ggplot(WHRdata_cleaned, aes(x = GDP.per.Capita, y = Happiness.Score)) + 
-  geom_point(aes(color=Region), size = .5, alpha = 0.8) +  
-  geom_smooth(aes(color = Region, fill = Region), 
-              method = "lm", fullrange = TRUE) +
-  facet_wrap(~Region) +
-  theme_bw() + labs(title = "Scatter plot with regression line")
-
-scp1|scp1a
-```
-
-## Social Support
-
-```{r}
-scp2 = ggplot(WHRdata_cleaned, aes(x = Social.Support, y = Happiness.Score)) + 
-  geom_point(size = .5, alpha = 0.8) +  
-  geom_smooth(method = "lm", fullrange = TRUE) +
-  theme_bw() + labs(title = "Scatter plot with regression line")
-
-scp2a = ggplot(WHRdata_cleaned, aes(x = Social.Support, y = Happiness.Score)) + 
-  geom_point(aes(color=Region), size = .5, alpha = 0.8) +  
-  geom_smooth(aes(color = Region, fill = Region), 
-              method = "lm", fullrange = TRUE) +
-  facet_wrap(~Region) +
-  theme_bw() + labs(title = "Scatter plot with regression line")
-
-scp2
-scp2a
-```
-
-## Life Expectancy
-
-```{r}
-scp3 = ggplot(WHRdata_cleaned, aes(x = Healthy.Life.Expectancy, y = Happiness.Score)) + 
-  geom_point(size = .5, alpha = 0.8) +  
-  geom_smooth(method = "lm", fullrange = TRUE) +
-  theme_bw() + labs(title = "Scatter plot with regression line")
-
-scp3a = ggplot(WHRdata_cleaned, aes(x = Healthy.Life.Expectancy, y = Happiness.Score)) + 
-  geom_point(aes(color=Region), size = .5, alpha = 0.8) +  
-  geom_smooth(aes(color = Region, fill = Region), 
-              method = "lm", fullrange = TRUE) +
-  facet_wrap(~Region) +
-  theme_bw() + labs(title = "Scatter plot with regression line")
-
-scp3
-scp3a
-```
-
-## Freedom
-
-```{r}
-scp4 = ggplot(WHRdata_cleaned, aes(x =Freedom, y = Happiness.Score)) + 
-  geom_point(size = .5, alpha = 0.8) +  
-  geom_smooth(method = "lm", fullrange = TRUE) +
-  theme_bw() + labs(title = "Scatter plot with regression line")
-
-scp4a = ggplot(WHRdata_cleaned, aes(x =Freedom, y = Happiness.Score)) + 
-  geom_point(aes(color=Region), size = .5, alpha = 0.8) +  
-  geom_smooth(aes(color = Region, fill = Region), 
-              method = "lm", fullrange = TRUE) +
-  facet_wrap(~Region) +
-  theme_bw() + labs(title = "Scatter plot with regression line")
-
-scp4
-scp4a
-```
-
-## Corruption
-
-```{r}
-scp5 = ggplot(WHRdata_cleaned, aes(x = Perceptions.of.Corruption, y = Happiness.Score)) + 
-  geom_point(size = .5, alpha = 0.8) +  
-  geom_smooth(method = "lm", fullrange = TRUE) +
-  theme_bw() + labs(title = "Scatter plot with regression line")
-
-scp5a = ggplot(WHRdata_cleaned, aes(x = Perceptions.of.Corruption, y = Happiness.Score)) + 
-  geom_point(aes(color=Region), size = .5, alpha = 0.8) +  
-  geom_smooth(aes(color = Region, fill = Region), 
-              method = "lm", fullrange = TRUE) +
-  facet_wrap(~Region) +
-  theme_bw() + labs(title = "Scatter plot with regression line")
-
-scp5
-scp5a
-```
-
-## Generosity
-
-```{r}
-scp6 = ggplot(WHRdata_cleaned, aes(x = Generosity, y = Happiness.Score)) + 
-  geom_point(size = .5, alpha = 0.8) +  
-  geom_smooth(method = "lm", fullrange = TRUE) +
-  theme_bw() + labs(title = "Scatter plot with regression line")
-
-scp6a = ggplot(WHRdata_cleaned, aes(x = Generosity, y = Happiness.Score)) + 
-  geom_point(aes(color=Region), size = .5, alpha = 0.8) +  
-  geom_smooth(aes(color = Region, fill = Region), 
-              method = "lm", fullrange = TRUE) +
-  facet_wrap(~Region) +
-  theme_bw() + labs(title = "Scatter plot with regression line")
-
-scp6
-scp6a
-```
-
-# Correlation Matrix
-
-```{r}
-dataset = select(WHRdata_cleaned,-c("Year","Country","Happiness.Rank","Region"))
-head(dataset)
-```
-
-```{r}
-Num.cols <- sapply(dataset, is.numeric)
-Cor.data <- cor(dataset[, Num.cols])
-
-corrplot(Cor.data, method = 'color') 
-```
-
-```{r}
-ggcorr(dataset, label = TRUE, label_round = 2, label_size = 3.5, size = 2, hjust = .85) +
-  ggtitle("Correlation Heatmap") +
-  theme(plot.title = element_text(hjust = 0.5))
 ```
