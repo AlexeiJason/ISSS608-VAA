@@ -6,6 +6,7 @@ listing:
     - "In-class_Ex/*/*.qmd"
     - "Hands-on_Ex/*/*.qmd"
     - "Take-home_Ex/*/*.qmd"
+    - "Projects"
   sort: 
     - "date desc"
 toc: false

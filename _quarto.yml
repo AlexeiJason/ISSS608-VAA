@@ -84,9 +84,7 @@ website:
             href: "Take-home_EX/Take-home_EX04/Take-home_Ex04.html"
       
       - text: "Projects"
-        menu:
-          - text: "Coming Soon!"
-            href: index.qmd
+        href: https://nowcasting-economic-sg.netlify.app/
         
       
     right:
